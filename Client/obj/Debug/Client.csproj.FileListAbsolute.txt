@@ -1,9 +1,0 @@
-C:\Users\Tiago\Desktop\TDIN\Trabalho\Diginote Exchange System\Client\bin\Debug\Client.exe.config
-C:\Users\Tiago\Desktop\TDIN\Trabalho\Diginote Exchange System\Client\bin\Debug\Client.exe
-C:\Users\Tiago\Desktop\TDIN\Trabalho\Diginote Exchange System\Client\bin\Debug\Client.pdb
-C:\Users\Tiago\Desktop\TDIN\Trabalho\Diginote Exchange System\Client\obj\Debug\Client.csprojResolveAssemblyReference.cache
-C:\Users\Tiago\Desktop\TDIN\Trabalho\Diginote Exchange System\Client\obj\Debug\Client.Form1.resources
-C:\Users\Tiago\Desktop\TDIN\Trabalho\Diginote Exchange System\Client\obj\Debug\Client.Properties.Resources.resources
-C:\Users\Tiago\Desktop\TDIN\Trabalho\Diginote Exchange System\Client\obj\Debug\Client.csproj.GenerateResource.Cache
-C:\Users\Tiago\Desktop\TDIN\Trabalho\Diginote Exchange System\Client\obj\Debug\Client.exe
-C:\Users\Tiago\Desktop\TDIN\Trabalho\Diginote Exchange System\Client\obj\Debug\Client.pdb
