@@ -95,9 +95,24 @@ namespace Server
             return new User(Convert.ToString(reader["name"]), Convert.ToString(reader["nickname"]));
         }
 
-        public bool RegisterUser(string nickname, string password, string name)
+        public IUser RegisterUser(string nickname, string password, string name)
         {
-            throw new NotImplementedException();
+            string sql = String.Format("INSERT INTO USER (name, nickname, password) values ('{0}','{1}', '{2}')", name, nickname, password);
+            
+            SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
+
+            try
+            {
+                command.ExecuteNonQuery();
+            }
+            catch (SQLiteException exception)
+            {
+                System.Diagnostics.Debug.WriteLine("exception in " +exception.Source +": '" + exception.Message + "'");
+                return null;
+            }
+            
+            return new User(name, nickname);
+            
         }
 
         public override object InitializeLifetimeService()

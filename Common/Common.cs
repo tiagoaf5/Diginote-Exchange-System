@@ -12,7 +12,7 @@ namespace Common
     public interface IUsers
     {
         IUser LogUser(string nickname, string password);
-        bool RegisterUser(string nickname, string password, string name);
+        IUser RegisterUser(string nickname, string password, string name);
     }
 
     public interface IUser
