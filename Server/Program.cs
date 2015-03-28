@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Data.SQLite;
 using System.IO;
+using System.Runtime.Remoting;
+using System.Security.Cryptography;
+using System.Text;
 using System.Windows.Forms;
 using Common;
 
@@ -11,17 +14,26 @@ namespace Server
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
-        [STAThread] 
+        [STAThread]
         static void Main()
         {
+
+            RemotingConfiguration.Configure("Server.exe.config", false);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            System.Diagnostics.Debug.WriteLine("-----------------benfica----------------");
-            Application.Run(new Form1());
-            
 
+            //creating users object to give a reference to MainWindow
+            Users users = (Users)RemotingServices.Connect(typeof(Users), "tcp://localhost:9000/Server/UsersManager");
+            MainWindow myWindow = new MainWindow(users);
+            users.AddWindow(myWindow);
+
+            System.Diagnostics.Debug.WriteLine("---------------------------------");
+
+            Application.Run(myWindow);
+
+            
         }
-        
+
 
         // Creates an empty database file
     }
@@ -30,12 +42,13 @@ namespace Server
     {
         private const string DatabaseName = "database.db";
         private SQLiteConnection _mDbConnection;
+        private MainWindow myWindow;
 
         public Users()
         {
             OpenDatabase();
         }
-        
+
         void OpenDatabase()
         {
             if (!File.Exists(DatabaseName))
@@ -49,13 +62,13 @@ namespace Server
             {
                 ConnectToDatabase();
             }
-            
+
         }
 
         // Creates a connection with our database file.
         void ConnectToDatabase()
         {
-            _mDbConnection = new SQLiteConnection("Data Source="+ DatabaseName +";Version=3;");
+            _mDbConnection = new SQLiteConnection("Data Source=" + DatabaseName + ";Version=3;");
             _mDbConnection.Open();
         }
 
@@ -73,32 +86,35 @@ namespace Server
         // Testing purpose
         void FillTable()
         {
-            string sql = "INSERT INTO USER (name, nickname, password) values ('jose','ze', 'nabo')";
-            SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
-            command.ExecuteNonQuery();
+            RegisterUser("ze", "nabo", "jose");
         }
 
 
 
         public IUser LogUser(string nickname, string password)
         {
-            string sql = "SELECT * FROM USER WHERE nickname = '" + nickname + "' and password = '" + password + "'";
+            
+            string sql = "SELECT * FROM USER WHERE nickname = '" + nickname + "' and password = '" + GetHashSha1(password) + "'";
             SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
             SQLiteDataReader reader = command.ExecuteReader();
-            
+
             if (reader.Read())
                 System.Diagnostics.Debug.WriteLine("Name: " + reader["name"] + "    nickname: " + reader["nickname"] + "    password: " + reader["password"]);
             else
                 return null;
-            
 
-            return new User(Convert.ToString(reader["name"]), Convert.ToString(reader["nickname"]));
+            User u = new User(Convert.ToString(reader["name"]), Convert.ToString(reader["nickname"]));
+
+            //add User to panel
+            myWindow.AddUser(u, true);
+
+            return u;
         }
 
         public IUser RegisterUser(string nickname, string password, string name)
         {
-            string sql = String.Format("INSERT INTO USER (name, nickname, password) values ('{0}','{1}', '{2}')", name, nickname, password);
-            
+            string sql = String.Format("INSERT INTO USER (name, nickname, password) values ('{0}','{1}', '{2}')", name, nickname, GetHashSha1(password));
+
             SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
 
             try
@@ -107,17 +123,56 @@ namespace Server
             }
             catch (SQLiteException exception)
             {
-                System.Diagnostics.Debug.WriteLine("exception in " +exception.Source +": '" + exception.Message + "'");
+                System.Diagnostics.Debug.WriteLine("exception in " + exception.Source + ": '" + exception.Message + "'");
                 return null;
             }
+
+            //add User to panel
+
+            User u = new User(name, nickname);
             
-            return new User(name, nickname);
-            
+            if (myWindow != null)
+                myWindow.AddUser(u, true);
+
+            return u;
+
+        }
+
+        public void AddWindow(MainWindow x)
+        {
+            myWindow = x;
         }
 
         public override object InitializeLifetimeService()
         {
             return null;
+        }
+
+        public void LoadUsers()
+        {
+            string sql = "SELECT * FROM USER";
+            SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
+            SQLiteDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                User u = new User(Convert.ToString(reader["name"]), Convert.ToString(reader["nickname"]));
+                //add User to panel
+                myWindow.AddUser(u, false);
+            }
+        }
+
+        private static string GetHashSha1(string text)
+        {
+            byte[] bytes = Encoding.UTF8.GetBytes(text);
+            SHA1Managed hashstring = new SHA1Managed();
+            byte[] hash = hashstring.ComputeHash(bytes);
+            string hashString = string.Empty;
+            foreach (byte x in hash)
+            {
+                hashString += String.Format("{0:X2}", x);
+            }
+            return hashString;
         }
     }
 

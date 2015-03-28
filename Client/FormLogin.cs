@@ -7,13 +7,13 @@ namespace Client
 {
     public partial class FormLogin : Form
     {
-        private IUser user;
-        private IUsers users;
+        private IUser _user;
+        private readonly IUsers _users;
 
         public FormLogin()
         {
             RemotingConfiguration.Configure("Client.exe.config", false);
-            users = (IUsers)RemoteNew.New(typeof(IUsers));
+            _users = (IUsers)RemoteNew.New(typeof(IUsers));
             InitializeComponent();
         }
 
@@ -21,9 +21,18 @@ namespace Client
         {
             if (textUsername.Text != "" && textPassword.Text != "")
             {
-                
-                user = users.LogUser(textUsername.Text, textPassword.Text);
-                if (user != null)
+                try
+                {
+                    _user = _users.LogUser(textUsername.Text, textPassword.Text);
+                }
+                catch (System.Net.Sockets.SocketException exception)
+                {
+                    MessageBox.Show(exception.Message, "Server is not online!", MessageBoxButtons.OK,
+                      MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    this.Close();
+                }
+
+                if (_user != null)
                 {
                     MessageBox.Show("Login successful!", "Welcome", MessageBoxButtons.OK,
                     MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
@@ -41,7 +50,7 @@ namespace Client
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void buttonRegister_Click(object sender, EventArgs e)
         {
             var name = textRName.Text;
             var nickname = textRNickname.Text;
@@ -62,9 +71,18 @@ namespace Client
             }
             else //success
             {
-                user = users.RegisterUser(nickname, password, name);
+                try
+                {
+                    _user = _users.RegisterUser(nickname, password, name);
+                }
+                catch (System.Net.Sockets.SocketException exception)
+                {
+                    MessageBox.Show(exception.Message, "Server is not online!", MessageBoxButtons.OK,
+                      MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    this.Close();
+                }
 
-                if (user == null)
+                if (_user == null)
                 {
                     MessageBox.Show("Username already taken! Choose another one!", "Warning", MessageBoxButtons.OK,
                         MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);

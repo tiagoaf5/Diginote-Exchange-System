@@ -40,7 +40,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.textRName = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.buttonRegister = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.textRpassword = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -124,7 +124,7 @@
             this.tabPage2.Controls.Add(this.label6);
             this.tabPage2.Controls.Add(this.textRName);
             this.tabPage2.Controls.Add(this.label5);
-            this.tabPage2.Controls.Add(this.button1);
+            this.tabPage2.Controls.Add(this.buttonRegister);
             this.tabPage2.Controls.Add(this.label3);
             this.tabPage2.Controls.Add(this.textRpassword);
             this.tabPage2.Controls.Add(this.label4);
@@ -170,15 +170,15 @@
             this.label5.TabIndex = 10;
             this.label5.Text = "name";
             // 
-            // button1
+            // buttonRegister
             // 
-            this.button1.Location = new System.Drawing.Point(156, 124);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 5;
-            this.button1.Text = "register";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.buttonRegister.Location = new System.Drawing.Point(156, 124);
+            this.buttonRegister.Name = "buttonRegister";
+            this.buttonRegister.Size = new System.Drawing.Size(75, 23);
+            this.buttonRegister.TabIndex = 5;
+            this.buttonRegister.Text = "register";
+            this.buttonRegister.UseVisualStyleBackColor = true;
+            this.buttonRegister.Click += new System.EventHandler(this.buttonRegister_Click);
             // 
             // label3
             // 
@@ -247,7 +247,7 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox textRName;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button buttonRegister;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox textRpassword;
         private System.Windows.Forms.Label label4;
