@@ -4,7 +4,7 @@ using System.Drawing;
 
 namespace Server
 {
-    partial class MainWindow
+    partial class MainWindowServer
     {
         /// <summary>
         /// Required designer variable.
@@ -55,14 +55,14 @@ namespace Server
             this.columnNickname.Text = "Users";
             this.columnNickname.Width = 120;
             // 
-            // MainWindow
+            // MainWindowServer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(683, 308);
             this.Controls.Add(this.listView1);
-            this.Name = "MainWindow";
-            this.Text = "MainWindow";
+            this.Name = "MainWindowServer";
+            this.Text = "Diginote Exchange System - Server";
             this.Shown += new System.EventHandler(this.InitialSetup);
             this.ResumeLayout(false);
 

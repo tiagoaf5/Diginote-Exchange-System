@@ -9,7 +9,7 @@ using Common;
 
 namespace Server
 {
-    static class Program
+    static class ProgramServer
     {
         /// <summary>
         /// The main entry point for the application.
@@ -24,7 +24,7 @@ namespace Server
 
             //creating users object to give a reference to MainWindow
             Users users = (Users)RemotingServices.Connect(typeof(Users), "tcp://localhost:9000/Server/UsersManager");
-            MainWindow myWindow = new MainWindow(users);
+            MainWindowServer myWindow = new MainWindowServer(users);
             users.AddWindow(myWindow);
 
             System.Diagnostics.Debug.WriteLine("---------------------------------");
@@ -42,7 +42,7 @@ namespace Server
     {
         private const string DatabaseName = "database.db";
         private SQLiteConnection _mDbConnection;
-        private MainWindow myWindow;
+        private MainWindowServer _myWindow;
 
         public Users()
         {
@@ -124,7 +124,7 @@ namespace Server
             User u = new User(Convert.ToString(reader["name"]), Convert.ToString(reader["nickname"]));
 
             //add User to panel
-            myWindow.AddUser(u, true);
+            _myWindow.AddUser(u, true);
 
             return u;
         }
@@ -149,16 +149,16 @@ namespace Server
 
             User u = new User(name, nickname);
             
-            if (myWindow != null)
-                myWindow.AddUser(u, true);
+            if (_myWindow != null)
+                _myWindow.AddUser(u, true);
 
             return u;
 
         }
 
-        public void AddWindow(MainWindow x)
+        public void AddWindow(MainWindowServer x)
         {
-            myWindow = x;
+            _myWindow = x;
         }
 
         public override object InitializeLifetimeService()
@@ -176,7 +176,7 @@ namespace Server
             {
                 User u = new User(Convert.ToString(reader["name"]), Convert.ToString(reader["nickname"]));
                 //add User to panel
-                myWindow.AddUser(u, false);
+                _myWindow.AddUser(u, false);
             }
         }
 

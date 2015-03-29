@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Drawing;
-using System.Runtime.Remoting;
 using System.Windows.Forms;
 
 namespace Server
 {
-    public partial class MainWindow : Form
+    public partial class MainWindowServer : Form
     {
 
         private Users users;
-        public MainWindow(Users users)
+        public MainWindowServer(Users users)
         {
             this.users = users;
             InitializeComponent();
@@ -31,7 +30,7 @@ namespace Server
                     return;
                 }
                 
-                var listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {x.Nickname}, -1, color, System.Drawing.Color.Empty, null);
+                var listViewItem1 = new ListViewItem(new[] {x.Nickname}, -1, color, Color.Empty, null);
                 listView1.Items.Add(listViewItem1);
             }
         }

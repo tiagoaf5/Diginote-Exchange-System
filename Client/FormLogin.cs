@@ -32,18 +32,23 @@ namespace Client
                     this.Close();
                 }
 
-                if (_user != null)
+                if (_user != null) //success
                 {
                     MessageBox.Show("Login successful!", "Welcome", MessageBoxButtons.OK,
                     MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                    
+                    this.Hide();
+                    new MainWindowClient(_user, _users).ShowDialog();
+                    this.Close();
+
                 }
-                else
+                else //wrong credentials
                 {
                     MessageBox.Show("Wrong credentials!", "Error", MessageBoxButtons.OK,
                   MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 }
             }
-            else
+            else //not all fields filled in
             {
                 MessageBox.Show("Please insert username and password!", "Warning", MessageBoxButtons.OK,
                    MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
@@ -92,6 +97,10 @@ namespace Client
                 {
                     MessageBox.Show("You've registered with success!", "Welcome", MessageBoxButtons.OK,
                      MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+
+                    this.Hide();
+                    new MainWindowClient(_user, _users).ShowDialog();
+                    this.Close();
                 }
             }
         }
