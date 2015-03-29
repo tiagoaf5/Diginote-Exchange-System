@@ -75,12 +75,30 @@ namespace Server
         // Creates a tables
         void CreateTables()
         {
-            string sql = "CREATE TABLE USER (idUser INTEGER PRIMARY KEY, " +
+            string sql = "CREATE TABLE USER (" +
+                         "idUser INTEGER PRIMARY KEY, " +
                          "name TEXT NOT NULL," +
                          "nickname TEXT NOT NULL UNIQUE," +
                          "password TEXT NOT NULL);";
             SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
             command.ExecuteNonQuery();
+
+            sql = "CREATE TABLE SYSTEM ( " +
+                  "idSystem INTEGER PRIMARY KEY, " +
+                  "cotation REAL NOT NULL DEFAULT 1.0)";
+            command = new SQLiteCommand(sql, _mDbConnection);
+            command.ExecuteNonQuery();
+
+            sql = "CREATE TABLE DIGINOTE (" +
+                  "idDiginote INTEGER PRIMARY KEY," +
+                  "serialNumber TEXT NOT NULL," +
+                  "value INTEGER DEFAULT 1," +
+                  "user INTEGER," +
+                  "system INTEGER," +
+                  "FOREIGN KEY(user) REFERENCES 'USER'(idUser))";
+            command = new SQLiteCommand(sql, _mDbConnection);
+            command.ExecuteNonQuery();
+
         }
 
         // Testing purpose
