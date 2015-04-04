@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 using System.Runtime.Remoting;
@@ -196,7 +197,7 @@ namespace Server
 
     public class User : MarshalByRefObject, IUser
     {
-
+        public List<Diginote> diginotes;
 
         public User(string name, string nickname)
         {

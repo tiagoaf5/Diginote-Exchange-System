@@ -42,5 +42,21 @@ namespace Common
                 throw new RemotingException("Type not found!");
             return RemotingServices.Connect(type, entry.ObjectUrl);
         }
+
+
+        
+    }
+    public class Diginote
+    {
+        public String SerialNumber { get; set; }
+        public int Value { get; private set; }
+
+        public IUser User { get; set; }
+
+        public Diginote(String serialNumber)
+        {
+            SerialNumber = serialNumber;
+            Value = 1;
+        }
     }
 }
