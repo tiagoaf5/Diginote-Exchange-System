@@ -1,6 +1,5 @@
-﻿using System;
-using System.ComponentModel;
-using System.Drawing;
+﻿using System.ComponentModel;
+using System.Windows.Forms;
 
 namespace Server
 {
@@ -71,8 +70,8 @@ namespace Server
 
         #endregion
 
-        private System.Windows.Forms.ListView listView1;
-        private System.Windows.Forms.ColumnHeader columnNickname;
+        private ListView listView1;
+        private ColumnHeader columnNickname;
 
     }
 }

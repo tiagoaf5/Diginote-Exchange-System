@@ -5,22 +5,6 @@ using System.Runtime.Remoting;
 
 namespace Common
 {
-    public class Common
-    {
-    }
-
-    public interface IUsers
-    {
-        IUser LogUser(string nickname, string password);
-        IUser RegisterUser(string nickname, string password, string name);
-    }
-
-    public interface IUser
-    {
-        string Name { get; }
-        string Nickname { get; }
-    }
-
     public class RemoteNew
     {
         private static Hashtable _types;
@@ -43,20 +27,5 @@ namespace Common
             return RemotingServices.Connect(type, entry.ObjectUrl);
         }
 
-
-        
-    }
-    public class Diginote
-    {
-        public String SerialNumber { get; set; }
-        public int Value { get; private set; }
-
-        public IUser User { get; set; }
-
-        public Diginote(String serialNumber)
-        {
-            SerialNumber = serialNumber;
-            Value = 1;
-        }
     }
 }
