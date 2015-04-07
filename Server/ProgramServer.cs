@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Runtime.Remoting;
 using System.Windows.Forms;
+using Common;
 
 namespace Server
 {
@@ -30,8 +31,20 @@ namespace Server
             
         }
 
+    }
 
-        // Creates an empty database file
+    public class Diginote : IDiginote
+    {
+        public String SerialNumber { get; set; }
+        public int Value { get; private set; }
+
+        public IUser User { get; set; }
+
+        public Diginote(string serialNumber)
+        {
+            SerialNumber = serialNumber;
+            Value = 1;
+        }
     }
 
 
