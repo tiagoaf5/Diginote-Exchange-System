@@ -13,6 +13,7 @@ namespace Server
     public class Market : MarshalByRefObject, IMarket
     {
         private const string DatabaseName = "database.db";
+        private const int NumberOfDiginotes = 100;
         private SQLiteConnection _mDbConnection;
         private MainWindowServer _myWindow;
 
@@ -83,6 +84,8 @@ namespace Server
         void FillTable()
         {
             RegisterUser("ze", "nabo", "jose");
+            for (int i = 0; i < NumberOfDiginotes; i++)
+                RegisterDiginotes(GetHashSha1(i + "diginote"));
         }
 
 
@@ -131,6 +134,26 @@ namespace Server
                 _myWindow.AddUser(u, true);
 
             return u;
+
+        }
+
+
+        private bool RegisterDiginotes(string serialNumber)
+        {
+            string sql = String.Format("INSERT INTO DIGINOTE (serialNumber, user) values ('{0}','1')", serialNumber);
+
+            SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
+
+            try
+            {
+                command.ExecuteNonQuery();
+                return true;
+            }
+            catch (SQLiteException exception)
+            {
+                Debug.WriteLine("exception in " + exception.Source + ": '" + exception.Message + "'");
+                return false;
+            }
 
         }
 
