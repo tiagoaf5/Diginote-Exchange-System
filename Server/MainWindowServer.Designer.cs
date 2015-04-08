@@ -51,7 +51,7 @@ namespace Server
             // 
             // columnNickname
             // 
-            this.columnNickname.Text = "Users";
+            this.columnNickname.Text = "Market";
             this.columnNickname.Width = 120;
             // 
             // MainWindowServer

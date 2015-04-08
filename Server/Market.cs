@@ -1,23 +1,31 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Diagnostics;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using Common;
 
 namespace Server
 {
-    public class Users : MarshalByRefObject, IUsers
+    public class Market : MarshalByRefObject, IMarket
     {
         private const string DatabaseName = "database.db";
         private SQLiteConnection _mDbConnection;
         private MainWindowServer _myWindow;
 
-        public Users()
+        public event ChangeDelegate ChangeEvent;
+        public float SharePrice { get; private set; }
+
+        public Market()
         {
             OpenDatabase();
+            SharePrice = (float)1.0;
         }
+
+
 
         void OpenDatabase()
         {
@@ -161,6 +169,45 @@ namespace Server
                 hashString += String.Format("{0:X2}", x);
             }
             return hashString;
+        }
+        
+        //MARKET
+        
+       
+        public List<IDiginote> BuyDiginotes(int quantity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int SellDiginotes(int quantity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SuggestNewSharePrice(float newPrice)
+        {
+            if (ChangeEvent != null)
+            {
+                Delegate[] invkList = ChangeEvent.GetInvocationList();
+
+                foreach (ChangeDelegate handler in invkList)
+                {
+                    var handler1 = handler;
+                    new Thread(() =>
+                    {
+                        try
+                        {
+                            handler1(newPrice, ChangeOperation.ShareUp);
+                            Debug.WriteLine("Invoking event handler");
+                        }
+                        catch (Exception)
+                        {
+                            ChangeEvent -= handler1;
+                            Debug.WriteLine("Exception: Removed an event handler");
+                        }
+                    }).Start();
+                }
+            }
         }
     }
 }

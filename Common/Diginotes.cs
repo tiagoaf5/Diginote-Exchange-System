@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Common
 {
@@ -14,15 +13,6 @@ namespace Common
     public enum ChangeOperation { ShareDrop, ShareUp };
 
     public delegate void ChangeDelegate(float newPrice, ChangeOperation change);
-
-    public interface IMarket
-    {
-        event ChangeDelegate ChangeEvent; //general event used to let clients know prices drop
-        List<IDiginote> BuyDiginotes(int quantity);
-        int SellDiginotes(int quantity);
-
-        void SuggestNewSharePrice(float newPrice);
-    }
 
     public class ChangeEventRepeater : MarshalByRefObject
     {

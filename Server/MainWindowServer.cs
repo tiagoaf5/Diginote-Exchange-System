@@ -7,10 +7,11 @@ namespace Server
     public partial class MainWindowServer : Form
     {
 
-        private Users users;
-        public MainWindowServer(Users users)
+        private Market _market;
+        public MainWindowServer(Market market)
         {
-            this.users = users;
+            _market = market;
+            _market.AddWindow(this);
             InitializeComponent();
         }
 
@@ -37,7 +38,7 @@ namespace Server
 
         private void InitialSetup(object sender, EventArgs e)
         {
-            users.LoadUsers();
+            _market.LoadUsers();
         }
  
     }

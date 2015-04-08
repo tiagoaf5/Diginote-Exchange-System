@@ -8,12 +8,12 @@ namespace Client
     public partial class FormLogin : Form
     {
         private IUser _user;
-        private readonly IUsers _users;
+        private readonly IMarket _market;
 
         public FormLogin()
         {
             RemotingConfiguration.Configure("Client.exe.config", false);
-            _users = (IUsers)RemoteNew.New(typeof(IUsers));
+            _market = (IMarket)RemoteNew.New(typeof(IMarket));
             InitializeComponent();
         }
 
@@ -23,7 +23,7 @@ namespace Client
             {
                 try
                 {
-                    _user = _users.LogUser(textUsername.Text, textPassword.Text);
+                    _user = _market.LogUser(textUsername.Text, textPassword.Text);
                 }
                 catch (System.Net.Sockets.SocketException exception)
                 {
@@ -38,7 +38,7 @@ namespace Client
                     MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
                     
                     this.Hide();
-                    new MainWindowClient(_user, _users).ShowDialog();
+                    new MainWindowClient(_user, _market).ShowDialog();
                     this.Close();
 
                 }
@@ -78,7 +78,7 @@ namespace Client
             {
                 try
                 {
-                    _user = _users.RegisterUser(nickname, password, name);
+                    _user = _market.RegisterUser(nickname, password, name);
                 }
                 catch (System.Net.Sockets.SocketException exception)
                 {
@@ -99,7 +99,7 @@ namespace Client
                      MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
 
                     this.Hide();
-                    new MainWindowClient(_user, _users).ShowDialog();
+                    new MainWindowClient(_user, _market).ShowDialog();
                     this.Close();
                 }
             }

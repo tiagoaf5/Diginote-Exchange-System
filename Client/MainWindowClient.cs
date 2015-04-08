@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Common;
 
@@ -14,16 +7,14 @@ namespace Client
 {
     public partial class MainWindowClient : Form
     {
-        private IUser _user;
-        private readonly IUsers _users;
-        private IMarket _market;
+        private readonly IUser _user;
+        private readonly IMarket _market;
 
-        public MainWindowClient(IUser user, IUsers users)
+        public MainWindowClient(IUser user, IMarket market)
         {
             _user = user;
-            _users = users;
-
-            _market = (IMarket)RemoteNew.New(typeof(IMarket));
+            _market = market;
+            //_market = (IMarket)RemoteNew.New(typeof(IMarket));
             ChangeEventRepeater repeater = new ChangeEventRepeater();
             repeater.ChangeEvent += new ChangeDelegate(ChangeOperation);
             _market.ChangeEvent += new ChangeDelegate(repeater.Repeater);
