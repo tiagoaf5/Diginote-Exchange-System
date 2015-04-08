@@ -102,12 +102,37 @@ namespace Server
             else
                 return null;
 
-            User u = new User(Convert.ToString(reader["name"]), Convert.ToString(reader["nickname"]));
+            List<IDiginote> diginotes = GetUserDiginotes(Convert.ToInt16(reader["idUser"]));
+
+            User u;
+            
+            if (diginotes != null)
+                u = new User(Convert.ToString(reader["name"]), Convert.ToString(reader["nickname"]), diginotes);
+            else
+                u = new User(Convert.ToString(reader["name"]), Convert.ToString(reader["nickname"]));
+            
 
             //add User to panel
             _myWindow.AddUser(u, true);
 
             return u;
+        }
+
+        private List<IDiginote> GetUserDiginotes(int idUser)
+        {
+            string sql = "SELECT * FROM DIGINOTE WHERE user = '" + idUser + "'";
+            SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
+            SQLiteDataReader reader = command.ExecuteReader();
+
+            List<IDiginote> diginotes = new List<IDiginote>();
+
+            while (reader.Read())
+                diginotes.Add(new Diginote((string) reader["serialNumber"]));
+
+            if (diginotes.Count == 0)
+                return null;
+
+            return diginotes;
         }
 
         public IUser RegisterUser(string nickname, string password, string name)
@@ -147,7 +172,6 @@ namespace Server
             try
             {
                 command.ExecuteNonQuery();
-                return true;
             }
             catch (SQLiteException exception)
             {
@@ -155,6 +179,7 @@ namespace Server
                 return false;
             }
 
+            return true;
         }
 
         public void AddWindow(MainWindowServer x)
@@ -231,6 +256,28 @@ namespace Server
                     }).Start();
                 }
             }
+        }
+    }
+
+
+    public class Diginote : MarshalByRefObject, IDiginote
+    {
+        public string SerialNumber { get; set; }
+        public int Value { get; private set; }
+
+        public IUser User { get; set; }
+
+        public Diginote(string serialNumber)
+        {
+            SerialNumber = serialNumber;
+            Value = 1;
+        }
+
+        public Diginote(string serialNumber, IUser u)
+        {
+            SerialNumber = serialNumber;
+            User = u;
+            Value = 1;
         }
     }
 }

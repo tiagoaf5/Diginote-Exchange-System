@@ -16,10 +16,4 @@ namespace Common
         IUser LogUser(string nickname, string password);
         IUser RegisterUser(string nickname, string password, string name);
     }
-
-    public interface IUser
-    {
-        string Name { get; }
-        string Nickname { get; }
-    }
 }

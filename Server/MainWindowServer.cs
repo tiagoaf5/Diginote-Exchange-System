@@ -30,8 +30,8 @@ namespace Server
                     item.ForeColor = color;
                     return;
                 }
-                
-                var listViewItem1 = new ListViewItem(new[] {x.Nickname}, -1, color, Color.Empty, null);
+
+                var listViewItem1 = new ListViewItem(new[] { x.Nickname}, -1, color, Color.Empty, null);
                 listView1.Items.Add(listViewItem1);
             }
         }

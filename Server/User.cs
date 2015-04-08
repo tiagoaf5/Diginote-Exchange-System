@@ -6,13 +6,21 @@ namespace Server
 {
     public class User : MarshalByRefObject, IUser
     {
-        public List<Diginote> diginotes;
+        public List<IDiginote> Diginotes { get; set; }
 
         public User(string name, string nickname)
         {
             Name = name;
             Nickname = nickname;
         }
+
+        public User(string name, string nickname, List<IDiginote> notes)
+        {
+            Name = name;
+            Nickname = nickname;
+            Diginotes = notes;
+        }
+
         public string Name
         {
             get;

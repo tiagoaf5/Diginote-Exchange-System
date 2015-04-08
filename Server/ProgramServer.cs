@@ -28,26 +28,7 @@ namespace Server
 
             Debug.WriteLine("---------------------------------");
 
-            Application.Run(myWindow);
-
-            
-        }
-
-    }
-
-    public class Diginote : MarshalByRefObject, IDiginote
-    {
-        public string SerialNumber { get; set; }
-        public int Value { get; private set; }
-
-        public IUser User { get; set; }
-
-        public Diginote(string serialNumber)
-        {
-            SerialNumber = serialNumber;
-            Value = 1;
+            Application.Run(myWindow);   
         }
     }
-
-
 }
