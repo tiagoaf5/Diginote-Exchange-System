@@ -11,14 +11,32 @@ namespace Common
         IUser User { get; set; }
     }
 
-    public enum SharePriceChange { Drop, Up };
+    public enum ChangeOperation { ShareDrop, ShareUp };
 
-    public delegate void SharePriceChangeDelegate(float newPrice, SharePriceChange change);
+    public delegate void ChangeDelegate(float newPrice, ChangeOperation change);
 
     public interface IMarket
     {
-        event SharePriceChangeDelegate SharePriceEvent;
+        event ChangeDelegate ChangeEvent; //general event used to let clients know prices drop
         List<IDiginote> BuyDiginotes(int quantity);
         int SellDiginotes(int quantity);
+
+        void SuggestNewSharePrice(float newPrice);
+    }
+
+    public class ChangeEventRepeater : MarshalByRefObject
+    {
+        public event ChangeDelegate ChangeEvent;
+
+        public override object InitializeLifetimeService()
+        {
+            return null;
+        }
+
+        public void Repeater(float newPrice, ChangeOperation change)
+        {
+            if (ChangeEvent != null)
+                ChangeEvent(newPrice, change);
+        }
     }
 }
