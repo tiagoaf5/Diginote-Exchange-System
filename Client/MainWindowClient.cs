@@ -26,6 +26,7 @@ namespace Client
         private void InitialSetup(object sender, EventArgs e)
         {
             labelWelcome.Text = "Welcome" + (_user == null ? "" : " " + _user.Name) + "!";
+            labelSharePrice.Text = "" + _market.SharePrice;
         }
 
         public void ChangeOperation(float newPrice, ChangeOperation change)

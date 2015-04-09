@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
@@ -24,7 +25,7 @@ namespace Server
         public Market()
         {
             OpenDatabase();
-            SharePrice = (float)1.0;
+            LoadSharePrice();
         }
 
 
@@ -36,13 +37,31 @@ namespace Server
                 SQLiteConnection.CreateFile(DatabaseName);
                 ConnectToDatabase();
                 CreateTables();
-                FillTable();
+                FillTable();                
             }
             else
             {
                 ConnectToDatabase();
             }
 
+        }
+
+        private void LoadSharePrice()
+        {
+            string sql = "SELECT * FROM SHAREHISTORY ORDER BY idShare DESC LIMIT 1";
+            SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
+            SQLiteDataReader reader = command.ExecuteReader();
+
+            if (reader.Read())
+            {
+                SharePrice = (float) Convert.ToDouble(reader["newSharePrice"]);
+                Debug.WriteLine("-----------> " + Convert.ToDouble(reader["newSharePrice"].ToString()));
+            }
+            else
+            {
+                Debug.WriteLine("-----------> No records");
+                SharePrice = (float)1.0;         
+            }
         }
 
         // Creates a connection with our database file.
@@ -65,14 +84,14 @@ namespace Server
 
             sql = "CREATE TABLE SYSTEM ( " +
                   "idSystem INTEGER PRIMARY KEY, " +
-                  "sharePrice REAL NOT NULL DEFAULT 1.0)";
+                  "sharePrice DOUBLE NOT NULL DEFAULT 1.0)";
             command = new SQLiteCommand(sql, _mDbConnection);
             command.ExecuteNonQuery();
 
             sql = "CREATE TABLE SHAREHISTORY ( " +
                   "idShare INTEGER PRIMARY KEY, " +
                   "date TEXT NOT NULL," +
-                  "newSharePrice REAL NOT NULL," +
+                  "newSharePrice DOUBLE NOT NULL," +
                   "user INTEGER NOT NULL," +
                   "FOREIGN KEY(user) REFERENCES 'USER'(idUser))";
             command = new SQLiteCommand(sql, _mDbConnection);
@@ -84,6 +103,17 @@ namespace Server
                   "value INTEGER DEFAULT 1," +
                   "user INTEGER," +
                   "system INTEGER," +
+                  "FOREIGN KEY(user) REFERENCES 'USER'(idUser))";
+            command = new SQLiteCommand(sql, _mDbConnection);
+            command.ExecuteNonQuery();
+
+            sql = "CREATE TABLE BUYORDER (" +
+                  "idBuyOrder INTEGER PRIMARY KEY," +
+                  "wanted INTEGER NOT NULL," +
+                  "satisfied INTEGER DEFAULT 0," +
+                  "user INTEGER," +
+                  "sharePrice DOUBLE," +
+                  "closed Boolean DEFAULT FALSE," +
                   "FOREIGN KEY(user) REFERENCES 'USER'(idUser))";
             command = new SQLiteCommand(sql, _mDbConnection);
             command.ExecuteNonQuery();
@@ -260,9 +290,10 @@ namespace Server
         public void SuggestNewSharePrice(float newPrice, IUser user)
         {
             SharePrice = newPrice;
+            string shareString = Convert.ToString(SharePrice, CultureInfo.InvariantCulture).Replace(",", ".");
 
             string sql = String.Format("INSERT INTO SHAREHISTORY (date, user, newSharePrice) SELECT '{0}', idUser, '{1}' FROM USER WHERE nickname = '{2}'",
-                DateTime.Now.ToString(datePatt), SharePrice, user.Nickname);
+                DateTime.Now.ToString(datePatt), shareString, user.Nickname);
 
             SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
 

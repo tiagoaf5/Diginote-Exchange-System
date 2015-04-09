@@ -5,7 +5,9 @@ namespace Common
     public interface IMarket
     {
 
+
         //Market
+        float SharePrice { get; }
         event ChangeDelegate ChangeEvent; //general event used to let clients know prices drop
         List<IDiginote> BuyDiginotes(int quantity);
         int SellDiginotes(int quantity);
