@@ -74,6 +74,7 @@
             this.textUsername.Name = "textUsername";
             this.textUsername.Size = new System.Drawing.Size(100, 20);
             this.textUsername.TabIndex = 1;
+            this.textUsername.Text = "ze";
             // 
             // textPassword
             // 
@@ -82,6 +83,7 @@
             this.textPassword.PasswordChar = '*';
             this.textPassword.Size = new System.Drawing.Size(100, 20);
             this.textPassword.TabIndex = 2;
+            this.textPassword.Text = "nabo";
             // 
             // buttonLogin
             // 

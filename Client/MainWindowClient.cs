@@ -41,7 +41,7 @@ namespace Client
 
         private void button1_Click(object sender, EventArgs e)
         {
-            _market.SuggestNewSharePrice((float)(new Random()).NextDouble());
+            _market.SuggestNewSharePrice((float)(new Random()).NextDouble(), _user);
         }
 
         private void label2_Click(object sender, EventArgs e)

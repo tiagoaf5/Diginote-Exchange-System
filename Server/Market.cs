@@ -72,7 +72,9 @@ namespace Server
             sql = "CREATE TABLE SHAREHISTORY ( " +
                   "idShare INTEGER PRIMARY KEY, " +
                   "date TEXT NOT NULL," +
-                  "newSharePrice REAL NOT NULL)";
+                  "newSharePrice REAL NOT NULL," +
+                  "user INTEGER NOT NULL," +
+                  "FOREIGN KEY(user) REFERENCES 'USER'(idUser))";
             command = new SQLiteCommand(sql, _mDbConnection);
             command.ExecuteNonQuery();
 
@@ -109,6 +111,7 @@ namespace Server
                 Debug.WriteLine("exception in " + exception.Source + ": '" + exception.Message + "'");
             }
         }
+
 
 
 
@@ -254,12 +257,12 @@ namespace Server
             throw new NotImplementedException();
         }
 
-        public void SuggestNewSharePrice(float newPrice)
+        public void SuggestNewSharePrice(float newPrice, IUser user)
         {
             SharePrice = newPrice;
-            /*DateTime saveNow = DateTime.Now;
-            saveNow.
-            string sql = String.Format("INSERT INTO SHAREHISTORY (date, user) values ('{0}','1')", DateTime.Now.ToString(datePatt));
+
+            string sql = String.Format("INSERT INTO SHAREHISTORY (date, user, newSharePrice) SELECT '{0}', idUser, '{1}' FROM USER WHERE nickname = '{2}'",
+                DateTime.Now.ToString(datePatt), SharePrice, user.Nickname);
 
             SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
 
@@ -270,8 +273,8 @@ namespace Server
             catch (SQLiteException exception)
             {
                 Debug.WriteLine("exception in " + exception.Source + ": '" + exception.Message + "'");
-                return false;
-            }*/
+           
+            }
 
             if (ChangeEvent != null)
             {
