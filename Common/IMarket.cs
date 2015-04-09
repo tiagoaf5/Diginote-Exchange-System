@@ -13,7 +13,7 @@ namespace Common
         int SellDiginotes(int quantity);
 
         void SuggestNewSharePrice(float newPrice, IUser user);
-    
+
         //USER
         IUser LogUser(string nickname, string password);
         IUser RegisterUser(string nickname, string password, string name);

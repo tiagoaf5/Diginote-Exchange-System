@@ -183,10 +183,10 @@ namespace Server
 
             while (reader.Read())
                 diginotes.Add(new Diginote((string) reader["serialNumber"]));
-
+            /*
             if (diginotes.Count == 0)
                 return null;
-
+            */
             return diginotes;
         }
 
