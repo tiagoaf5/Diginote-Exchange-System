@@ -14,6 +14,7 @@ namespace Server
     {
         private const string DatabaseName = "database.db";
         private const int NumberOfDiginotes = 100;
+        private const string datePatt = @"yyyy-MM-dd HH:mm:ss";
         private SQLiteConnection _mDbConnection;
         private MainWindowServer _myWindow;
 
@@ -64,7 +65,14 @@ namespace Server
 
             sql = "CREATE TABLE SYSTEM ( " +
                   "idSystem INTEGER PRIMARY KEY, " +
-                  "cotation REAL NOT NULL DEFAULT 1.0)";
+                  "sharePrice REAL NOT NULL DEFAULT 1.0)";
+            command = new SQLiteCommand(sql, _mDbConnection);
+            command.ExecuteNonQuery();
+
+            sql = "CREATE TABLE SHAREHISTORY ( " +
+                  "idShare INTEGER PRIMARY KEY, " +
+                  "date TEXT NOT NULL," +
+                  "newSharePrice REAL NOT NULL)";
             command = new SQLiteCommand(sql, _mDbConnection);
             command.ExecuteNonQuery();
 
@@ -78,6 +86,7 @@ namespace Server
             command = new SQLiteCommand(sql, _mDbConnection);
             command.ExecuteNonQuery();
 
+            
         }
 
         // Testing purpose
@@ -86,6 +95,19 @@ namespace Server
             RegisterUser("ze", "nabo", "jose");
             for (int i = 0; i < NumberOfDiginotes; i++)
                 RegisterDiginotes(GetHashSha1(i + "diginote"));
+
+            //Create System
+            string sql = "INSERT INTO SYSTEM (sharePrice) values ('1.0')";
+            SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
+
+            try
+            {
+                command.ExecuteNonQuery();
+            }
+            catch (SQLiteException exception)
+            {
+                Debug.WriteLine("exception in " + exception.Source + ": '" + exception.Message + "'");
+            }
         }
 
 
@@ -234,8 +256,22 @@ namespace Server
 
         public void SuggestNewSharePrice(float newPrice)
         {
+            SharePrice = newPrice;
+            /*DateTime saveNow = DateTime.Now;
+            saveNow.
+            string sql = String.Format("INSERT INTO SHAREHISTORY (date, user) values ('{0}','1')", DateTime.Now.ToString(datePatt));
 
-            this.SharePrice = newPrice;
+            SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
+
+            try
+            {
+                command.ExecuteNonQuery();
+            }
+            catch (SQLiteException exception)
+            {
+                Debug.WriteLine("exception in " + exception.Source + ": '" + exception.Message + "'");
+                return false;
+            }*/
 
             if (ChangeEvent != null)
             {
