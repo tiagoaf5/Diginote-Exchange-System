@@ -10,6 +10,8 @@ namespace Common
         List<IDiginote> BuyDiginotes(int quantity);
         int SellDiginotes(int quantity);
 
+        float SharePrice { get;}
+
         void SuggestNewSharePrice(float newPrice);
     
         //USER

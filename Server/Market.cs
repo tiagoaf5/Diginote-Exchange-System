@@ -128,10 +128,10 @@ namespace Server
 
             while (reader.Read())
                 diginotes.Add(new Diginote((string) reader["serialNumber"]));
-
+            /*
             if (diginotes.Count == 0)
                 return null;
-
+            */
             return diginotes;
         }
 
@@ -234,6 +234,9 @@ namespace Server
 
         public void SuggestNewSharePrice(float newPrice)
         {
+
+            this.SharePrice = newPrice;
+
             if (ChangeEvent != null)
             {
                 Delegate[] invkList = ChangeEvent.GetInvocationList();
