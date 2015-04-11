@@ -69,6 +69,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Diginote.cs" />
     <Compile Include="MainWindowServer.cs">
       <SubType>Form</SubType>
     </Compile>

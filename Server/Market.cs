@@ -15,7 +15,7 @@ namespace Server
     {
         private const string DatabaseName = "database.db";
         private const int NumberOfDiginotes = 100;
-        private const string datePatt = @"yyyy-MM-dd HH:mm:ss";
+        private const string DatePatt = @"yyyy-MM-dd HH:mm:ss";
         private SQLiteConnection _mDbConnection;
         private MainWindowServer _myWindow;
 
@@ -109,6 +109,19 @@ namespace Server
 
             sql = "CREATE TABLE BUYORDER (" +
                   "idBuyOrder INTEGER PRIMARY KEY," +
+                  "date TEXT NOT NULL," +
+                  "wanted INTEGER NOT NULL," +
+                  "satisfied INTEGER DEFAULT 0," +
+                  "user INTEGER," +
+                  "sharePrice DOUBLE," +
+                  "closed Boolean DEFAULT FALSE," +
+                  "FOREIGN KEY(user) REFERENCES 'USER'(idUser))";
+            command = new SQLiteCommand(sql, _mDbConnection);
+            command.ExecuteNonQuery();
+            
+            sql = "CREATE TABLE SELLORDER (" +
+                  "idSellOrder INTEGER PRIMARY KEY," +
+                  "date TEXT NOT NULL," +
                   "wanted INTEGER NOT NULL," +
                   "satisfied INTEGER DEFAULT 0," +
                   "user INTEGER," +
@@ -218,7 +231,7 @@ namespace Server
         }
 
 
-        private bool RegisterDiginotes(string serialNumber)
+        private void RegisterDiginotes(string serialNumber)
         {
             string sql = String.Format("INSERT INTO DIGINOTE (serialNumber, user) values ('{0}','1')", serialNumber);
 
@@ -231,11 +244,52 @@ namespace Server
             catch (SQLiteException exception)
             {
                 Debug.WriteLine("exception in " + exception.Source + ": '" + exception.Message + "'");
-                return false;
             }
 
-            return true;
         }
+
+        private string RealToString(float num)
+        {
+            return Convert.ToString(num, CultureInfo.InvariantCulture).Replace(",", ".");
+        }
+
+        public void InsertBuyOrder(int quantity, IUser user)
+        {
+            string sql = String.Format("INSERT INTO BUYORDER (date, user, sharePrice, wanted) SELECT '{0}', idUser, '{1}','{3}' FROM USER WHERE nickname = '{2}'",
+                DateTime.Now.ToString(DatePatt), RealToString(SharePrice), user.Nickname, quantity);
+
+            SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
+
+            try
+            {
+                command.ExecuteNonQuery();
+            }
+            catch (SQLiteException exception)
+            {
+                Debug.WriteLine("exception in " + exception.Source + ": '" + exception.Message + "'");
+
+            }
+        }
+
+        public void InsertSellOrder(int quantity, IUser user)
+        {
+            string sql = String.Format("INSERT INTO SELLORDER (date, user, sharePrice, wanted) SELECT '{0}', idUser, '{1}','{3}' FROM USER WHERE nickname = '{2}'",
+                DateTime.Now.ToString(DatePatt), RealToString(SharePrice), user.Nickname, quantity);
+
+            SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
+
+            try
+            {
+                command.ExecuteNonQuery();
+            }
+            catch (SQLiteException exception)
+            {
+                Debug.WriteLine("exception in " + exception.Source + ": '" + exception.Message + "'");
+
+            }
+        }
+
+
 
         public void AddWindow(MainWindowServer x)
         {
@@ -290,10 +344,9 @@ namespace Server
         public void SuggestNewSharePrice(float newPrice, IUser user)
         {
             SharePrice = newPrice;
-            string shareString = Convert.ToString(SharePrice, CultureInfo.InvariantCulture).Replace(",", ".");
 
             string sql = String.Format("INSERT INTO SHAREHISTORY (date, user, newSharePrice) SELECT '{0}', idUser, '{1}' FROM USER WHERE nickname = '{2}'",
-                DateTime.Now.ToString(datePatt), shareString, user.Nickname);
+                DateTime.Now.ToString(DatePatt), RealToString(SharePrice), user.Nickname);
 
             SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
 
@@ -311,8 +364,10 @@ namespace Server
             {
                 Delegate[] invkList = ChangeEvent.GetInvocationList();
 
-                foreach (ChangeDelegate handler in invkList)
+                //foreach (ChangeDelegate handler in invkList)
+                foreach (var @delegate in invkList)
                 {
+                    var handler = (ChangeDelegate) @delegate;
                     var handler1 = handler;
                     new Thread(() =>
                     {
@@ -329,28 +384,6 @@ namespace Server
                     }).Start();
                 }
             }
-        }
-    }
-
-
-    public class Diginote : MarshalByRefObject, IDiginote
-    {
-        public string SerialNumber { get; set; }
-        public int Value { get; private set; }
-
-        public IUser User { get; set; }
-
-        public Diginote(string serialNumber)
-        {
-            SerialNumber = serialNumber;
-            Value = 1;
-        }
-
-        public Diginote(string serialNumber, IUser u)
-        {
-            SerialNumber = serialNumber;
-            User = u;
-            Value = 1;
         }
     }
 }

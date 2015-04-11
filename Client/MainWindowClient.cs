@@ -27,18 +27,18 @@ namespace Client
         private void InitialSetup(object sender, EventArgs e)
         {
             labelWelcome.Text = "Welcome" + (_user == null ? "" : " " + _user.Name) + "!";
-            numericUpDown1.DecimalPlaces = 0;
+            /*numericUpDown1.DecimalPlaces = 0;
             numericUpDown1.Maximum = _user.Diginotes.Count;
             numericUpDown1.Minimum = 0;
-            numericUpDown2.DecimalPlaces = 2;
+            numericUpDown2.DecimalPlaces = 2;*/
             setPrice();
         }
 
         private void setPrice()
         {
-            numericUpDown2.Value = (Decimal)_market.SharePrice;
+            /*numericUpDown2.Value = (Decimal)_market.SharePrice;
             numericUpDown2.Maximum = (Decimal)_market.SharePrice;
-            numericUpDown2.Minimum = (Decimal)_market.SharePrice;
+            numericUpDown2.Minimum = (Decimal)_market.SharePrice;*/
             labelSharePrice.Text = "" + _market.SharePrice;
         }
 
@@ -57,7 +57,7 @@ namespace Client
 
         private void button1_Click(object sender, EventArgs e)
         {
-            _market.SuggestNewSharePrice((float)(new Random()).NextDouble(), _user);
+            _market.SuggestNewSharePrice((float)(Math.Floor((new Random()).NextDouble() * 100) / 100.0), _user);
         }
 
         private void label2_Click(object sender, EventArgs e)

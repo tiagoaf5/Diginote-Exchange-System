@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="Common.cs" />
     <Compile Include="Diginotes.cs" />
+    <Compile Include="IOrder.cs" />
     <Compile Include="IUser.cs" />
     <Compile Include="IMarket.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
