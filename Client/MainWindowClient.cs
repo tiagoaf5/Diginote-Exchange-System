@@ -27,6 +27,8 @@ namespace Client
         private void InitialSetup(object sender, EventArgs e)
         {
             labelWelcome.Text = "Welcome" + (_user == null ? "" : " " + _user.Name) + "!";
+            labelSharePrice.Text = _market.SharePrice.ToString(CultureInfo.InvariantCulture);
+            labelNumberDiginotes.Text = _user.Diginotes.Count.ToString();
             numericUpDown1.DecimalPlaces = 0;
             numericUpDown1.Maximum = _user.Diginotes.Count;
             numericUpDown1.Minimum = 0;
@@ -93,11 +95,6 @@ namespace Client
             }
             numericUpDown1.Value = 0;
             numericUpDown1.Maximum = _user.Diginotes.Count;
-        }
-
-        private void label5_Click(object sender, EventArgs e)
-        {
-
         }
     }
 
