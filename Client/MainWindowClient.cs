@@ -27,19 +27,9 @@ namespace Client
         private void InitialSetup(object sender, EventArgs e)
         {
             labelWelcome.Text = "Welcome" + (_user == null ? "" : " " + _user.Name) + "!";
-            /*numericUpDown1.DecimalPlaces = 0;
+            numericUpDown1.DecimalPlaces = 0;
             numericUpDown1.Maximum = _user.Diginotes.Count;
             numericUpDown1.Minimum = 0;
-            numericUpDown2.DecimalPlaces = 2;*/
-            setPrice();
-        }
-
-        private void setPrice()
-        {
-            /*numericUpDown2.Value = (Decimal)_market.SharePrice;
-            numericUpDown2.Maximum = (Decimal)_market.SharePrice;
-            numericUpDown2.Minimum = (Decimal)_market.SharePrice;*/
-            labelSharePrice.Text = "" + _market.SharePrice;
         }
 
         public void ChangeOperation(float newPrice, ChangeOperation change)
@@ -50,7 +40,6 @@ namespace Client
             {
                 labelSharePrice.Text = newPrice.ToString(CultureInfo.CurrentCulture);
                 Debug.WriteLine(_market.SharePrice);
-                setPrice();
             }
             
         }
@@ -76,6 +65,37 @@ namespace Client
         }
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void numericUpDown2_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            int result = _market.SellDiginotes((int)numericUpDown1.Value);
+            if (result < numericUpDown1.Value)
+            {
+                using (NewPrice np = new NewPrice((int)numericUpDown1.Value,(int)numericUpDown1.Value-result, (decimal)_market.SharePrice))
+                {
+                    var r1 = np.ShowDialog();
+                    _market.SuggestNewSharePrice((float)np.newValue, _user);
+                }
+
+            }
+            else
+            {
+                MessageBox.Show("Information", "Your diginotes have been sold!", MessageBoxButtons.OK,
+                MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+            }
+            numericUpDown1.Value = 0;
+            numericUpDown1.Maximum = _user.Diginotes.Count;
+        }
+
+        private void label5_Click(object sender, EventArgs e)
         {
 
         }
