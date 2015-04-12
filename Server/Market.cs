@@ -338,7 +338,8 @@ namespace Server
 
         public int SellDiginotes(int quantity)
         {
-            throw new NotImplementedException();
+            return quantity - 1;
+           // throw new NotImplementedException();
         }
 
         public void SuggestNewSharePrice(float newPrice, IUser user)

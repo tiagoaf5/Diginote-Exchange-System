@@ -76,6 +76,12 @@
     <Compile Include="MainWindowClient.Designer.cs">
       <DependentUpon>MainWindowClient.cs</DependentUpon>
     </Compile>
+    <Compile Include="NewPrice.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NewPrice.Designer.cs">
+      <DependentUpon>NewPrice.cs</DependentUpon>
+    </Compile>
     <Compile Include="ProgramClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FormLogin.resx">
@@ -83,6 +89,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MainWindowClient.resx">
       <DependentUpon>MainWindowClient.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NewPrice.resx">
+      <DependentUpon>NewPrice.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
