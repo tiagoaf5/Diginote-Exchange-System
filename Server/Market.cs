@@ -289,8 +289,6 @@ namespace Server
             }
         }
 
-
-
         public void AddWindow(MainWindowServer x)
         {
             _myWindow = x;
@@ -336,13 +334,23 @@ namespace Server
             throw new NotImplementedException();
         }
 
-        public int SellDiginotes(int quantity)
+        public int SellDiginotes(int quantity) // apenas para as que estao disponiveis
         {
+
+           /* string sql = "SELECT * FROM BUYORDER WHERE closed = FALSE";
+            SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
+            SQLiteDataReader reader = command.ExecuteReader();
+
+            List<IDiginote> diginotes = new List<IDiginote>();
+
+            while (reader.Read())
+                diginotes.Add(new Diginote((string)reader["serialNumber"]));*/
+
             return quantity - 1;
            // throw new NotImplementedException();
         }
 
-        public void SuggestNewSharePrice(float newPrice, IUser user)
+        public void SuggestNewSharePrice(float newPrice, IUser user) // aqui acrescentar se é por venda/compra e quantas quer vender/comprar
         {
             SharePrice = newPrice;
 
