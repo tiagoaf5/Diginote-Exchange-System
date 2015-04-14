@@ -28,4 +28,28 @@ namespace Common
         }
 
     }
+
+
+    public class EventsRepeater : MarshalByRefObject
+    {
+        public event ChangeDelegate ChangeEvent;
+        public event UpdateLockingTimeDelegate UpdateLockingEvent;
+
+        public override object InitializeLifetimeService()
+        {
+            return null;
+        }
+
+        public void ChangeRepeater(float newPrice, ChangeOperation change)
+        {
+            if (ChangeEvent != null)
+                ChangeEvent(newPrice, change);
+        }
+
+        public void LockingRepeater(int seconds)
+        {
+            if (UpdateLockingEvent != null)
+                UpdateLockingEvent(seconds);
+        }
+    }
 }

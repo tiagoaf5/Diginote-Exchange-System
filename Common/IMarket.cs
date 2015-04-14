@@ -2,13 +2,19 @@
 
 namespace Common
 {
+
+    public delegate void UpdateLockingTimeDelegate(int seconds);
+
     public interface IMarket
     {
 
 
         //Market
         float SharePrice { get; }
-        event ChangeDelegate ChangeEvent; //general event used to let clients know prices drop
+        //general event used to let clients know prices drop
+        event ChangeDelegate ChangeEvent; 
+        //general event that lets clients know that market locked time
+        event UpdateLockingTimeDelegate UpdateLockingEvent;
         List<IDiginote> BuyDiginotes(int quantity);
         int SellDiginotes(int quantity);
 
