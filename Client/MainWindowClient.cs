@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Forms;
 using Common;
 using System.Diagnostics;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace Client
 {
@@ -35,6 +37,8 @@ namespace Client
             numericUpDown1.DecimalPlaces = 0;
             numericUpDown1.Maximum = _user.Diginotes.Count;
             numericUpDown1.Minimum = 0;
+
+            UpdateChart();
         }
 
         public void ChangeOperation(float newPrice, ChangeOperation change)
@@ -47,6 +51,7 @@ namespace Client
                 Debug.WriteLine(_market.SharePrice);
 
                 LockButtons(true);
+                UpdateChart();
             }
 
         }
@@ -54,7 +59,7 @@ namespace Client
         public void UpdateTimer(int seconds)
         {
             if (InvokeRequired) // I'm not in UI thread
-                BeginInvoke((MethodInvoker) delegate { UpdateTimer(seconds); }); // Invoke using an anonymous delegate
+                BeginInvoke((MethodInvoker)delegate { UpdateTimer(seconds); }); // Invoke using an anonymous delegate
             else
             {
                 if (!labelCountDown.Visible)
@@ -73,8 +78,8 @@ namespace Client
                 }
             }
 
-           
-               
+
+
         }
 
         private void LockButtons(bool locked)
@@ -98,6 +103,23 @@ namespace Client
 
         }
 
+        private void UpdateChart()
+        {
+            if (InvokeRequired) // I'm not in UI thread
+                BeginInvoke((MethodInvoker)delegate { UpdateChart(); }); // Invoke using an anonymous delegate
+            else
+            {
+                series1.Points.Clear();
+                ArrayList history = _market.GetSharePricesList();
+
+                int size = history.Count;
+                for (int i = 0; i < size; i++)
+                    series1.Points.AddXY(i, history[i]);
+            }
+
+        }
+
+
         private void GetAllControl(Control c, List<Control> list)
         {
             foreach (Control control in c.Controls)
@@ -110,6 +132,7 @@ namespace Client
         private void button1_Click(object sender, EventArgs e)
         {
             _market.SuggestNewSharePrice((float)(Math.Floor((new Random()).NextDouble() * 100) / 100.0), _user);
+            series1.Points.Add(new DataPoint(12, 3));
         }
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
@@ -124,7 +147,7 @@ namespace Client
 
         private void button2_Click(object sender, EventArgs e)
         {
-            int result = _market.SellDiginotes((int)numericUpDown1.Value,_user);
+            int result = _market.SellDiginotes((int)numericUpDown1.Value, _user);
             if (result < numericUpDown1.Value)
             {
                 using (NewPrice np = new NewPrice((int)numericUpDown1.Value, (int)numericUpDown1.Value - result, (decimal)_market.SharePrice))

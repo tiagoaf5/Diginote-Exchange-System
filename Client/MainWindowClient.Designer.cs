@@ -36,9 +36,9 @@ namespace Client
             "100",
             "50",
             "1.5"}, -1);
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.labelWelcome = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.labelSharePrice = new System.Windows.Forms.Label();
@@ -317,7 +317,9 @@ namespace Client
             // 
             chartArea1.Name = "ChartArea1";
             chartArea1.AxisX.Minimum = 0;
-            chartArea1.AxisX.Maximum = 9;
+            chartArea1.AxisX.LabelStyle.Enabled = false;
+
+            /*chartArea1.AxisX.Maximum = 9;*/
 
             this.chart1.ChartAreas.Add(chartArea1);
             legend1.LegendStyle = System.Windows.Forms.DataVisualization.Charting.LegendStyle.Column;
@@ -339,7 +341,8 @@ namespace Client
 
             series1.Points.Add(new DataPoint(0, 1.0));
             series1.Points.Add(new DataPoint(1, 1.5));
-            series1.ChartType = SeriesChartType.Line;
+
+           // series1.ChartType = SeriesChartType.Line;
             // 
             // MainWindowClient
             // 
@@ -400,5 +403,8 @@ namespace Client
         private System.Windows.Forms.Label labelCountDown;
         private System.Windows.Forms.Label labelLocked;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
+        private System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1;
+        private System.Windows.Forms.DataVisualization.Charting.Legend legend1;
+        private System.Windows.Forms.DataVisualization.Charting.Series series1;
     }
 }

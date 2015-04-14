@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Diagnostics;
@@ -235,6 +236,23 @@ namespace Server
 
             return u;
 
+        }
+
+        public ArrayList GetSharePricesList()
+        {
+            string sql = "SELECT * FROM SHAREHISTORY";
+            SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
+            SQLiteDataReader reader = command.ExecuteReader();
+
+            ArrayList history = new ArrayList();
+
+            while (reader.Read())
+                history.Add((float)Convert.ToDouble(reader["newSharePrice"]));
+            /*
+            if (diginotes.Count == 0)
+                return null;
+            */
+            return history;
         }
 
 
