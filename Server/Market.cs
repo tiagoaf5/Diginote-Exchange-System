@@ -429,7 +429,7 @@ namespace Server
             return sql;
         }
 
-        public void SuggestNewSharePrice(float newPrice, IUser user) // aqui acrescentar se é por venda/compra e quantas quer vender/comprar
+        public void SuggestNewSharePrice(float newPrice, IUser user, bool Sell, int quantity)
         {
             SharePrice = newPrice;
 
@@ -447,6 +447,11 @@ namespace Server
                 Debug.WriteLine("exception in " + exception.Source + ": '" + exception.Message + "'");
 
             }
+
+            if (Sell)
+                InsertSellOrder(quantity, user);
+            else
+                InsertBuyOrder(quantity, user);
 
             if (ChangeEvent != null)
             {

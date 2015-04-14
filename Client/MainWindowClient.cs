@@ -109,7 +109,7 @@ namespace Client
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            _market.SuggestNewSharePrice((float)(Math.Floor((new Random()).NextDouble() * 100) / 100.0), _user);
+           // _market.SuggestNewSharePrice((float)(Math.Floor((new Random()).NextDouble() * 100) / 100.0), _user);
         }
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
@@ -130,13 +130,13 @@ namespace Client
                 using (NewPrice np = new NewPrice((int)numericUpDown1.Value, (int)numericUpDown1.Value - result, (decimal)_market.SharePrice))
                 {
                     var r1 = np.ShowDialog();
-                    _market.SuggestNewSharePrice((float)np.newValue, _user);
+                    _market.SuggestNewSharePrice((float)np.newValue, _user, true, (int)numericUpDown1.Value - result);
                 }
 
             }
             else
             {
-                MessageBox.Show("Information", "Your diginotes have been sold!", MessageBoxButtons.OK,
+                MessageBox.Show("Your diginotes have been sold!", "Success", MessageBoxButtons.OK,
                 MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
             }
             numericUpDown1.Value = 0;

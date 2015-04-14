@@ -18,7 +18,7 @@ namespace Common
         List<IDiginote> BuyDiginotes(int quantity);
         int SellDiginotes(int quantity, IUser user);
 
-        void SuggestNewSharePrice(float newPrice, IUser user);
+        void SuggestNewSharePrice(float newPrice, IUser user, bool Sell, int quantity);
 
         //USER
         IUser LogUser(string nickname, string password);
