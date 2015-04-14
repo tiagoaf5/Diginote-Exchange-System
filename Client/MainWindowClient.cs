@@ -142,6 +142,7 @@ namespace Client
             numericUpDown1.Value = 0;
             numericUpDown1.Maximum = _user.Diginotes.Count;
         }
+
     }
 
 }
