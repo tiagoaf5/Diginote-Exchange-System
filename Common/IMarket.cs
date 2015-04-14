@@ -16,7 +16,7 @@ namespace Common
         //general event that lets clients know that market locked time
         event UpdateLockingTimeDelegate UpdateLockingEvent;
         List<IDiginote> BuyDiginotes(int quantity);
-        int SellDiginotes(int quantity);
+        int SellDiginotes(int quantity, IUser user);
 
         void SuggestNewSharePrice(float newPrice, IUser user);
 

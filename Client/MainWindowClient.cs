@@ -124,7 +124,7 @@ namespace Client
 
         private void button2_Click(object sender, EventArgs e)
         {
-            int result = _market.SellDiginotes((int)numericUpDown1.Value);
+            int result = _market.SellDiginotes((int)numericUpDown1.Value,_user);
             if (result < numericUpDown1.Value)
             {
                 using (NewPrice np = new NewPrice((int)numericUpDown1.Value, (int)numericUpDown1.Value - result, (decimal)_market.SharePrice))

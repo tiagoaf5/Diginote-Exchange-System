@@ -76,6 +76,7 @@
     <Compile Include="MainWindowServer.Designer.cs">
       <DependentUpon>MainWindowServer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Order.cs" />
     <Compile Include="ProgramServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="User.cs" />
