@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Common;
 
 namespace Server
 {
@@ -8,10 +9,12 @@ namespace Server
     {
 
         private Market _market;
+
         public MainWindowServer(Market market)
         {
             _market = market;
             _market.AddWindow(this);
+            _market.UpdateLockingEvent += new UpdateLockingTimeDelegate(UpdateTimer);
             InitializeComponent();
         }
 
@@ -33,6 +36,17 @@ namespace Server
 
                 var listViewItem1 = new ListViewItem(new[] { x.Nickname}, -1, color, Color.Empty, null);
                 listView1.Items.Add(listViewItem1);
+            }
+        }
+
+
+        public void UpdateTimer(int seconds)
+        {
+            if (InvokeRequired) // I'm not in UI thread
+                BeginInvoke((MethodInvoker)delegate { UpdateTimer(seconds); }); // Invoke using an anonymous delegate
+            else
+            {
+                labelCountDown.Text = seconds.ToString();
             }
         }
 

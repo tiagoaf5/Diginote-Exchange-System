@@ -16,11 +16,19 @@ namespace Server
         private const string DatabaseName = "database.db";
         private const int NumberOfDiginotes = 100;
         private const string DatePatt = @"yyyy-MM-dd HH:mm:ss";
+        private const int TimerSeconds = 10;
+
         private SQLiteConnection _mDbConnection;
         private MainWindowServer _myWindow;
 
         public event ChangeDelegate ChangeEvent;
+        public event UpdateLockingTimeDelegate UpdateLockingEvent;
+
         public float SharePrice { get; private set; }
+
+        private int _countDown; // Seconds
+        private System.Threading.Timer _timer;
+
 
         public Market()
         {
@@ -37,7 +45,7 @@ namespace Server
                 SQLiteConnection.CreateFile(DatabaseName);
                 ConnectToDatabase();
                 CreateTables();
-                FillTable();                
+                FillTable();
             }
             else
             {
@@ -54,13 +62,13 @@ namespace Server
 
             if (reader.Read())
             {
-                SharePrice = (float) Convert.ToDouble(reader["newSharePrice"]);
+                SharePrice = (float)Convert.ToDouble(reader["newSharePrice"]);
                 Debug.WriteLine("-----------> " + Convert.ToDouble(reader["newSharePrice"].ToString()));
             }
             else
             {
                 Debug.WriteLine("-----------> No records");
-                SharePrice = (float)1.0;         
+                SharePrice = (float)1.0;
             }
         }
 
@@ -118,7 +126,7 @@ namespace Server
                   "FOREIGN KEY(user) REFERENCES 'USER'(idUser))";
             command = new SQLiteCommand(sql, _mDbConnection);
             command.ExecuteNonQuery();
-            
+
             sql = "CREATE TABLE SELLORDER (" +
                   "idSellOrder INTEGER PRIMARY KEY," +
                   "date TEXT NOT NULL," +
@@ -131,7 +139,7 @@ namespace Server
             command = new SQLiteCommand(sql, _mDbConnection);
             command.ExecuteNonQuery();
 
-            
+
         }
 
         // Testing purpose
@@ -177,7 +185,7 @@ namespace Server
             u = new User(Convert.ToString(reader["name"]), Convert.ToString(reader["nickname"]), diginotes);
 
             u.IdUser = Convert.ToInt32(reader["idUser"]);
-            
+
 
             //add User to panel
             _myWindow.AddUser(u, true);
@@ -194,7 +202,7 @@ namespace Server
             List<IDiginote> diginotes = new List<IDiginote>();
 
             while (reader.Read())
-                diginotes.Add(new Diginote((string) reader["serialNumber"]));
+                diginotes.Add(new Diginote((string)reader["serialNumber"]));
             /*
             if (diginotes.Count == 0)
                 return null;
@@ -324,7 +332,7 @@ namespace Server
             }
             return hashString;
         }
-        
+
         //MARKET
 
         //            List<IDiginote> diginotes_to_transfer = new List<IDiginote>();
@@ -437,7 +445,7 @@ namespace Server
             catch (SQLiteException exception)
             {
                 Debug.WriteLine("exception in " + exception.Source + ": '" + exception.Message + "'");
-           
+
             }
 
             if (ChangeEvent != null)
@@ -447,7 +455,7 @@ namespace Server
                 //foreach (ChangeDelegate handler in invkList)
                 foreach (var @delegate in invkList)
                 {
-                    var handler = (ChangeDelegate) @delegate;
+                    var handler = (ChangeDelegate)@delegate;
                     var handler1 = handler;
                     new Thread(() =>
                     {
@@ -464,6 +472,50 @@ namespace Server
                     }).Start();
                 }
             }
+
+            SetTimer();
+
+        }
+
+        private void SetTimer()
+        {
+            Debug.WriteLine("setting Timer");
+            _countDown = TimerSeconds;
+            _timer = new System.Threading.Timer(new TimerCallback(timer1_Tick), null, 0, 1000);
+        }
+
+        private void timer1_Tick(object sender)
+        {
+            if (UpdateLockingEvent != null)
+            {
+                Delegate[] invkList = UpdateLockingEvent.GetInvocationList();
+
+                //foreach (ChangeDelegate handler in invkList)
+                foreach (var @delegate in invkList)
+                {
+                    var handler = (UpdateLockingTimeDelegate)@delegate;
+                    var handler1 = handler;
+                    new Thread(() =>
+                    {
+                        try
+                        {
+                            handler1(_countDown);
+                            Debug.WriteLine("Invoking event handler");
+                        }
+                        catch (Exception)
+                        {
+                            UpdateLockingEvent -= handler1;
+                            Debug.WriteLine("Exception: Removed an event handler");
+                        }
+                    }).Start();
+                }
+            }
+
+            _countDown--;
+
+            if (_countDown == 0)
+                _timer.Dispose();
+
         }
     }
 }
