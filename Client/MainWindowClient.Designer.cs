@@ -1,4 +1,7 @@
-﻿namespace Client
+﻿using System.Drawing;
+using System.Windows.Forms.DataVisualization.Charting;
+
+namespace Client
 {
     partial class MainWindowClient
     {
@@ -28,11 +31,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
             "150",
             "100",
             "50",
             "1.5"}, -1);
+            chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.labelWelcome = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.labelSharePrice = new System.Windows.Forms.Label();
@@ -58,9 +64,11 @@
             this.label9 = new System.Windows.Forms.Label();
             this.labelCountDown = new System.Windows.Forms.Label();
             this.labelLocked = new System.Windows.Forms.Label();
+            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
             // 
             // labelWelcome
@@ -185,7 +193,7 @@
             this.Remaining,
             this.SharePrice});
             this.listView1.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem3});
+            listViewItem1});
             this.listView1.Location = new System.Drawing.Point(17, 107);
             this.listView1.Name = "listView1";
             this.listView1.Size = new System.Drawing.Size(263, 52);
@@ -305,11 +313,43 @@
             this.labelLocked.Text = "Locked";
             this.labelLocked.Visible = false;
             // 
+            // chart1
+            // 
+            chartArea1.Name = "ChartArea1";
+            chartArea1.AxisX.Minimum = 0;
+            chartArea1.AxisX.LabelStyle.Enabled = false;
+
+            /*chartArea1.AxisX.Maximum = 9;*/
+
+            this.chart1.ChartAreas.Add(chartArea1);
+            legend1.LegendStyle = System.Windows.Forms.DataVisualization.Charting.LegendStyle.Column;
+            legend1.Name = "Legend1";
+            this.chart1.Legends.Add(legend1);
+            this.chart1.Location = new System.Drawing.Point(346, 173);
+            this.chart1.Name = "chart1";
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            series1.Color = Color.Red;
+            series1.IsVisibleInLegend = false;
+            this.chart1.Series.Add(series1);
+            this.chart1.Size = new System.Drawing.Size(239, 141);
+            this.chart1.TabIndex = 19;
+            this.chart1.Text = "Share Price";
+
+
+            series1.Points.Add(new DataPoint(0, 1.0));
+            series1.Points.Add(new DataPoint(1, 1.5));
+
+           // series1.ChartType = SeriesChartType.Line;
+            // 
             // MainWindowClient
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(597, 387);
+            this.Controls.Add(this.chart1);
             this.Controls.Add(this.labelLocked);
             this.Controls.Add(this.labelCountDown);
             this.Controls.Add(this.label9);
@@ -329,6 +369,7 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -361,5 +402,9 @@
         public System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label labelCountDown;
         private System.Windows.Forms.Label labelLocked;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
+        private System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1;
+        private System.Windows.Forms.DataVisualization.Charting.Legend legend1;
+        private System.Windows.Forms.DataVisualization.Charting.Series series1;
     }
 }

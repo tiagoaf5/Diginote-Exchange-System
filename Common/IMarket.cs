@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 
 namespace Common
 {
@@ -23,5 +24,7 @@ namespace Common
         //USER
         IUser LogUser(string nickname, string password);
         IUser RegisterUser(string nickname, string password, string name);
+
+        ArrayList GetSharePricesList();
     }
 }
