@@ -10,7 +10,7 @@ namespace Common
         float SharePrice { get; }
         event ChangeDelegate ChangeEvent; //general event used to let clients know prices drop
         List<IDiginote> BuyDiginotes(int quantity);
-        int SellDiginotes(int quantity);
+        int SellDiginotes(int quantity, IUser user);
 
         void SuggestNewSharePrice(float newPrice, IUser user);
 

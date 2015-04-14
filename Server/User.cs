@@ -33,5 +33,8 @@ namespace Server
         {
             return null;
         }
+
+        public int IdUser { get; internal set; }
+
     }
 }
