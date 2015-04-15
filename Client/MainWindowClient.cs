@@ -178,6 +178,12 @@ namespace Client
                 MessageBox.Show("Your diginotes have been sold!", "Success", MessageBoxButtons.OK,
                 MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
             }
+            listView_sell.Items.Clear();
+            if (result < numericUpDown1.Value)
+            {
+                string[] info = { "" + numericUpDown1.Value, "" + result, "" + ((int)numericUpDown1.Value - result) };
+                listView_sell.Items.Add(new ListViewItem(info));
+            }
             numericUpDown1.Value = 0;
             numericUpDown1.Maximum = _user.Diginotes.Count;
         }
@@ -201,6 +207,11 @@ namespace Client
             }
             numericUpDown1.Value = 0;
             numericUpDown1.Maximum = _user.Diginotes.Count;
+        }
+
+        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
 
 
