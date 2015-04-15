@@ -104,7 +104,7 @@ namespace Client
         }
 
         private void UpdateChart()
-        {
+        {/*
             if (InvokeRequired) // I'm not in UI thread
                 BeginInvoke((MethodInvoker)delegate { UpdateChart(); }); // Invoke using an anonymous delegate
             else
@@ -116,7 +116,7 @@ namespace Client
                 for (int i = 0; i < size; i++)
                     series1.Points.AddXY(i, history[i]);
             }
-
+            */
         }
 
 
@@ -150,7 +150,7 @@ namespace Client
             int result = _market.SellDiginotes((int)numericUpDown1.Value, _user);
             if (result < numericUpDown1.Value)
             {
-                using (NewPrice np = new NewPrice((int)numericUpDown1.Value, (int)numericUpDown1.Value - result, (decimal)_market.SharePrice))
+                using (NewPrice np = new NewPrice((int)numericUpDown1.Value, (int)numericUpDown1.Value - result, (decimal)_market.SharePrice,true))
                 {
                     var r1 = np.ShowDialog();
                     _market.SuggestNewSharePrice((float)np.newValue, _user, true, (int)numericUpDown1.Value - result);
@@ -165,6 +165,28 @@ namespace Client
             numericUpDown1.Value = 0;
             numericUpDown1.Maximum = _user.Diginotes.Count;
         }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            int result = _market.BuyDiginotes((int)numericUpDown2.Value, _user);
+            if (result < numericUpDown2.Value)
+            {
+                using (NewPrice np = new NewPrice((int)numericUpDown2.Value, (int)numericUpDown2.Value - result, (decimal)_market.SharePrice, false))
+                {
+                    var r1 = np.ShowDialog();
+                    _market.SuggestNewSharePrice((float)np.newValue, _user, false, (int)numericUpDown2.Value - result);
+                }
+
+            }
+            else
+            {
+                MessageBox.Show("Your have new diginotes!", "Success", MessageBoxButtons.OK,
+                MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+            }
+            numericUpDown1.Value = 0;
+            numericUpDown1.Maximum = _user.Diginotes.Count;
+        }
+
 
     }
 
