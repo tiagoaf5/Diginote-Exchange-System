@@ -33,27 +33,43 @@ namespace Server
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint1 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 1D);
             System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint2 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(1D, 1.5D);
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
+            "22:03:2000 12:00",
+            "tiagoaf",
+            "buy",
+            "100",
+            "20",
+            "80",
+            "open"}, -1);
             this.listView1 = new System.Windows.Forms.ListView();
             this.columnNickname = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.labelCountDown = new System.Windows.Forms.Label();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.listView2 = new System.Windows.Forms.ListView();
+            this.columnDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnUser = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnTotal = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnSatisfied = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnRemaining = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
             // 
             // listView1
             // 
-            this.listView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.listView1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnNickname});
             this.listView1.Dock = System.Windows.Forms.DockStyle.Left;
             this.listView1.Location = new System.Drawing.Point(0, 0);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(121, 308);
+            this.listView1.Size = new System.Drawing.Size(121, 338);
             this.listView1.TabIndex = 0;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -68,7 +84,7 @@ namespace Server
             this.labelCountDown.AutoSize = true;
             this.labelCountDown.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelCountDown.ForeColor = System.Drawing.Color.Red;
-            this.labelCountDown.Location = new System.Drawing.Point(649, 9);
+            this.labelCountDown.Location = new System.Drawing.Point(127, 9);
             this.labelCountDown.Name = "labelCountDown";
             this.labelCountDown.Size = new System.Drawing.Size(22, 16);
             this.labelCountDown.TabIndex = 1;
@@ -76,33 +92,84 @@ namespace Server
             // 
             // chart1
             // 
-            chartArea1.AxisX.LabelStyle.Enabled = false;
-            chartArea1.AxisX.Minimum = 0D;
-            chartArea1.Name = "ChartArea1";
+            this.chartArea1.AxisX.LabelStyle.Enabled = false;
+            this.chartArea1.AxisX.Minimum = 0D;
+            this.chartArea1.Name = "ChartArea1";
             this.chart1.ChartAreas.Add(chartArea1);
-            legend1.LegendStyle = System.Windows.Forms.DataVisualization.Charting.LegendStyle.Column;
-            legend1.Name = "Legend1";
+            this.legend1.LegendStyle = System.Windows.Forms.DataVisualization.Charting.LegendStyle.Column;
+            this.legend1.Name = "Legend1";
             this.chart1.Legends.Add(legend1);
-            this.chart1.Location = new System.Drawing.Point(432, 155);
+            this.chart1.Location = new System.Drawing.Point(432, 12);
             this.chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series1.Color = System.Drawing.Color.Red;
-            series1.IsVisibleInLegend = false;
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            series1.Points.Add(dataPoint1);
-            series1.Points.Add(dataPoint2);
+            this.series1.ChartArea = "ChartArea1";
+            this.series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            this.series1.Color = System.Drawing.Color.Red;
+            this.series1.IsVisibleInLegend = false;
+            this.series1.Legend = "Legend1";
+            this.series1.Name = "Series1";
+            this.series1.Points.Add(dataPoint1);
+            this.series1.Points.Add(dataPoint2);
             this.chart1.Series.Add(series1);
             this.chart1.Size = new System.Drawing.Size(239, 141);
             this.chart1.TabIndex = 20;
             this.chart1.Text = "Share Price";
             // 
+            // listView2
+            // 
+            this.listView2.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnDate,
+            this.columnUser,
+            this.columnType,
+            this.columnTotal,
+            this.columnSatisfied,
+            this.columnRemaining,
+            this.columnStatus});
+            this.listView2.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
+            listViewItem1});
+            this.listView2.Location = new System.Drawing.Point(127, 159);
+            this.listView2.Name = "listView2";
+            this.listView2.Size = new System.Drawing.Size(544, 167);
+            this.listView2.TabIndex = 21;
+            this.listView2.UseCompatibleStateImageBehavior = false;
+            this.listView2.View = System.Windows.Forms.View.Details;
+            // 
+            // columnDate
+            // 
+            this.columnDate.Text = "Date";
+            this.columnDate.Width = 95;
+            // 
+            // columnUser
+            // 
+            this.columnUser.Text = "User";
+            this.columnUser.Width = 82;
+            // 
+            // columnType
+            // 
+            this.columnType.Text = "Type";
+            // 
+            // columnTotal
+            // 
+            this.columnTotal.Text = "Total";
+            // 
+            // columnSatisfied
+            // 
+            this.columnSatisfied.Text = "Satisfied";
+            // 
+            // columnRemaining
+            // 
+            this.columnRemaining.Text = "Remaining";
+            this.columnRemaining.Width = 63;
+            // 
+            // columnStatus
+            // 
+            this.columnStatus.Text = "Status";
+            // 
             // MainWindowServer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(683, 308);
+            this.ClientSize = new System.Drawing.Size(683, 338);
+            this.Controls.Add(this.listView2);
             this.Controls.Add(this.chart1);
             this.Controls.Add(this.labelCountDown);
             this.Controls.Add(this.listView1);
@@ -123,6 +190,16 @@ namespace Server
         private Label labelCountDown;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
         private Series series1;
+        private ListView listView2;
+        private ColumnHeader columnDate;
+        private ColumnHeader columnUser;
+        private ColumnHeader columnType;
+        private ColumnHeader columnTotal;
+        private ColumnHeader columnSatisfied;
+        private ColumnHeader columnRemaining;
+        private ColumnHeader columnStatus;
+        private Legend legend1;
+        private ChartArea chartArea1;
     }
 }
 

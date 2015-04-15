@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Text;
 using System.Windows.Forms;
 using Common;
 
@@ -50,7 +51,7 @@ namespace Client
                 Debug.WriteLine(_market.SharePrice);
 
                 LockButtons(true);
-                checkPendingOrders();
+                //TODO: checkPendingOrders();
                 UpdateChart();
             }
 
@@ -58,9 +59,11 @@ namespace Client
 
         private void checkPendingOrders()
         {
-            DialogResult result1 = MessageBox.Show("Do you want to sell the remaining diginotes (10) at the new price?",
-            "Share price change!",
-            MessageBoxButtons.YesNo);
+            //TODO CHECK if I have pendent buyOrders and sell orders
+            String text = String.Format("Do you want to {0} the remaining diginotes ({1}) at the new share price ({2}€)?", "sell", 10, 0.51);
+            DialogResult result1 = MessageBox.Show(text,
+            "Share price changed!",
+            MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (result1 == DialogResult.Yes)
             {
@@ -149,6 +152,7 @@ namespace Client
         {
             //_market.SuggestNewSharePrice((float)(Math.Floor((new Random()).NextDouble() * 100) / 100.0), _user);
             //series1.Points.Add(new DataPoint(12, 3));
+            checkPendingOrders();
         }
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
