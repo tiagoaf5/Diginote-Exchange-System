@@ -1,8 +1,9 @@
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace Common
 {
-    public interface IUser
+    public interface IUser : INotifyPropertyChanged
     {
         List<IDiginote> Diginotes { get; set; }
         string Name { get; }

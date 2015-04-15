@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Windows.Forms;
 using Common;
-using System.Diagnostics;
-using System.Windows.Forms.DataVisualization.Charting;
 
 namespace Client
 {
