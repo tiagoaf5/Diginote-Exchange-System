@@ -23,7 +23,7 @@ namespace Server
 
             //creating Market object to give a reference to MainWindow
             Market _market = (Market)RemotingServices.Connect(typeof(Market), "tcp://localhost:9000/Server/MarketManager");
-            MainWindowServer myWindow = new MainWindowServer(_market);
+            MainWindowServer myWindow = new MainWindowServer(_market) { FormBorderStyle = FormBorderStyle.FixedSingle };
             //_market.AddWindow(myWindow);
 
             Debug.WriteLine("---------------------------------");

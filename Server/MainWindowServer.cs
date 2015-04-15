@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Drawing;
 using System.Windows.Forms;
 using Common;
@@ -53,6 +54,23 @@ namespace Server
         private void InitialSetup(object sender, EventArgs e)
         {
             _market.LoadUsers();
+            UpdateChart();
+        }
+
+        public void UpdateChart()
+        {
+            if (InvokeRequired) // I'm not in UI thread
+                BeginInvoke((MethodInvoker)delegate { UpdateChart(); }); // Invoke using an anonymous delegate
+            else
+            {
+                series1.Points.Clear();
+                ArrayList history = _market.GetSharePricesList();
+
+                int size = history.Count;
+                for (int i = 0; i < size; i++)
+                    series1.Points.AddXY(i, history[i]);
+            }
+
         }
  
     }

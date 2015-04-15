@@ -182,7 +182,7 @@ namespace Server
             List<IDiginote> diginotes = GetUserDiginotes(Convert.ToInt16(reader["idUser"]));
 
             User u;
-            
+
             u = new User(Convert.ToString(reader["name"]), Convert.ToString(reader["nickname"]), diginotes);
 
             u.IdUser = Convert.ToInt32(reader["idUser"]);
@@ -354,6 +354,7 @@ namespace Server
         //MARKET
 
         public int BuyDiginotes(int quantity, IUser user)
+
         {
 
             SQLiteTransaction t = _mDbConnection.BeginTransaction();
@@ -417,7 +418,7 @@ namespace Server
         {
 
             SQLiteTransaction t = _mDbConnection.BeginTransaction();
-           string sql = "SELECT * FROM BUYORDER WHERE not closed ORDER BY date asc";
+            string sql = "SELECT * FROM BUYORDER WHERE not closed ORDER BY date asc";
             SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
             SQLiteDataReader reader = command.ExecuteReader();
 
@@ -428,9 +429,14 @@ namespace Server
             while (reader.Read())
             {
                 Order o1 = new Order(Convert.ToInt32(reader["idBuyOrder"]), Convert.ToInt32(reader["user"]), Convert.ToInt32(reader["wanted"]), Convert.ToInt32(reader["satisfied"]));
-                
+
                 int how_many_to_offer = o1.Wanted - o1.Satisfied;
-                    if(how_many_left > how_many_to_offer)
+                if (how_many_left > how_many_to_offer)
+                {
+                    o1.Satisfied = o1.Wanted;
+                    orders.Add(o1);
+                    how_many_left -= how_many_to_offer;
+                    for (int i = 0; i < how_many_to_offer; i++)
                     {
                         o1.Satisfied = o1.Wanted;
                         orders.Add(o1);
@@ -455,15 +461,19 @@ namespace Server
                         how_many_left = 0;
                         break;
                     }
+                    InsertSellOrder(quantity, user, how_many_left, true);
+                    how_many_left = 0;
+                    break;
+                }
             }
 
             InsertSellOrder(quantity, user, quantity-how_many_left, true);
 
-            foreach(IOrder o in orders)
+            foreach (IOrder o in orders)
             {
                 if (o.Satisfied < o.Wanted)
-                 sql = String.Format("UPDATE BUYORDER SET satisfied = {0} WHERE idBuyOrder = {1}",o.Satisfied, o.IdOrder);
-                else sql =  String.Format("UPDATE BUYORDER SET satisfied = {0}, closed = 1 WHERE idBuyOrder = {1}",o.Satisfied,o.IdOrder);
+                    sql = String.Format("UPDATE BUYORDER SET satisfied = {0} WHERE idBuyOrder = {1}", o.Satisfied, o.IdOrder);
+                else sql = String.Format("UPDATE BUYORDER SET satisfied = {0}, closed = 1 WHERE idBuyOrder = {1}", o.Satisfied, o.IdOrder);
 
                 try
                 {
@@ -561,6 +571,7 @@ namespace Server
             }
 
             SetTimer();
+            _myWindow.UpdateChart();
 
         }
 

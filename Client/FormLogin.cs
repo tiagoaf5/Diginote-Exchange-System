@@ -38,7 +38,7 @@ namespace Client
                     MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
                     
                     this.Hide();
-                    new MainWindowClient(_user, _market).ShowDialog();
+                    new MainWindowClient(_user, _market) { FormBorderStyle = FormBorderStyle.FixedSingle }.ShowDialog();
                     this.Close();
 
                 }
@@ -99,7 +99,7 @@ namespace Client
                      MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
 
                     this.Hide();
-                    new MainWindowClient(_user, _market).ShowDialog();
+                    new MainWindowClient(_user, _market) { FormBorderStyle = FormBorderStyle.FixedSingle }.ShowDialog();
                     this.Close();
                 }
             }
