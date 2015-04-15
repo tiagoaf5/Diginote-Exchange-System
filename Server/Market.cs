@@ -354,7 +354,6 @@ namespace Server
         //MARKET
 
         public int BuyDiginotes(int quantity, IUser user)
-
         {
 
             SQLiteTransaction t = _mDbConnection.BeginTransaction();
@@ -388,7 +387,7 @@ namespace Server
                 }
             }
 
-            InsertBuyOrder(quantity, user, quantity-how_many_left_to_buy, true);
+            InsertBuyOrder(quantity, user, quantity - how_many_left_to_buy, true);
 
             foreach (IOrder o in orders)
             {
@@ -411,7 +410,7 @@ namespace Server
 
             t.Commit();
 
-          return quantity - how_many_left_to_buy;
+            return quantity - how_many_left_to_buy;
         }
 
         public int SellDiginotes(int quantity, IUser user) // apenas para as que estao disponiveis
@@ -438,36 +437,30 @@ namespace Server
                     how_many_left -= how_many_to_offer;
                     for (int i = 0; i < how_many_to_offer; i++)
                     {
-                        o1.Satisfied = o1.Wanted;
-                        orders.Add(o1);
-                        how_many_left -= how_many_to_offer;
-                        for (int i = 0; i < how_many_to_offer; i++)
-                        {
-                            //TODO
-                            IDiginote d = user.Diginotes[0];
-                            user.Diginotes.RemoveAt(0);
-                        }
-                        TransferDiginotes(user.IdUser, o1.IdUser, how_many_to_offer);
-                    } else {
-                        o1.Satisfied += how_many_left;
-                        orders.Add(o1);
-                        for (int i = 0; i < how_many_left; i++)
-                        {
-                            //TODO
-                            IDiginote d = user.Diginotes[0];
-                            user.Diginotes.RemoveAt(0);
-                        }
-                        TransferDiginotes(user.IdUser, o1.IdUser, how_many_left);
-                        how_many_left = 0;
-                        break;
+                        //TODO
+                        IDiginote d = user.Diginotes[0];
+                        user.Diginotes.RemoveAt(0);
                     }
-                    InsertSellOrder(quantity, user, how_many_left, true);
+                    TransferDiginotes(user.IdUser, o1.IdUser, how_many_to_offer);
+                }
+                else
+                {
+                    o1.Satisfied += how_many_left;
+                    orders.Add(o1);
+                    for (int i = 0; i < how_many_left; i++)
+                    {
+                        //TODO
+                        IDiginote d = user.Diginotes[0];
+                        user.Diginotes.RemoveAt(0);
+                    }
+                    TransferDiginotes(user.IdUser, o1.IdUser, how_many_left);
                     how_many_left = 0;
                     break;
                 }
             }
 
-            InsertSellOrder(quantity, user, quantity-how_many_left, true);
+
+            InsertSellOrder(quantity, user, quantity - how_many_left, true);
 
             foreach (IOrder o in orders)
             {
