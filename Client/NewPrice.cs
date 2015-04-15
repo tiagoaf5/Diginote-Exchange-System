@@ -15,7 +15,7 @@ namespace Client
 
         public decimal newValue { get; set; }
 
-        public NewPrice(int total, int remaining, decimal current_value)
+        public NewPrice(int total, int remaining, decimal current_value, bool sell)
         {
             InitializeComponent();
             valueUpDown.DecimalPlaces = 2;
@@ -24,7 +24,12 @@ namespace Client
             valueUpDown.Maximum = current_value;
             valueUpDown.Value = current_value;
 
-            label.Text = "We were able to sell " + (total-remaining) + " diginotes.\n Suggest a new price for the remaining " + remaining + " diginotes.";
+            string sell_buy;
+            if (sell)
+                sell_buy = "sell ";
+            else sell_buy = "buy ";
+
+            label.Text = "We were able to " + sell_buy + (total-remaining) + " diginotes.\n Suggest a new price for the remaining " + remaining + " diginotes.";
         }
 
         private void valueUpDown_ValueChanged(object sender, EventArgs e)
