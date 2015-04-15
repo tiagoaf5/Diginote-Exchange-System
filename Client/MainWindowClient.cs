@@ -50,9 +50,26 @@ namespace Client
                 Debug.WriteLine(_market.SharePrice);
 
                 LockButtons(true);
+                checkPendingOrders();
                 UpdateChart();
             }
 
+        }
+
+        private void checkPendingOrders()
+        {
+            DialogResult result1 = MessageBox.Show("Do you want to sell the remaining diginotes (10) at the new price?",
+            "Share price change!",
+            MessageBoxButtons.YesNo);
+
+            if (result1 == DialogResult.Yes)
+            {
+                Debug.WriteLine("->YES");
+            }
+            else
+            {
+                Debug.WriteLine("->NO");
+            }
         }
 
         public void UpdateTimer(int seconds)
