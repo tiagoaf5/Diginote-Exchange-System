@@ -278,10 +278,10 @@ namespace Server
             return Convert.ToString(num, CultureInfo.InvariantCulture).Replace(",", ".");
         }
 
-        public void InsertBuyOrder(int quantity, IUser user)
+        public void InsertBuyOrder(int quantity, IUser user, int satisfied = 0, bool closed = false)
         {
-            string sql = String.Format("INSERT INTO BUYORDER (date, user, sharePrice, wanted) SELECT '{0}', idUser, '{1}','{3}' FROM USER WHERE nickname = '{2}'",
-                DateTime.Now.ToString(DatePatt), RealToString(SharePrice), user.Nickname, quantity);
+            string sql = String.Format("INSERT INTO BUYORDER (date, user, sharePrice, wanted, closed, satisfied) SELECT '{0}', idUser, '{1}','{3}',{4}, {5} FROM USER WHERE nickname = '{2}'",
+               DateTime.Now.ToString(DatePatt), RealToString(SharePrice), user.Nickname, quantity, Convert.ToInt32(closed), satisfied);
 
             SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
 
@@ -353,14 +353,64 @@ namespace Server
 
         //MARKET
 
-        //            List<IDiginote> diginotes_to_transfer = new List<IDiginote>();
-
-        // List<IDiginote> digis = GetUserDiginotes(o1.IdUser).GetRange(0, how_many_left);
-        // diginotes_to_transfer.AddRange(digis);
-       
-        public List<IDiginote> BuyDiginotes(int quantity)
+        public int BuyDiginotes(int quantity, IUser user)
         {
-            throw new NotImplementedException();
+
+            SQLiteTransaction t = _mDbConnection.BeginTransaction();
+            string sql = "SELECT * FROM SELLORDER WHERE not closed ORDER BY date asc";
+            SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
+            SQLiteDataReader reader = command.ExecuteReader();
+
+            List<IOrder> orders = new List<IOrder>();
+
+            int how_many_left_to_buy = quantity;
+
+            while (reader.Read())
+            {
+                Order o1 = new Order(Convert.ToInt32(reader["idSellOrder"]), Convert.ToInt32(reader["user"]), Convert.ToInt32(reader["wanted"]), Convert.ToInt32(reader["satisfied"]));
+
+                int how_many_to_sell = o1.Wanted - o1.Satisfied;
+                if (how_many_left_to_buy > how_many_to_sell)
+                {
+                    o1.Satisfied = o1.Wanted;
+                    orders.Add(o1);
+                    how_many_left_to_buy -= how_many_to_sell;
+                    TransferDiginotes(o1.IdUser, user.IdUser, how_many_to_sell);
+                }
+                else
+                {
+                    o1.Satisfied += how_many_left_to_buy;
+                    orders.Add(o1);
+                    TransferDiginotes(o1.IdUser, user.IdUser, how_many_left_to_buy);
+                    how_many_left_to_buy = 0;
+                    break;
+                }
+            }
+
+            InsertBuyOrder(quantity, user, quantity-how_many_left_to_buy, true);
+
+            foreach (IOrder o in orders)
+            {
+                if (o.Satisfied < o.Wanted)
+                    sql = String.Format("UPDATE SELLORDER SET satisfied = {0} WHERE idSellOrder = {1}", o.Satisfied, o.IdOrder);
+                else sql = String.Format("UPDATE SELLORDER SET satisfied = {0}, closed = 1 WHERE idSellOrder = {1}", o.Satisfied, o.IdOrder);
+
+                try
+                {
+                    command = new SQLiteCommand(sql, _mDbConnection);
+                    command.ExecuteNonQuery();
+                }
+                catch (SQLiteException exception)
+                {
+                    Debug.WriteLine("exception in " + exception.Source + ": '" + exception.Message + "'");
+                    //TODO fazer try catch global para rollback
+                }
+
+            }
+
+            t.Commit();
+
+          return quantity - how_many_left_to_buy;
         }
 
         public int SellDiginotes(int quantity, IUser user) // apenas para as que estao disponiveis
@@ -387,27 +437,27 @@ namespace Server
                         how_many_left -= how_many_to_offer;
                         for (int i = 0; i < how_many_to_offer; i++)
                         {
+                            //TODO
                             IDiginote d = user.Diginotes[0];
                             user.Diginotes.RemoveAt(0);
-                            UpdateDiginoteOwner(o1.IdUser, d);
                         }
-                        InsertSellOrder(quantity, user, how_many_to_offer, true);
+                        TransferDiginotes(user.IdUser, o1.IdUser, how_many_to_offer);
                     } else {
                         o1.Satisfied += how_many_left;
                         orders.Add(o1);
                         for (int i = 0; i < how_many_left; i++)
                         {
+                            //TODO
                             IDiginote d = user.Diginotes[0];
                             user.Diginotes.RemoveAt(0);
-                            UpdateDiginoteOwner(o1.IdUser, d);
                         }
-                        InsertSellOrder(quantity, user,how_many_left, true);
+                        TransferDiginotes(user.IdUser, o1.IdUser, how_many_left);
                         how_many_left = 0;
                         break;
                     }
             }
 
-            //TODO transacoes
+            InsertSellOrder(quantity, user, quantity-how_many_left, true);
 
             foreach(IOrder o in orders)
             {
@@ -423,6 +473,7 @@ namespace Server
                 catch (SQLiteException exception)
                 {
                     Debug.WriteLine("exception in " + exception.Source + ": '" + exception.Message + "'");
+                    //TODO fazer try catch global para rollback
                 }
 
             }
@@ -431,8 +482,8 @@ namespace Server
 
             return quantity - how_many_left;
         }
-
-        private string UpdateDiginoteOwner(int destination, IDiginote d)
+        /*
+        private void UpdateDiginoteOwner(int destination, IDiginote d)
         {
             String sql = String.Format("UPDATE DIGINOTE SET user = {0} WHERE serialNumber = '{1}'", destination, d.SerialNumber);
             try
@@ -444,7 +495,20 @@ namespace Server
             {
                 Debug.WriteLine("exception in " + exception.Source + ": '" + exception.Message + "'");
             }
-            return sql;
+        }
+        */
+        private void TransferDiginotes(int origin, int destination, int quantity)
+        {
+            String sql = String.Format("UPDATE DIGINOTE SET user = {0} WHERE idDiginote in (SELECT idDiginote FROM Diginote where user = {1} LIMIT {2})", destination, origin, quantity);
+            try
+            {
+                SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
+                command.ExecuteNonQuery();
+            }
+            catch (SQLiteException exception)
+            {
+                Debug.WriteLine("exception in " + exception.Source + ": '" + exception.Message + "'");
+            }
         }
 
         public void SuggestNewSharePrice(float newPrice, IUser user, bool Sell, int quantity)
