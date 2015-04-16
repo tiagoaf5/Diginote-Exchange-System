@@ -19,6 +19,8 @@ namespace Common
         int BuyDiginotes(int quantity, IUser user);
         int SellDiginotes(int quantity, IUser user);
 
+        IOrder GetUserPendingOrder(IUser user);
+
         void SuggestNewSharePrice(float newPrice, IUser user, bool Sell, int quantity);
 
         //USER

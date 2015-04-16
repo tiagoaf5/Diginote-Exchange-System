@@ -183,8 +183,10 @@ namespace Client
                 MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
             }
             listView_sell.Items.Clear();
+            button2.Enabled = true;
             if (result < numericUpDown1.Value)
             {
+                button2.Enabled = false;
                 string[] info = { "" + numericUpDown1.Value, "" + result, "" + ((int)numericUpDown1.Value - result) };
                 listView_sell.Items.Add(new ListViewItem(info));
             }

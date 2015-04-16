@@ -367,7 +367,7 @@ namespace Server
 
             while (reader.Read())
             {
-                Order o1 = new Order(Convert.ToInt32(reader["idSellOrder"]), Convert.ToInt32(reader["user"]), Convert.ToInt32(reader["wanted"]), Convert.ToInt32(reader["satisfied"]));
+                Order o1 = new Order(OrderOptionEnum.Sell,Convert.ToInt32(reader["idSellOrder"]), Convert.ToInt32(reader["user"]), Convert.ToInt32(reader["wanted"]), Convert.ToInt32(reader["satisfied"]));
 
                 int how_many_to_sell = o1.Wanted - o1.Satisfied;
                 if (how_many_left_to_buy > how_many_to_sell)
@@ -427,7 +427,7 @@ namespace Server
 
             while (reader.Read())
             {
-                Order o1 = new Order(Convert.ToInt32(reader["idBuyOrder"]), Convert.ToInt32(reader["user"]), Convert.ToInt32(reader["wanted"]), Convert.ToInt32(reader["satisfied"]));
+                Order o1 = new Order(OrderOptionEnum.Sell, Convert.ToInt32(reader["idBuyOrder"]), Convert.ToInt32(reader["user"]), Convert.ToInt32(reader["wanted"]), Convert.ToInt32(reader["satisfied"]));
 
                 int how_many_to_offer = o1.Wanted - o1.Satisfied;
                 if (how_many_left > how_many_to_offer)
@@ -485,6 +485,26 @@ namespace Server
 
             return quantity - how_many_left;
         }
+
+        public IOrder GetUserPendingOrder(IUser user)
+        {
+            string sql = String.Format("SELECT * FROM BUYORDER WHERE not closed and user = {0} LIMIT 1",user.IdUser);
+            SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
+            SQLiteDataReader reader = command.ExecuteReader();
+
+            if (reader.Read())
+                return new Order(OrderOptionEnum.Buy, Convert.ToInt32(reader["idBuyOrder"]), user.IdUser, Convert.ToInt32(reader["wanted"]), Convert.ToInt32(reader["satisfied"]), Convert.ToBoolean(reader["closed"]));
+
+            sql = String.Format("SELECT * FROM SELLORDER WHERE not closed and user = {0} LIMIT 1", user.IdUser);
+            command = new SQLiteCommand(sql, _mDbConnection);
+            reader = command.ExecuteReader();
+
+            if (reader.Read())
+                return new Order(OrderOptionEnum.Sell, Convert.ToInt32(reader["idSellOrder"]), user.IdUser, Convert.ToInt32(reader["wanted"]), Convert.ToInt32(reader["satisfied"]), Convert.ToBoolean(reader["closed"]));
+
+            return null;
+        }
+
         /*
         private void UpdateDiginoteOwner(int destination, IDiginote d)
         {
