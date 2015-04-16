@@ -34,8 +34,8 @@ namespace Client
             chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint1 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 1D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint2 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(1D, 1.5D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint3 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 1D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint4 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(1D, 1.5D);
             this.labelWelcome = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.labelSharePrice = new System.Windows.Forms.Label();
@@ -65,10 +65,12 @@ namespace Client
             this.label7 = new System.Windows.Forms.Label();
             this.labelNumberDiginotes = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
+            this.labelSupply = new System.Windows.Forms.Label();
             this.labelCountDown = new System.Windows.Forms.Label();
-            this.labelLocked = new System.Windows.Forms.Label();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.label10 = new System.Windows.Forms.Label();
+            this.labelDemand = new System.Windows.Forms.Label();
+            this.button5 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -89,7 +91,7 @@ namespace Client
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(221, 54);
+            this.button1.Location = new System.Drawing.Point(395, 124);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 2;
@@ -128,7 +130,7 @@ namespace Client
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(168, 36);
+            this.button2.Location = new System.Drawing.Point(169, 33);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 9;
@@ -220,6 +222,7 @@ namespace Client
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.button5);
             this.tabPage2.Controls.Add(this.label5);
             this.tabPage2.Controls.Add(this.listView_buy);
             this.tabPage2.Controls.Add(this.button4);
@@ -236,7 +239,7 @@ namespace Client
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(9, 84);
+            this.label5.Location = new System.Drawing.Point(14, 81);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(124, 13);
             this.label5.TabIndex = 16;
@@ -248,7 +251,7 @@ namespace Client
             this.columnHeader1,
             this.columnHeader2,
             this.columnHeader3});
-            this.listView_buy.Location = new System.Drawing.Point(12, 111);
+            this.listView_buy.Location = new System.Drawing.Point(17, 107);
             this.listView_buy.Name = "listView_buy";
             this.listView_buy.Size = new System.Drawing.Size(192, 52);
             this.listView_buy.TabIndex = 15;
@@ -270,7 +273,7 @@ namespace Client
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(163, 36);
+            this.button4.Location = new System.Drawing.Point(169, 33);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(75, 23);
             this.button4.TabIndex = 12;
@@ -280,7 +283,7 @@ namespace Client
             // 
             // numericUpDown2
             // 
-            this.numericUpDown2.Location = new System.Drawing.Point(81, 36);
+            this.numericUpDown2.Location = new System.Drawing.Point(86, 36);
             this.numericUpDown2.Name = "numericUpDown2";
             this.numericUpDown2.Size = new System.Drawing.Size(60, 20);
             this.numericUpDown2.TabIndex = 10;
@@ -289,7 +292,7 @@ namespace Client
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(9, 36);
+            this.label1.Location = new System.Drawing.Point(14, 36);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(56, 16);
             this.label1.TabIndex = 11;
@@ -340,45 +343,34 @@ namespace Client
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(359, 54);
+            this.label8.Location = new System.Drawing.Point(447, 43);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(144, 16);
+            this.label8.Size = new System.Drawing.Size(56, 16);
             this.label8.TabIndex = 16;
-            this.label8.Text = "Available Diginotes";
+            this.label8.Text = "Supply";
             // 
-            // label9
+            // labelSupply
             // 
-            this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(534, 54);
-            this.label9.Name = "label9";
-            this.label9.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.label9.Size = new System.Drawing.Size(15, 16);
-            this.label9.TabIndex = 17;
-            this.label9.Text = "0";
+            this.labelSupply.AutoSize = true;
+            this.labelSupply.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelSupply.Location = new System.Drawing.Point(534, 43);
+            this.labelSupply.Name = "labelSupply";
+            this.labelSupply.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.labelSupply.Size = new System.Drawing.Size(15, 16);
+            this.labelSupply.TabIndex = 17;
+            this.labelSupply.Text = "0";
             // 
             // labelCountDown
             // 
             this.labelCountDown.AutoSize = true;
-            this.labelCountDown.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelCountDown.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelCountDown.ForeColor = System.Drawing.Color.Red;
-            this.labelCountDown.Location = new System.Drawing.Point(533, 81);
+            this.labelCountDown.Location = new System.Drawing.Point(267, 77);
             this.labelCountDown.Name = "labelCountDown";
-            this.labelCountDown.Size = new System.Drawing.Size(29, 20);
+            this.labelCountDown.Size = new System.Drawing.Size(32, 24);
             this.labelCountDown.TabIndex = 16;
             this.labelCountDown.Text = "59";
             this.labelCountDown.Visible = false;
-            // 
-            // labelLocked
-            // 
-            this.labelLocked.AutoSize = true;
-            this.labelLocked.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelLocked.Location = new System.Drawing.Point(444, 84);
-            this.labelLocked.Name = "labelLocked";
-            this.labelLocked.Size = new System.Drawing.Size(59, 16);
-            this.labelLocked.TabIndex = 18;
-            this.labelLocked.Text = "Locked";
-            this.labelLocked.Visible = false;
             // 
             // chart1
             // 
@@ -397,22 +389,53 @@ namespace Client
             series1.IsVisibleInLegend = false;
             series1.Legend = "Legend1";
             series1.Name = "Series1";
-            series1.Points.Add(dataPoint1);
-            series1.Points.Add(dataPoint2);
+            series1.Points.Add(dataPoint3);
+            series1.Points.Add(dataPoint4);
             this.chart1.Series.Add(series1);
             this.chart1.Size = new System.Drawing.Size(239, 141);
             this.chart1.TabIndex = 19;
             this.chart1.Text = "Share Price";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label10.Location = new System.Drawing.Point(437, 65);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(66, 16);
+            this.label10.TabIndex = 20;
+            this.label10.Text = "Demand";
+            // 
+            // labelDemand
+            // 
+            this.labelDemand.AutoSize = true;
+            this.labelDemand.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelDemand.Location = new System.Drawing.Point(534, 65);
+            this.labelDemand.Name = "labelDemand";
+            this.labelDemand.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.labelDemand.Size = new System.Drawing.Size(15, 16);
+            this.labelDemand.TabIndex = 21;
+            this.labelDemand.Text = "0";
+            // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(205, 177);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(75, 23);
+            this.button5.TabIndex = 17;
+            this.button5.Text = "Change";
+            this.button5.UseVisualStyleBackColor = true;
             // 
             // MainWindowClient
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(597, 387);
+            this.Controls.Add(this.labelDemand);
+            this.Controls.Add(this.label10);
             this.Controls.Add(this.chart1);
-            this.Controls.Add(this.labelLocked);
             this.Controls.Add(this.labelCountDown);
-            this.Controls.Add(this.label9);
+            this.Controls.Add(this.labelSupply);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.labelNumberDiginotes);
             this.Controls.Add(this.label7);
@@ -461,9 +484,8 @@ namespace Client
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label labelNumberDiginotes;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label labelSupply;
         private System.Windows.Forms.Label labelCountDown;
-        private System.Windows.Forms.Label labelLocked;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
         private System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1;
         private System.Windows.Forms.DataVisualization.Charting.Legend legend1;
@@ -476,5 +498,8 @@ namespace Client
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader3;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label labelDemand;
+        private System.Windows.Forms.Button button5;
     }
 }

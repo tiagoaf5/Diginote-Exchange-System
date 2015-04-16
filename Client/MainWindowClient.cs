@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
+using System.Net.Sockets;
 using System.Runtime.Remoting;
 using System.Text;
 using System.Windows.Forms;
@@ -18,17 +19,26 @@ namespace Client
 
         public MainWindowClient(IUser user, IMarket market)
         {
-            _user = user;
-            _market = market;
-            //_market = (IMarket)RemoteNew.New(typeof(IMarket));
-            EventsRepeater repeater = new EventsRepeater();
-            repeater.ChangeEvent += ChangeOperation;
-            repeater.UpdateLockingEvent += new UpdateLockingTimeDelegate(UpdateTimer);
-            _market.ChangeEvent += new ChangeDelegate(repeater.ChangeRepeater);
-            _market.UpdateLockingEvent += new UpdateLockingTimeDelegate(repeater.LockingRepeater);
+            try
+            {
 
-            this.Closing += Form1_FormClosing;
-            InitializeComponent();
+                _user = user;
+                _market = market;
+                //_market = (IMarket)RemoteNew.New(typeof(IMarket));
+                EventsRepeater repeater = new EventsRepeater();
+                repeater.ChangeEvent += ChangeOperation;
+                repeater.UpdateLockingEvent += new UpdateLockingTimeDelegate(UpdateTimer);
+                _market.ChangeEvent += new ChangeDelegate(repeater.ChangeRepeater);
+                _market.UpdateLockingEvent += new UpdateLockingTimeDelegate(repeater.LockingRepeater);
+
+                this.Closing += Form1_FormClosing;
+                InitializeComponent();
+            }
+            catch (SocketException exception)
+            {
+                ServerDown(exception);
+            }
+
         }
 
         //Loads what needs to be shown on the window - gets data from _market and _user
@@ -43,24 +53,31 @@ namespace Client
 
         private void UpdateView()
         {
-            labelSharePrice.Text = _market.SharePrice.ToString(CultureInfo.InvariantCulture);
-            int nDiginotes = _market.GetUserDiginotes(_user).Count;
-            labelNumberDiginotes.Text = nDiginotes.ToString();
-            numericUpDown1.Value = 0;
-            numericUpDown1.Maximum = nDiginotes;
-            UpdateChart();
-
-            listView_sell.Items.Clear();
-            IOrder order = _market.GetUserPendingOrder(_user);
-            if (order != null)
+            try
             {
-                button2.Enabled = false;
-                button4.Enabled = false;
-                string[] info = { Convert.ToString(order.Wanted), Convert.ToString(order.Satisfied), Convert.ToString(order.Wanted - order.Satisfied) };
-                if (order.OrderType == OrderOptionEnum.Sell)
-                    listView_sell.Items.Add(new ListViewItem(info));
-                else listView_buy.Items.Add(new ListViewItem(info));
+                labelSharePrice.Text = _market.SharePrice.ToString(CultureInfo.InvariantCulture);
+                int nDiginotes = _market.GetUserDiginotes(_user).Count;
+                labelNumberDiginotes.Text = nDiginotes.ToString();
+                numericUpDown1.Value = 0;
+                numericUpDown1.Maximum = nDiginotes;
+                UpdateChart();
 
+                listView_sell.Items.Clear();
+                IOrder order = _market.GetUserPendingOrder(_user);
+                if (order != null)
+                {
+                    button2.Enabled = false;
+                    button4.Enabled = false;
+                    string[] info = { Convert.ToString(order.Wanted), Convert.ToString(order.Satisfied), Convert.ToString(order.Wanted - order.Satisfied) };
+                    if (order.OrderType == OrderOptionEnum.Sell)
+                        listView_sell.Items.Add(new ListViewItem(info));
+                    else listView_buy.Items.Add(new ListViewItem(info));
+
+                }
+            }
+            catch (SocketException exception)
+            {
+                ServerDown(exception);
             }
 
         }
@@ -119,7 +136,6 @@ namespace Client
                 if (!labelCountDown.Visible)
                 {
                     labelCountDown.Visible = true;
-                    labelLocked.Visible = true;
                 }
 
                 labelCountDown.Text = seconds.ToString();
@@ -127,7 +143,6 @@ namespace Client
                 if (seconds == 0)
                 {
                     labelCountDown.Visible = false;
-                    labelLocked.Visible = false;
                     LockButtons(false);
                 }
             }
@@ -202,47 +217,67 @@ namespace Client
 
         private void button2_Click(object sender, EventArgs e)
         {
-
-            if (numericUpDown1.Value <= 0)
-                return;
-
-            int result = _market.SellDiginotes((int)numericUpDown1.Value, _user);
-            if (result < numericUpDown1.Value)
+            try
             {
-                using (NewPrice np = new NewPrice((int)numericUpDown1.Value, (int)numericUpDown1.Value - result, (decimal)_market.SharePrice, true))
+                if (numericUpDown1.Value <= 0)
+                    return;
+
+                int result = _market.SellDiginotes((int)numericUpDown1.Value, _user);
+                if (result < numericUpDown1.Value)
                 {
-                    var r1 = np.ShowDialog();
-                    _market.SuggestNewSharePrice((float)np.newValue, _user, true, (int)numericUpDown1.Value - result);
-                }
+                    using (NewPrice np = new NewPrice((int)numericUpDown1.Value, (int)numericUpDown1.Value - result, (decimal)_market.SharePrice, true))
+                    {
+                        var r1 = np.ShowDialog();
+                        _market.SuggestNewSharePrice((float)np.newValue, _user, true, (int)numericUpDown1.Value - result);
+                    }
 
+                }
+                else
+                {
+                    MessageBox.Show("Your diginotes have been sold!", "Success", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                }
             }
-            else
+            catch (SocketException exception)
             {
-                MessageBox.Show("Your diginotes have been sold!", "Success", MessageBoxButtons.OK,
-                MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                ServerDown(exception);
             }
 
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
-            int result = _market.BuyDiginotes((int)numericUpDown2.Value, _user);
-            if (result < numericUpDown2.Value)
+            try
             {
-                using (NewPrice np = new NewPrice((int)numericUpDown2.Value, (int)numericUpDown2.Value - result, (decimal)_market.SharePrice, false))
+                int result = _market.BuyDiginotes((int)numericUpDown2.Value, _user);
+                if (result < numericUpDown2.Value)
                 {
-                    var r1 = np.ShowDialog();
-                    _market.SuggestNewSharePrice((float)np.newValue, _user, false, (int)numericUpDown2.Value - result);
-                }
+                    using (NewPrice np = new NewPrice((int)numericUpDown2.Value, (int)numericUpDown2.Value - result, (decimal)_market.SharePrice, false))
+                    {
+                        var r1 = np.ShowDialog();
+                        _market.SuggestNewSharePrice((float)np.newValue, _user, false, (int)numericUpDown2.Value - result);
+                    }
 
+                }
+                else
+                {
+                    MessageBox.Show("Your have new diginotes!", "Success", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                }
+                numericUpDown1.Value = 0;
+                numericUpDown1.Maximum = _market.GetUserDiginotes(_user).Count;
             }
-            else
+            catch (SocketException exception)
             {
-                MessageBox.Show("Your have new diginotes!", "Success", MessageBoxButtons.OK,
-                MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                ServerDown(exception);
             }
-            numericUpDown1.Value = 0;
-            numericUpDown1.Maximum = _market.GetUserDiginotes(_user).Count;
+        }
+
+        private void ServerDown(SocketException exception)
+        {
+            MessageBox.Show(exception.Message, "Server is not online!", MessageBoxButtons.OK,
+                MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+            this.Close();
         }
 
         private void listView1_SelectedIndexChanged(object sender, EventArgs e)
@@ -251,14 +286,21 @@ namespace Client
 
         private void Form1_FormClosing(object sender, EventArgs e)
         {
-            _market.Logout(_user);
+            try
+            {
+                _market.Logout(_user);
+            }
+            catch (SocketException exception)
+            {
+                this.Close();
+            }
         }
 
 
         public void AddMessage(string message)
         {
-           /* MessageBox.Show(message, "Message from server", MessageBoxButtons.OK,
-                 MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);*/
+            /* MessageBox.Show(message, "Message from server", MessageBoxButtons.OK,
+                  MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);*/
             button1.BackColor = Color.Red;
         }
 
