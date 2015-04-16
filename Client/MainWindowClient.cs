@@ -5,8 +5,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Net.Sockets;
-using System.Runtime.Remoting;
-using System.Text;
 using System.Windows.Forms;
 using Common;
 
@@ -14,8 +12,8 @@ namespace Client
 {
     public partial class MainWindowClient : Form
     {
-        private IUser _user;
-        private IMarket _market;
+        private readonly IUser _user;
+        private readonly IMarket _market;
 
         public MainWindowClient(IUser user, IMarket market)
         {
@@ -88,11 +86,12 @@ namespace Client
                 BeginInvoke((MethodInvoker)delegate { ChangeOperation(change); }); // Invoke using an anonymous delegate
             else
             {
+                UpdateView();
                 switch (change)
                 {
                     case Common.ChangeOperation.ShareChange:
                         {
-
+                            CheckPendingOrders();
                             break;
                         }
                     case Common.ChangeOperation.UpdateInterface:
@@ -102,28 +101,32 @@ namespace Client
                         }
                 }
                 LockButtons(true);
-                //TODO: checkPendingOrders();
-                UpdateView();
+
             }
 
         }
 
-        private void checkPendingOrders()
+        private void CheckPendingOrders()
         {
             //TODO CHECK if I have pendent buyOrders and sell orders
-            String text = String.Format("Do you want to {0} the remaining diginotes ({1}) at the new share price ({2}€)?", "sell", 10, 0.51);
-            DialogResult result1 = MessageBox.Show(text,
-            "Share price changed!",
-            MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            IOrder order = _market.GetUserPendingOrder(_user);
+            if (order == null)
+                return;
+
+
+            String text = String.Format("Do you want to {0} the remaining diginotes ({1}) at the new share price ({2}€)?",
+                order.OrderType == OrderOptionEnum.Sell ? "sell" : "buy", order.Wanted - order.Satisfied, labelSharePrice.Text);
+            DialogResult result1 = MessageBox.Show(text, "Share price changed!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (result1 == DialogResult.Yes)
             {
                 Debug.WriteLine("->YES");
-                InitialSetup(null, null);
             }
             else
             {
                 Debug.WriteLine("->NO");
+                UpdateView();
             }
         }
 
@@ -202,7 +205,7 @@ namespace Client
         {
             //_market.SuggestNewSharePrice((float)(Math.Floor((new Random()).NextDouble() * 100) / 100.0), _user);
             //series1.Points.Add(new DataPoint(12, 3));
-            checkPendingOrders();
+            CheckPendingOrders();
         }
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)

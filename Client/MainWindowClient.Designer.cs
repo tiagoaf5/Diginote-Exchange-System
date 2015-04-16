@@ -34,8 +34,8 @@ namespace Client
             chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint3 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 1D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint4 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(1D, 1.5D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint1 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 1D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint2 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(1D, 1.5D);
             this.labelWelcome = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.labelSharePrice = new System.Windows.Forms.Label();
@@ -45,6 +45,7 @@ namespace Client
             this.label4 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.button6 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
             this.listView_sell = new System.Windows.Forms.ListView();
@@ -52,6 +53,8 @@ namespace Client
             this.Satisfied = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Remaining = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.button7 = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.listView_buy = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -70,7 +73,6 @@ namespace Client
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.label10 = new System.Windows.Forms.Label();
             this.labelDemand = new System.Windows.Forms.Label();
-            this.button5 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -161,6 +163,7 @@ namespace Client
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.button6);
             this.tabPage1.Controls.Add(this.button3);
             this.tabPage1.Controls.Add(this.label6);
             this.tabPage1.Controls.Add(this.listView_sell);
@@ -174,6 +177,15 @@ namespace Client
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Sell";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(115, 177);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(75, 23);
+            this.button6.TabIndex = 16;
+            this.button6.Text = "Close";
+            this.button6.UseVisualStyleBackColor = true;
             // 
             // button3
             // 
@@ -222,6 +234,7 @@ namespace Client
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.button7);
             this.tabPage2.Controls.Add(this.button5);
             this.tabPage2.Controls.Add(this.label5);
             this.tabPage2.Controls.Add(this.listView_buy);
@@ -235,6 +248,24 @@ namespace Client
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Buy";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(115, 177);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(75, 23);
+            this.button7.TabIndex = 18;
+            this.button7.Text = "Close";
+            this.button7.UseVisualStyleBackColor = true;
+            // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(205, 177);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(75, 23);
+            this.button5.TabIndex = 17;
+            this.button5.Text = "Change";
+            this.button5.UseVisualStyleBackColor = true;
             // 
             // label5
             // 
@@ -330,6 +361,7 @@ namespace Client
             // labelNumberDiginotes
             // 
             this.labelNumberDiginotes.AutoSize = true;
+            this.labelNumberDiginotes.Cursor = System.Windows.Forms.Cursors.Hand;
             this.labelNumberDiginotes.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelNumberDiginotes.Location = new System.Drawing.Point(331, 22);
             this.labelNumberDiginotes.Name = "labelNumberDiginotes";
@@ -389,8 +421,8 @@ namespace Client
             series1.IsVisibleInLegend = false;
             series1.Legend = "Legend1";
             series1.Name = "Series1";
-            series1.Points.Add(dataPoint3);
-            series1.Points.Add(dataPoint4);
+            series1.Points.Add(dataPoint1);
+            series1.Points.Add(dataPoint2);
             this.chart1.Series.Add(series1);
             this.chart1.Size = new System.Drawing.Size(239, 141);
             this.chart1.TabIndex = 19;
@@ -416,15 +448,6 @@ namespace Client
             this.labelDemand.Size = new System.Drawing.Size(15, 16);
             this.labelDemand.TabIndex = 21;
             this.labelDemand.Text = "0";
-            // 
-            // button5
-            // 
-            this.button5.Location = new System.Drawing.Point(205, 177);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(75, 23);
-            this.button5.TabIndex = 17;
-            this.button5.Text = "Change";
-            this.button5.UseVisualStyleBackColor = true;
             // 
             // MainWindowClient
             // 
@@ -501,5 +524,7 @@ namespace Client
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label labelDemand;
         private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.Button button7;
     }
 }

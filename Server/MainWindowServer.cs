@@ -9,7 +9,7 @@ namespace Server
     public partial class MainWindowServer : Form
     {
 
-        private Market _market;
+        private readonly Market _market;
 
         public MainWindowServer(Market market)
         {
@@ -50,6 +50,7 @@ namespace Server
                 labelCountDown.Text = seconds.ToString();
             }
         }
+
 
         //Loads what needs to be shown on the window - gets data from _market
         private void InitialSetup(object sender, EventArgs e)
