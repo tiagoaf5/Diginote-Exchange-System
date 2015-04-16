@@ -7,12 +7,15 @@ namespace Client
 {
     public partial class FormLogin : Form
     {
+        private int _port;
         private IUser _user;
         private readonly IMarket _market;
+        private MainWindowClient _mainWindow;
 
-        public FormLogin()
+        public FormLogin(int port)
         {
-            RemotingConfiguration.Configure("Client.exe.config", false);
+            this._port = port;
+            //RemotingConfiguration.Configure("Client.exe.config", false);
             _market = (IMarket)RemoteNew.New(typeof(IMarket));
             InitializeComponent();
         }
@@ -37,9 +40,7 @@ namespace Client
                     MessageBox.Show("Login successful!", "Welcome", MessageBoxButtons.OK,
                     MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
                     
-                    this.Hide();
-                    new MainWindowClient(_user, _market) { FormBorderStyle = FormBorderStyle.FixedSingle }.ShowDialog();
-                    this.Close();
+                    OpenMainWindow();
 
                 }
                 else //wrong credentials
@@ -98,12 +99,24 @@ namespace Client
                     MessageBox.Show("You've registered with success!", "Welcome", MessageBoxButtons.OK,
                      MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
 
-                    this.Hide();
-                    new MainWindowClient(_user, _market) { FormBorderStyle = FormBorderStyle.FixedSingle }.ShowDialog();
-                    this.Close();
+                    OpenMainWindow();
                 }
             }
         }
 
+        private void OpenMainWindow()
+        {
+            this.Hide();
+
+            MainWindowClient myWindow = new MainWindowClient(_user, _market)
+            {
+                FormBorderStyle = FormBorderStyle.FixedSingle
+            };
+
+            ClientNotify r = (ClientNotify)RemotingServices.Connect(typeof(ClientNotify), "tcp://localhost:" + _port.ToString() + "/ClientNotify");    // connect to the registered my remote object here
+            r.PutMyForm(myWindow);
+            myWindow.ShowDialog();
+            this.Close();
+        }
     }
 }

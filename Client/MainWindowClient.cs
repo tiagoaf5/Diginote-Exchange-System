@@ -11,8 +11,8 @@ namespace Client
 {
     public partial class MainWindowClient : Form
     {
-        private readonly IUser _user;
-        private readonly IMarket _market;
+        private IUser _user;
+        private IMarket _market;
 
         public MainWindowClient(IUser user, IMarket market)
         {
@@ -253,6 +253,11 @@ namespace Client
         }
 
 
+        public void AddMessage(string message)
+        {
+            MessageBox.Show(message, "Message from server", MessageBoxButtons.OK,
+                 MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+        }
     }
 
 }
