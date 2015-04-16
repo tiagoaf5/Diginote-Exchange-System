@@ -50,6 +50,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -59,11 +61,22 @@
   <ItemGroup>
     <Compile Include="Common.cs" />
     <Compile Include="Diginotes.cs" />
+    <Compile Include="DiginotesWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DiginotesWindow.Designer.cs">
+      <DependentUpon>DiginotesWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="IClientNotify.cs" />
     <Compile Include="IOrder.cs" />
     <Compile Include="IUser.cs" />
     <Compile Include="IMarket.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DiginotesWindow.resx">
+      <DependentUpon>DiginotesWindow.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

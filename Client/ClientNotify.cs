@@ -3,7 +3,7 @@ using Common;
 
 namespace Client
 {
-    public class ClientNotifyNotify : MarshalByRefObject, IClientNotify
+    public class ClientNotify : MarshalByRefObject, IClientNotify
     {
         private MainWindowClient _win;
 

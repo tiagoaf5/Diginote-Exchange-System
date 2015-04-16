@@ -23,19 +23,19 @@ namespace Server
         public void AddUser(IUser x, bool online)
         {
             if (InvokeRequired) // I'm not in UI thread
-                BeginInvoke((MethodInvoker) delegate { AddUser(x, online); }); // Invoke using an anonymous delegate
+                BeginInvoke((MethodInvoker)delegate { AddUser(x, online); }); // Invoke using an anonymous delegate
             else
             {
                 var color = online ? Color.Green : Color.Maroon;
                 ListViewItem item = listView1.FindItemWithText(x.Nickname);
-                
-                if ( item != null)
+
+                if (item != null)
                 {
                     item.ForeColor = color;
                     return;
                 }
 
-                var listViewItem1 = new ListViewItem(new[] { x.Nickname}, -1, color, Color.Empty, null);
+                var listViewItem1 = new ListViewItem(new[] { x.Nickname }, -1, color, Color.Empty, null);
                 listView1.Items.Add(listViewItem1);
             }
         }
@@ -76,8 +76,8 @@ namespace Server
 
         private void ListView1_ItemActivate(Object sender, EventArgs e)
         {
-
-            MessageBox.Show("You are in the ListView.ItemActivate event.");
+            if (listView1.SelectedItems.Count > 0)
+                new DiginotesWindow(_market.GetUserDiginotes(listView1.SelectedItems[0].Text)).ShowDialog();
 
         }
 
@@ -85,6 +85,6 @@ namespace Server
         {
             _market.GetUserChannel(1).SomeMessage("oi gatinho");
         }
- 
+
     }
 }

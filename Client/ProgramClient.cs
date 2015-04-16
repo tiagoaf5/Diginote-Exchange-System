@@ -28,7 +28,7 @@ namespace Client
             int port = new Uri(data.ChannelUris[0]).Port;                            // get the port
 
             RemotingConfiguration.Configure("Client.exe.config", false);             // register the server objects
-            RemotingConfiguration.RegisterWellKnownServiceType(typeof(ClientNotifyNotify), "ClientNotifyNotify", WellKnownObjectMode.Singleton);  // register my remote object for service
+            RemotingConfiguration.RegisterWellKnownServiceType(typeof(ClientNotify), "ClientNotify", WellKnownObjectMode.Singleton);  // register my remote object for service
 
            // VisualStyleElement.Window myWindow = new VisualStyleElement.Window(port);
 

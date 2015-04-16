@@ -52,6 +52,11 @@ namespace Client
             this.Satisfied = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Remaining = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.label5 = new System.Windows.Forms.Label();
+            this.listView_buy = new System.Windows.Forms.ListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.button4 = new System.Windows.Forms.Button();
             this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
@@ -64,11 +69,6 @@ namespace Client
             this.labelCountDown = new System.Windows.Forms.Label();
             this.labelLocked = new System.Windows.Forms.Label();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.label5 = new System.Windows.Forms.Label();
-            this.listView_buy = new System.Windows.Forms.ListView();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -233,6 +233,41 @@ namespace Client
             this.tabPage2.Text = "Buy";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(9, 84);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(124, 13);
+            this.label5.TabIndex = 16;
+            this.label5.Text = "You are currently buying:";
+            // 
+            // listView_buy
+            // 
+            this.listView_buy.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1,
+            this.columnHeader2,
+            this.columnHeader3});
+            this.listView_buy.Location = new System.Drawing.Point(12, 111);
+            this.listView_buy.Name = "listView_buy";
+            this.listView_buy.Size = new System.Drawing.Size(192, 52);
+            this.listView_buy.TabIndex = 15;
+            this.listView_buy.UseCompatibleStateImageBehavior = false;
+            this.listView_buy.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "Total";
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "Satisfied";
+            // 
+            // columnHeader3
+            // 
+            this.columnHeader3.Text = "Remaining";
+            this.columnHeader3.Width = 68;
+            // 
             // button4
             // 
             this.button4.Location = new System.Drawing.Point(163, 36);
@@ -292,13 +327,14 @@ namespace Client
             // labelNumberDiginotes
             // 
             this.labelNumberDiginotes.AutoSize = true;
-            this.labelNumberDiginotes.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelNumberDiginotes.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelNumberDiginotes.Location = new System.Drawing.Point(331, 22);
             this.labelNumberDiginotes.Name = "labelNumberDiginotes";
             this.labelNumberDiginotes.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.labelNumberDiginotes.Size = new System.Drawing.Size(15, 16);
             this.labelNumberDiginotes.TabIndex = 15;
             this.labelNumberDiginotes.Text = "0";
+            this.labelNumberDiginotes.Click += new System.EventHandler(this.labelNumberDiginotes_Click);
             // 
             // label8
             // 
@@ -367,41 +403,6 @@ namespace Client
             this.chart1.Size = new System.Drawing.Size(239, 141);
             this.chart1.TabIndex = 19;
             this.chart1.Text = "Share Price";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(9, 84);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(124, 13);
-            this.label5.TabIndex = 16;
-            this.label5.Text = "You are currently buying:";
-            // 
-            // listView_buy
-            // 
-            this.listView_buy.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1,
-            this.columnHeader2,
-            this.columnHeader3});
-            this.listView_buy.Location = new System.Drawing.Point(12, 111);
-            this.listView_buy.Name = "listView_buy";
-            this.listView_buy.Size = new System.Drawing.Size(192, 52);
-            this.listView_buy.TabIndex = 15;
-            this.listView_buy.UseCompatibleStateImageBehavior = false;
-            this.listView_buy.View = System.Windows.Forms.View.Details;
-            // 
-            // columnHeader1
-            // 
-            this.columnHeader1.Text = "Total";
-            // 
-            // columnHeader2
-            // 
-            this.columnHeader2.Text = "Satisfied";
-            // 
-            // columnHeader3
-            // 
-            this.columnHeader3.Text = "Remaining";
-            this.columnHeader3.Width = 68;
             // 
             // MainWindowClient
             // 

@@ -211,6 +211,22 @@ namespace Server
             return diginotes;
         }
 
+        public List<IDiginote> GetUserDiginotes(string nickname)
+        {
+
+            string sql = "SELECT idUser, name FROM USER WHERE nickname = '" + nickname + "'";
+            SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
+             SQLiteDataReader reader = command.ExecuteReader();
+
+            if (!reader.Read())
+                return null;
+
+            var u = new User(Convert.ToInt32(reader["idUser"]), Convert.ToString(reader["name"]), nickname);
+
+
+            return  GetUserDiginotes(u);
+        }
+
         public IUser RegisterUser(string nickname, string password, string name, string address)
         {
             string sql = String.Format("INSERT INTO USER (name, nickname, password) values ('{0}','{1}', '{2}')", name, nickname, GetHashSha1(password));
@@ -235,7 +251,7 @@ namespace Server
             if (_myWindow != null)
                 _myWindow.AddUser(u, true);
 
-            if(address != null)
+            if (address != null)
                 _table.Add(u.IdUser, address);
 
 
@@ -644,10 +660,12 @@ namespace Server
         {
             string addr = _table[userId] as string;
 
-            if(addr != null)
+            if (addr != null)
                 return (IClientNotify)RemotingServices.Connect(typeof(IClientNotify), addr); // Obtain a reference to the client remote object
-            
+
             return null;
         }
+
+
     }
 }

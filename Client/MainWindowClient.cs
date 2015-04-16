@@ -261,6 +261,11 @@ namespace Client
                  MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);*/
             button1.BackColor = Color.Red;
         }
+
+        private void labelNumberDiginotes_Click(object sender, EventArgs e)
+        {
+            new DiginotesWindow(_market.GetUserDiginotes(_user)).ShowDialog();
+        }
     }
 
 }
