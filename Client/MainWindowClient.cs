@@ -175,6 +175,10 @@ namespace Client
 
         private void button2_Click(object sender, EventArgs e)
         {
+
+            if (numericUpDown1.Value <= 0)
+                return;
+
             int result = _market.SellDiginotes((int)numericUpDown1.Value, _user);
             if (result < numericUpDown1.Value)
             {

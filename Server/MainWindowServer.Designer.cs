@@ -73,6 +73,7 @@ namespace Server
             this.listView1.TabIndex = 0;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
+            this.listView1.ItemActivate += new System.EventHandler(this.ListView1_ItemActivate);
             // 
             // columnNickname
             // 
@@ -92,23 +93,23 @@ namespace Server
             // 
             // chart1
             // 
-            this.chartArea1.AxisX.LabelStyle.Enabled = false;
-            this.chartArea1.AxisX.Minimum = 0D;
-            this.chartArea1.Name = "ChartArea1";
+            chartArea1.AxisX.LabelStyle.Enabled = false;
+            chartArea1.AxisX.Minimum = 0D;
+            chartArea1.Name = "ChartArea1";
             this.chart1.ChartAreas.Add(chartArea1);
-            this.legend1.LegendStyle = System.Windows.Forms.DataVisualization.Charting.LegendStyle.Column;
-            this.legend1.Name = "Legend1";
+            legend1.LegendStyle = System.Windows.Forms.DataVisualization.Charting.LegendStyle.Column;
+            legend1.Name = "Legend1";
             this.chart1.Legends.Add(legend1);
             this.chart1.Location = new System.Drawing.Point(127, 36);
             this.chart1.Name = "chart1";
-            this.series1.ChartArea = "ChartArea1";
-            this.series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            this.series1.Color = System.Drawing.Color.Red;
-            this.series1.IsVisibleInLegend = false;
-            this.series1.Legend = "Legend1";
-            this.series1.Name = "Series1";
-            this.series1.Points.Add(dataPoint1);
-            this.series1.Points.Add(dataPoint2);
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series1.Color = System.Drawing.Color.Red;
+            series1.IsVisibleInLegend = false;
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            series1.Points.Add(dataPoint1);
+            series1.Points.Add(dataPoint2);
             this.chart1.Series.Add(series1);
             this.chart1.Size = new System.Drawing.Size(544, 141);
             this.chart1.TabIndex = 20;
