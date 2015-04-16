@@ -28,5 +28,7 @@ namespace Common
         IUser RegisterUser(string nickname, string password, string name);
 
         ArrayList GetSharePricesList();
+        void Logout(IUser user);
+        List<IDiginote> GetUserDiginotes(IUser user);
     }
 }

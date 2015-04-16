@@ -69,7 +69,7 @@ namespace Server
             this.listView1.Dock = System.Windows.Forms.DockStyle.Left;
             this.listView1.Location = new System.Drawing.Point(0, 0);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(121, 338);
+            this.listView1.Size = new System.Drawing.Size(121, 362);
             this.listView1.TabIndex = 0;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -84,7 +84,7 @@ namespace Server
             this.labelCountDown.AutoSize = true;
             this.labelCountDown.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelCountDown.ForeColor = System.Drawing.Color.Red;
-            this.labelCountDown.Location = new System.Drawing.Point(127, 9);
+            this.labelCountDown.Location = new System.Drawing.Point(370, 9);
             this.labelCountDown.Name = "labelCountDown";
             this.labelCountDown.Size = new System.Drawing.Size(22, 16);
             this.labelCountDown.TabIndex = 1;
@@ -99,7 +99,7 @@ namespace Server
             this.legend1.LegendStyle = System.Windows.Forms.DataVisualization.Charting.LegendStyle.Column;
             this.legend1.Name = "Legend1";
             this.chart1.Legends.Add(legend1);
-            this.chart1.Location = new System.Drawing.Point(432, 12);
+            this.chart1.Location = new System.Drawing.Point(127, 36);
             this.chart1.Name = "chart1";
             this.series1.ChartArea = "ChartArea1";
             this.series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
@@ -110,7 +110,7 @@ namespace Server
             this.series1.Points.Add(dataPoint1);
             this.series1.Points.Add(dataPoint2);
             this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(239, 141);
+            this.chart1.Size = new System.Drawing.Size(544, 141);
             this.chart1.TabIndex = 20;
             this.chart1.Text = "Share Price";
             // 
@@ -126,7 +126,7 @@ namespace Server
             this.columnStatus});
             this.listView2.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
             listViewItem1});
-            this.listView2.Location = new System.Drawing.Point(127, 159);
+            this.listView2.Location = new System.Drawing.Point(127, 183);
             this.listView2.Name = "listView2";
             this.listView2.Size = new System.Drawing.Size(544, 167);
             this.listView2.TabIndex = 21;
@@ -168,7 +168,7 @@ namespace Server
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(683, 338);
+            this.ClientSize = new System.Drawing.Size(683, 362);
             this.Controls.Add(this.listView2);
             this.Controls.Add(this.chart1);
             this.Controls.Add(this.labelCountDown);

@@ -9,20 +9,15 @@ namespace Server
 {
     public class User : MarshalByRefObject, IUser
     {
-        public List<IDiginote> Diginotes { get; set; }
+        /*public List<IDiginote> Diginotes { get; set; }*/
 
-        public User(string name, string nickname)
+        public User(int idUser, string name, string nickname)
         {
+            IdUser = idUser;
             Name = name;
             Nickname = nickname;
         }
 
-        public User(string name, string nickname, List<IDiginote> notes)
-        {
-            Name = name;
-            Nickname = nickname;
-            Diginotes = notes;
-        }
 
         public string Name
         {
