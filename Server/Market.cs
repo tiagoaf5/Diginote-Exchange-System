@@ -570,7 +570,7 @@ namespace Server
                     {
                         try
                         {
-                            handler1(newPrice, ChangeOperation.ShareUp);
+                            handler1(ChangeOperation.ShareChange);
                             Debug.WriteLine("Invoking event handler");
                         }
                         catch (Exception)

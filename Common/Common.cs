@@ -40,10 +40,10 @@ namespace Common
             return null;
         }
 
-        public void ChangeRepeater(float newPrice, ChangeOperation change)
+        public void ChangeRepeater(ChangeOperation change)
         {
             if (ChangeEvent != null)
-                ChangeEvent(newPrice, change);
+                ChangeEvent(change);
         }
 
         public void LockingRepeater(int seconds)

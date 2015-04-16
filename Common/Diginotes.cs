@@ -10,9 +10,9 @@ namespace Common
         IUser User { get; set; }
     }
 
-    public enum ChangeOperation { ShareDrop, ShareUp };
+    public enum ChangeOperation { ShareChange, UpdateInterface};
 
-    public delegate void ChangeDelegate(float newPrice, ChangeOperation change);
+    public delegate void ChangeDelegate(ChangeOperation change);
 
     
 }

@@ -35,7 +35,7 @@ namespace Client
             labelWelcome.Text = "Welcome" + (_user == null ? "" : " " + _user.Name) + "!";
             numericUpDown1.DecimalPlaces = 0;
             numericUpDown1.Minimum = 0;
-            
+
             UpdateView();
         }
 
@@ -44,19 +44,44 @@ namespace Client
             labelSharePrice.Text = _market.SharePrice.ToString(CultureInfo.InvariantCulture);
             int nDiginotes = _market.GetUserDiginotes(_user).Count;
             labelNumberDiginotes.Text = nDiginotes.ToString();
+            numericUpDown1.Value = 0;
             numericUpDown1.Maximum = nDiginotes;
             UpdateChart();
+
+            listView_sell.Items.Clear();
+            IOrder order = _market.GetUserPendingOrder(_user);
+            if (order != null)
+            {
+                button2.Enabled = false;
+                button4.Enabled = false;
+                string[] info = { Convert.ToString(order.Wanted), Convert.ToString(order.Satisfied), Convert.ToString(order.Wanted - order.Satisfied) };
+                if (order.OrderType == OrderOptionEnum.Sell)
+                    listView_sell.Items.Add(new ListViewItem(info));
+                else listView_buy.Items.Add(new ListViewItem(info));
+
+            }
+
         }
 
-        public void ChangeOperation(float newPrice, ChangeOperation change)
+        public void ChangeOperation(ChangeOperation change)
         {
             if (InvokeRequired) // I'm not in UI thread
-                BeginInvoke((MethodInvoker)delegate { ChangeOperation(newPrice, change); }); // Invoke using an anonymous delegate
+                BeginInvoke((MethodInvoker)delegate { ChangeOperation(change); }); // Invoke using an anonymous delegate
             else
             {
-                labelSharePrice.Text = newPrice.ToString(CultureInfo.CurrentCulture);
-                Debug.WriteLine(_market.SharePrice);
+                switch (change)
+                {
+                    case Common.ChangeOperation.ShareChange:
+                        {
 
+                            break;
+                        }
+                    case Common.ChangeOperation.UpdateInterface:
+                        {
+
+                            break;
+                        }
+                }
                 LockButtons(true);
                 //TODO: checkPendingOrders();
                 UpdateView();
@@ -136,14 +161,14 @@ namespace Client
                 BeginInvoke((MethodInvoker)delegate { UpdateChart(); }); // Invoke using an anonymous delegate
             else
             {
-                series2.Points.Clear();
+                series1.Points.Clear();
                 ArrayList history = _market.GetSharePricesList();
 
                 int size = history.Count;
                 for (int i = 0; i < size; i++)
-                    series2.Points.AddXY(i, history[i]);
+                    series1.Points.AddXY(i, history[i]);
             }
-            
+
         }
 
 
@@ -178,7 +203,7 @@ namespace Client
             int result = _market.SellDiginotes((int)numericUpDown1.Value, _user);
             if (result < numericUpDown1.Value)
             {
-                using (NewPrice np = new NewPrice((int)numericUpDown1.Value, (int)numericUpDown1.Value - result, (decimal)_market.SharePrice,true))
+                using (NewPrice np = new NewPrice((int)numericUpDown1.Value, (int)numericUpDown1.Value - result, (decimal)_market.SharePrice, true))
                 {
                     var r1 = np.ShowDialog();
                     _market.SuggestNewSharePrice((float)np.newValue, _user, true, (int)numericUpDown1.Value - result);
@@ -190,16 +215,7 @@ namespace Client
                 MessageBox.Show("Your diginotes have been sold!", "Success", MessageBoxButtons.OK,
                 MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
             }
-            listView_sell.Items.Clear();
-            button2.Enabled = true;
-            if (result < numericUpDown1.Value)
-            {
-                button2.Enabled = false;
-                string[] info = { "" + numericUpDown1.Value, "" + result, "" + ((int)numericUpDown1.Value - result) };
-                listView_sell.Items.Add(new ListViewItem(info));
-            }
-            numericUpDown1.Value = 0;
-            numericUpDown1.Maximum = _market.GetUserDiginotes(_user).Count;
+
         }
 
         private void button4_Click(object sender, EventArgs e)

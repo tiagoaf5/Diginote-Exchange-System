@@ -31,11 +31,11 @@ namespace Client
         /// </summary>
         private void InitializeComponent()
         {
-            chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint3 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 1D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint4 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(1D, 1.5D);
+            chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint1 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 1D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint2 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(1D, 1.5D);
             this.labelWelcome = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.labelSharePrice = new System.Windows.Forms.Label();
@@ -64,6 +64,11 @@ namespace Client
             this.labelCountDown = new System.Windows.Forms.Label();
             this.labelLocked = new System.Windows.Forms.Label();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.label5 = new System.Windows.Forms.Label();
+            this.listView_buy = new System.Windows.Forms.ListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -182,9 +187,9 @@ namespace Client
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(14, 81);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(152, 13);
+            this.label6.Size = new System.Drawing.Size(122, 13);
             this.label6.TabIndex = 14;
-            this.label6.Text = "Neste momento está a vender:";
+            this.label6.Text = "You are currently selling:";
             // 
             // listView_sell
             // 
@@ -215,6 +220,8 @@ namespace Client
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.label5);
+            this.tabPage2.Controls.Add(this.listView_buy);
             this.tabPage2.Controls.Add(this.button4);
             this.tabPage2.Controls.Add(this.numericUpDown2);
             this.tabPage2.Controls.Add(this.label1);
@@ -339,27 +346,62 @@ namespace Client
             // 
             // chart1
             // 
-            this.chartArea2.AxisX.LabelStyle.Enabled = false;
-            this.chartArea2.AxisX.Minimum = 0D;
-            this.chartArea2.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea2);
-            this.legend2.LegendStyle = System.Windows.Forms.DataVisualization.Charting.LegendStyle.Column;
-            this.legend2.Name = "Legend1";
-            this.chart1.Legends.Add(legend2);
+            chartArea1.AxisX.LabelStyle.Enabled = false;
+            chartArea1.AxisX.Minimum = 0D;
+            chartArea1.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea1);
+            legend1.LegendStyle = System.Windows.Forms.DataVisualization.Charting.LegendStyle.Column;
+            legend1.Name = "Legend1";
+            this.chart1.Legends.Add(legend1);
             this.chart1.Location = new System.Drawing.Point(346, 173);
             this.chart1.Name = "chart1";
-            this.series2.ChartArea = "ChartArea1";
-            this.series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            this.series2.Color = System.Drawing.Color.Red;
-            this.series2.IsVisibleInLegend = false;
-            this.series2.Legend = "Legend1";
-            this.series2.Name = "Series1";
-            this.series2.Points.Add(dataPoint3);
-            this.series2.Points.Add(dataPoint4);
-            this.chart1.Series.Add(series2);
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series1.Color = System.Drawing.Color.Red;
+            series1.IsVisibleInLegend = false;
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            series1.Points.Add(dataPoint1);
+            series1.Points.Add(dataPoint2);
+            this.chart1.Series.Add(series1);
             this.chart1.Size = new System.Drawing.Size(239, 141);
             this.chart1.TabIndex = 19;
             this.chart1.Text = "Share Price";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(9, 84);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(124, 13);
+            this.label5.TabIndex = 16;
+            this.label5.Text = "You are currently buying:";
+            // 
+            // listView_buy
+            // 
+            this.listView_buy.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1,
+            this.columnHeader2,
+            this.columnHeader3});
+            this.listView_buy.Location = new System.Drawing.Point(12, 111);
+            this.listView_buy.Name = "listView_buy";
+            this.listView_buy.Size = new System.Drawing.Size(192, 52);
+            this.listView_buy.TabIndex = 15;
+            this.listView_buy.UseCompatibleStateImageBehavior = false;
+            this.listView_buy.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "Total";
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "Satisfied";
+            // 
+            // columnHeader3
+            // 
+            this.columnHeader3.Text = "Remaining";
+            this.columnHeader3.Width = 68;
             // 
             // MainWindowClient
             // 
@@ -428,8 +470,10 @@ namespace Client
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.NumericUpDown numericUpDown2;
         private System.Windows.Forms.Label label1;
-        private Legend legend2;
-        private ChartArea chartArea2;
-        private Series series2;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.ListView listView_buy;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ColumnHeader columnHeader2;
+        private System.Windows.Forms.ColumnHeader columnHeader3;
     }
 }
