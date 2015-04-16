@@ -58,6 +58,7 @@ namespace Server
             this.columnSatisfied = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnRemaining = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -165,11 +166,22 @@ namespace Server
             // 
             this.columnStatus.Text = "Status";
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(510, 12);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 22;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // MainWindowServer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(683, 362);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.listView2);
             this.Controls.Add(this.chart1);
             this.Controls.Add(this.labelCountDown);
@@ -201,6 +213,7 @@ namespace Server
         private ColumnHeader columnStatus;
         private Legend legend1;
         private ChartArea chartArea1;
+        private Button button1;
     }
 }
 

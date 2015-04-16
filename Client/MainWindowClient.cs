@@ -2,7 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Globalization;
+using System.Runtime.Remoting;
 using System.Text;
 using System.Windows.Forms;
 using Common;
@@ -255,8 +257,9 @@ namespace Client
 
         public void AddMessage(string message)
         {
-            MessageBox.Show(message, "Message from server", MessageBoxButtons.OK,
-                 MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+           /* MessageBox.Show(message, "Message from server", MessageBoxButtons.OK,
+                 MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);*/
+            button1.BackColor = Color.Red;
         }
     }
 

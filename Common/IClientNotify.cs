@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Common
 {
-    public interface IClient
+    public interface IClientNotify
     {
-        
+        void SomeMessage(string message);
     }
 }

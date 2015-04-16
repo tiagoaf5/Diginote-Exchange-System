@@ -5,6 +5,7 @@ using System.Data.SQLite;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Runtime.Remoting;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
@@ -30,6 +31,7 @@ namespace Server
         private int _countDown; // Seconds
         private Timer _timer;
 
+        private readonly Hashtable _table = new Hashtable();
 
         public Market()
         {
@@ -146,7 +148,7 @@ namespace Server
         // Testing purpose
         void FillTable()
         {
-            RegisterUser("ze", "nabo", "jose");
+            RegisterUser("ze", "nabo", "jose", null);
             for (int i = 0; i < NumberOfDiginotes; i++)
                 RegisterDiginotes(GetHashSha1(i + "diginote"));
 
@@ -167,7 +169,7 @@ namespace Server
 
 
 
-        public IUser LogUser(string nickname, string password)
+        public IUser LogUser(string nickname, string password, string address)
         {
 
             string sql = "SELECT * FROM USER WHERE nickname = '" + nickname + "' and password = '" + GetHashSha1(password) + "'";
@@ -179,17 +181,22 @@ namespace Server
             else
                 return null;
 
-            var u = new User(Convert.ToInt32(reader["idUser"]),Convert.ToString(reader["name"]), Convert.ToString(reader["nickname"]));
+            var u = new User(Convert.ToInt32(reader["idUser"]), Convert.ToString(reader["name"]), Convert.ToString(reader["nickname"]));
 
             //add User to panel
             _myWindow.AddUser(u, true);
+
+            if (address != null)
+                _table.Add(u.IdUser, address);
+
+
 
             return u;
         }
 
         public List<IDiginote> GetUserDiginotes(IUser user)
         {
-            string sql = "SELECT * FROM DIGINOTE WHERE user = '" + user.IdUser+ "'";
+            string sql = "SELECT * FROM DIGINOTE WHERE user = '" + user.IdUser + "'";
             SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
             SQLiteDataReader reader = command.ExecuteReader();
 
@@ -204,7 +211,7 @@ namespace Server
             return diginotes;
         }
 
-        public IUser RegisterUser(string nickname, string password, string name)
+        public IUser RegisterUser(string nickname, string password, string name, string address)
         {
             string sql = String.Format("INSERT INTO USER (name, nickname, password) values ('{0}','{1}', '{2}')", name, nickname, GetHashSha1(password));
 
@@ -213,7 +220,7 @@ namespace Server
             try
             {
                 command.ExecuteNonQuery();
-                id = (int) _mDbConnection.LastInsertRowId;
+                id = (int)_mDbConnection.LastInsertRowId;
             }
             catch (SQLiteException exception)
             {
@@ -227,6 +234,10 @@ namespace Server
 
             if (_myWindow != null)
                 _myWindow.AddUser(u, true);
+
+            if(address != null)
+                _table.Add(u.IdUser, address);
+
 
             return u;
 
@@ -252,6 +263,7 @@ namespace Server
         public void Logout(IUser user)
         {
             _myWindow.AddUser(user, false);
+            _table.Remove(user.IdUser);
         }
 
 
@@ -366,7 +378,7 @@ namespace Server
 
             while (reader.Read())
             {
-                Order o1 = new Order(OrderOptionEnum.Sell,Convert.ToInt32(reader["idSellOrder"]), Convert.ToInt32(reader["user"]), Convert.ToInt32(reader["wanted"]), Convert.ToInt32(reader["satisfied"]));
+                Order o1 = new Order(OrderOptionEnum.Sell, Convert.ToInt32(reader["idSellOrder"]), Convert.ToInt32(reader["user"]), Convert.ToInt32(reader["wanted"]), Convert.ToInt32(reader["satisfied"]));
 
                 int howManyToSell = o1.Wanted - o1.Satisfied;
                 if (howManyLeftToBuy > howManyToSell)
@@ -487,7 +499,7 @@ namespace Server
 
         public IOrder GetUserPendingOrder(IUser user)
         {
-            string sql = String.Format("SELECT * FROM BUYORDER WHERE not closed and user = {0} LIMIT 1",user.IdUser);
+            string sql = String.Format("SELECT * FROM BUYORDER WHERE not closed and user = {0} LIMIT 1", user.IdUser);
             SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
             SQLiteDataReader reader = command.ExecuteReader();
 
@@ -626,6 +638,16 @@ namespace Server
             if (_countDown == 0)
                 _timer.Dispose();
 
+        }
+
+        public IClientNotify GetUserChannel(int userId)
+        {
+            string addr = _table[userId] as string;
+
+            if(addr != null)
+                return (IClientNotify)RemotingServices.Connect(typeof(IClientNotify), addr); // Obtain a reference to the client remote object
+            
+            return null;
         }
     }
 }

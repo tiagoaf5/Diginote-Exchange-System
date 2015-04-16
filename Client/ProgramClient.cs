@@ -5,7 +5,6 @@ using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
-using Common;
 
 namespace Client
 {
@@ -29,7 +28,7 @@ namespace Client
             int port = new Uri(data.ChannelUris[0]).Port;                            // get the port
 
             RemotingConfiguration.Configure("Client.exe.config", false);             // register the server objects
-            RemotingConfiguration.RegisterWellKnownServiceType(typeof(ClientNotify), "ClientNotify", WellKnownObjectMode.Singleton);  // register my remote object for service
+            RemotingConfiguration.RegisterWellKnownServiceType(typeof(ClientNotifyNotify), "ClientNotifyNotify", WellKnownObjectMode.Singleton);  // register my remote object for service
 
            // VisualStyleElement.Window myWindow = new VisualStyleElement.Window(port);
 
@@ -49,25 +48,4 @@ namespace Client
             Application.Run(new FormLogin(port) {FormBorderStyle = FormBorderStyle.FixedSingle});
         }
     }
-
-    public class ClientNotify : MarshalByRefObject, IClient
-    {
-        private MainWindowClient win;
-
-        public override object InitializeLifetimeService()
-        {
-            return null;
-        }
-
-        public void PutMyForm(MainWindowClient form)
-        {
-            win = form;
-        }
-
-        public void SomeMessage(string message)
-        {
-            win.AddMessage(message);
-        }
-    }
-
 }

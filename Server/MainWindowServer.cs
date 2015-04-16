@@ -80,6 +80,11 @@ namespace Server
             MessageBox.Show("You are in the ListView.ItemActivate event.");
 
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            _market.GetUserChannel(1).SomeMessage("oi gatinho");
+        }
  
     }
 }

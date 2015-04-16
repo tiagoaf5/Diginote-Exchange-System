@@ -24,8 +24,8 @@ namespace Common
         void SuggestNewSharePrice(float newPrice, IUser user, bool Sell, int quantity);
 
         //USER
-        IUser LogUser(string nickname, string password);
-        IUser RegisterUser(string nickname, string password, string name);
+        IUser LogUser(string nickname, string password, string address);
+        IUser RegisterUser(string nickname, string password, string name, string address);
 
         ArrayList GetSharePricesList();
         void Logout(IUser user);

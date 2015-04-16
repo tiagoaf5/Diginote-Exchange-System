@@ -26,7 +26,7 @@ namespace Client
             {
                 try
                 {
-                    _user = _market.LogUser(textUsername.Text, textPassword.Text);
+                    _user = _market.LogUser(textUsername.Text, textPassword.Text, "tcp://localhost:" + _port.ToString() + "/ClientNotifyNotify");
                 }
                 catch (System.Net.Sockets.SocketException exception)
                 {
@@ -79,7 +79,7 @@ namespace Client
             {
                 try
                 {
-                    _user = _market.RegisterUser(nickname, password, name);
+                    _user = _market.RegisterUser(nickname, password, name, "tcp://localhost:" + _port.ToString() + "/ClientNotifyNotify");
                 }
                 catch (System.Net.Sockets.SocketException exception)
                 {
@@ -113,7 +113,7 @@ namespace Client
                 FormBorderStyle = FormBorderStyle.FixedSingle
             };
 
-            ClientNotify r = (ClientNotify)RemotingServices.Connect(typeof(ClientNotify), "tcp://localhost:" + _port.ToString() + "/ClientNotify");    // connect to the registered my remote object here
+            ClientNotifyNotify r = (ClientNotifyNotify)RemotingServices.Connect(typeof(ClientNotifyNotify), "tcp://localhost:" + _port.ToString() + "/ClientNotifyNotify");    // connect to the registered my remote object here
             r.PutMyForm(myWindow);
             myWindow.ShowDialog();
             this.Close();
