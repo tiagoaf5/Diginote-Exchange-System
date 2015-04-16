@@ -3,10 +3,11 @@ using System.ComponentModel;
 
 namespace Common
 {
-    public interface IUser : INotifyPropertyChanged
+    public interface IUser
     {
         string Name { get; }
         string Nickname { get; }
         int IdUser { get;}
+        
     }
 }

@@ -9,7 +9,6 @@ namespace Server
 {
     public class User : MarshalByRefObject, IUser
     {
-        /*public List<IDiginote> Diginotes { get; set; }*/
 
         public User(int idUser, string name, string nickname)
         {
@@ -36,11 +35,5 @@ namespace Server
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            var handler = PropertyChanged;
-            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }
