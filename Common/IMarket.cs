@@ -19,12 +19,14 @@ namespace Common
         int BuyDiginotes(int quantity, IUser user);
         int SellDiginotes(int quantity, IUser user);
 
-        void SuggestNewSharePrice(float newPrice, IUser user, bool Sell, int quantity);
+        void SuggestNewSharePrice(float newPrice, IUser user, bool sell, int quantity);
 
         //USER
         IUser LogUser(string nickname, string password);
         IUser RegisterUser(string nickname, string password, string name);
 
         ArrayList GetSharePricesList();
+        void Logout(IUser user);
+        List<IDiginote> GetUserDiginotes(IUser user);
     }
 }

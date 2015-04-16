@@ -25,17 +25,20 @@ namespace Client
             _market.ChangeEvent += new ChangeDelegate(repeater.ChangeRepeater);
             _market.UpdateLockingEvent += new UpdateLockingTimeDelegate(repeater.LockingRepeater);
 
-
+            this.Closing += Form1_FormClosing;
             InitializeComponent();
         }
 
+        //Loads what needs to be shown on the window - gets data from _market and _user
         private void InitialSetup(object sender, EventArgs e)
         {
             labelWelcome.Text = "Welcome" + (_user == null ? "" : " " + _user.Name) + "!";
             labelSharePrice.Text = _market.SharePrice.ToString(CultureInfo.InvariantCulture);
-            labelNumberDiginotes.Text = _user.Diginotes.Count.ToString();
+
+            int nDiginotes = _market.GetUserDiginotes(_user).Count;
+            labelNumberDiginotes.Text = nDiginotes.ToString();
             numericUpDown1.DecimalPlaces = 0;
-            numericUpDown1.Maximum = _user.Diginotes.Count;
+            numericUpDown1.Maximum = nDiginotes;
             numericUpDown1.Minimum = 0;
 
             UpdateChart();
@@ -68,6 +71,7 @@ namespace Client
             if (result1 == DialogResult.Yes)
             {
                 Debug.WriteLine("->YES");
+                InitialSetup(null, null);
             }
             else
             {
@@ -123,19 +127,19 @@ namespace Client
         }
 
         private void UpdateChart()
-        {/*
+        {
             if (InvokeRequired) // I'm not in UI thread
                 BeginInvoke((MethodInvoker)delegate { UpdateChart(); }); // Invoke using an anonymous delegate
             else
             {
-                series1.Points.Clear();
+                series2.Points.Clear();
                 ArrayList history = _market.GetSharePricesList();
 
                 int size = history.Count;
                 for (int i = 0; i < size; i++)
-                    series1.Points.AddXY(i, history[i]);
+                    series2.Points.AddXY(i, history[i]);
             }
-            */
+            
         }
 
 
@@ -189,7 +193,7 @@ namespace Client
                 listView_sell.Items.Add(new ListViewItem(info));
             }
             numericUpDown1.Value = 0;
-            numericUpDown1.Maximum = _user.Diginotes.Count;
+            numericUpDown1.Maximum = _market.GetUserDiginotes(_user).Count;
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -210,12 +214,16 @@ namespace Client
                 MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
             }
             numericUpDown1.Value = 0;
-            numericUpDown1.Maximum = _user.Diginotes.Count;
+            numericUpDown1.Maximum = _market.GetUserDiginotes(_user).Count;
         }
 
         private void listView1_SelectedIndexChanged(object sender, EventArgs e)
         {
+        }
 
+        private void Form1_FormClosing(object sender, EventArgs e)
+        {
+            _market.Logout(_user);
         }
 
 

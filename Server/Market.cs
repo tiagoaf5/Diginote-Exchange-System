@@ -28,7 +28,7 @@ namespace Server
         public float SharePrice { get; private set; }
 
         private int _countDown; // Seconds
-        private System.Threading.Timer _timer;
+        private Timer _timer;
 
 
         public Market()
@@ -179,14 +179,7 @@ namespace Server
             else
                 return null;
 
-            List<IDiginote> diginotes = GetUserDiginotes(Convert.ToInt16(reader["idUser"]));
-
-            User u;
-
-            u = new User(Convert.ToString(reader["name"]), Convert.ToString(reader["nickname"]), diginotes);
-
-            u.IdUser = Convert.ToInt32(reader["idUser"]);
-
+            var u = new User(Convert.ToInt32(reader["idUser"]),Convert.ToString(reader["name"]), Convert.ToString(reader["nickname"]));
 
             //add User to panel
             _myWindow.AddUser(u, true);
@@ -194,9 +187,9 @@ namespace Server
             return u;
         }
 
-        private List<IDiginote> GetUserDiginotes(int idUser)
+        public List<IDiginote> GetUserDiginotes(IUser user)
         {
-            string sql = "SELECT * FROM DIGINOTE WHERE user = '" + idUser + "'";
+            string sql = "SELECT * FROM DIGINOTE WHERE user = '" + user.IdUser+ "'";
             SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
             SQLiteDataReader reader = command.ExecuteReader();
 
@@ -216,10 +209,11 @@ namespace Server
             string sql = String.Format("INSERT INTO USER (name, nickname, password) values ('{0}','{1}', '{2}')", name, nickname, GetHashSha1(password));
 
             SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
-
+            int id;
             try
             {
                 command.ExecuteNonQuery();
+                id = (int) _mDbConnection.LastInsertRowId;
             }
             catch (SQLiteException exception)
             {
@@ -229,7 +223,7 @@ namespace Server
 
             //add User to panel
 
-            User u = new User(name, nickname);
+            User u = new User(id, name, nickname);
 
             if (_myWindow != null)
                 _myWindow.AddUser(u, true);
@@ -253,6 +247,11 @@ namespace Server
                 return null;
             */
             return history;
+        }
+
+        public void Logout(IUser user)
+        {
+            _myWindow.AddUser(user, false);
         }
 
 
@@ -332,7 +331,7 @@ namespace Server
 
             while (reader.Read())
             {
-                User u = new User(Convert.ToString(reader["name"]), Convert.ToString(reader["nickname"]));
+                User u = new User(Convert.ToInt32(reader["idUser"]), Convert.ToString(reader["name"]), Convert.ToString(reader["nickname"]));
                 //add User to panel
                 _myWindow.AddUser(u, false);
             }
@@ -363,31 +362,31 @@ namespace Server
 
             List<IOrder> orders = new List<IOrder>();
 
-            int how_many_left_to_buy = quantity;
+            int howManyLeftToBuy = quantity;
 
             while (reader.Read())
             {
                 Order o1 = new Order(Convert.ToInt32(reader["idSellOrder"]), Convert.ToInt32(reader["user"]), Convert.ToInt32(reader["wanted"]), Convert.ToInt32(reader["satisfied"]));
 
-                int how_many_to_sell = o1.Wanted - o1.Satisfied;
-                if (how_many_left_to_buy > how_many_to_sell)
+                int howManyToSell = o1.Wanted - o1.Satisfied;
+                if (howManyLeftToBuy > howManyToSell)
                 {
                     o1.Satisfied = o1.Wanted;
                     orders.Add(o1);
-                    how_many_left_to_buy -= how_many_to_sell;
-                    TransferDiginotes(o1.IdUser, user.IdUser, how_many_to_sell);
+                    howManyLeftToBuy -= howManyToSell;
+                    TransferDiginotes(o1.IdUser, user.IdUser, howManyToSell);
                 }
                 else
                 {
-                    o1.Satisfied += how_many_left_to_buy;
+                    o1.Satisfied += howManyLeftToBuy;
                     orders.Add(o1);
-                    TransferDiginotes(o1.IdUser, user.IdUser, how_many_left_to_buy);
-                    how_many_left_to_buy = 0;
+                    TransferDiginotes(o1.IdUser, user.IdUser, howManyLeftToBuy);
+                    howManyLeftToBuy = 0;
                     break;
                 }
             }
 
-            InsertBuyOrder(quantity, user, quantity - how_many_left_to_buy, true);
+            InsertBuyOrder(quantity, user, quantity - howManyLeftToBuy, true);
 
             foreach (IOrder o in orders)
             {
@@ -410,7 +409,7 @@ namespace Server
 
             t.Commit();
 
-            return quantity - how_many_left_to_buy;
+            return quantity - howManyLeftToBuy;
         }
 
         public int SellDiginotes(int quantity, IUser user) // apenas para as que estao disponiveis
@@ -423,44 +422,44 @@ namespace Server
 
             List<IOrder> orders = new List<IOrder>();
 
-            int how_many_left = quantity;
+            int howManyLeft = quantity;
 
             while (reader.Read())
             {
                 Order o1 = new Order(Convert.ToInt32(reader["idBuyOrder"]), Convert.ToInt32(reader["user"]), Convert.ToInt32(reader["wanted"]), Convert.ToInt32(reader["satisfied"]));
 
-                int how_many_to_offer = o1.Wanted - o1.Satisfied;
-                if (how_many_left > how_many_to_offer)
+                int howManyToOffer = o1.Wanted - o1.Satisfied;
+                if (howManyLeft > howManyToOffer)
                 {
                     o1.Satisfied = o1.Wanted;
                     orders.Add(o1);
-                    how_many_left -= how_many_to_offer;
-                    for (int i = 0; i < how_many_to_offer; i++)
+                    howManyLeft -= howManyToOffer;
+                    for (int i = 0; i < howManyToOffer; i++)
                     {
                         //TODO
-                        IDiginote d = user.Diginotes[0];
-                        user.Diginotes.RemoveAt(0);
+                        /*IDiginote d = user.Diginotes[0];
+                        user.Diginotes.RemoveAt(0);*/
                     }
-                    TransferDiginotes(user.IdUser, o1.IdUser, how_many_to_offer);
+                    TransferDiginotes(user.IdUser, o1.IdUser, howManyToOffer);
                 }
                 else
                 {
-                    o1.Satisfied += how_many_left;
+                    o1.Satisfied += howManyLeft;
                     orders.Add(o1);
-                    for (int i = 0; i < how_many_left; i++)
+                    for (int i = 0; i < howManyLeft; i++)
                     {
                         //TODO
-                        IDiginote d = user.Diginotes[0];
-                        user.Diginotes.RemoveAt(0);
+                        /*IDiginote d = user.Diginotes[0];
+                        user.Diginotes.RemoveAt(0);*/
                     }
-                    TransferDiginotes(user.IdUser, o1.IdUser, how_many_left);
-                    how_many_left = 0;
+                    TransferDiginotes(user.IdUser, o1.IdUser, howManyLeft);
+                    howManyLeft = 0;
                     break;
                 }
             }
 
 
-            InsertSellOrder(quantity, user, quantity - how_many_left, true);
+            InsertSellOrder(quantity, user, quantity - howManyLeft, true);
 
             foreach (IOrder o in orders)
             {
@@ -483,7 +482,7 @@ namespace Server
 
             t.Commit();
 
-            return quantity - how_many_left;
+            return quantity - howManyLeft;
         }
         /*
         private void UpdateDiginoteOwner(int destination, IDiginote d)
@@ -514,7 +513,7 @@ namespace Server
             }
         }
 
-        public void SuggestNewSharePrice(float newPrice, IUser user, bool Sell, int quantity)
+        public void SuggestNewSharePrice(float newPrice, IUser user, bool sell, int quantity)
         {
             SharePrice = newPrice;
 
@@ -533,7 +532,7 @@ namespace Server
 
             }
 
-            if (Sell)
+            if (sell)
                 InsertSellOrder(quantity, user);
             else
                 InsertBuyOrder(quantity, user);
@@ -572,7 +571,7 @@ namespace Server
         {
             Debug.WriteLine("setting Timer");
             _countDown = TimerSeconds;
-            _timer = new System.Threading.Timer(new TimerCallback(timer1_Tick), null, 0, 1000);
+            _timer = new Timer(timer1_Tick, null, 0, 1000);
         }
 
         private void timer1_Tick(object sender)

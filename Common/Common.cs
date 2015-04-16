@@ -20,7 +20,7 @@ namespace Common
         {
             if (_types == null)
                 InitTypeTable();
-            Debug.Assert(_types != null, "types != null"); //TODO: Added it
+            Debug.Assert(_types != null, "types != null"); // Added it
             WellKnownClientTypeEntry entry = (WellKnownClientTypeEntry)_types[type];
             if (entry == null)
                 throw new RemotingException("Type not found!");

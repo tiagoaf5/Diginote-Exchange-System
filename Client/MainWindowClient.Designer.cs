@@ -31,9 +31,9 @@ namespace Client
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint3 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 1D);
             System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint4 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(1D, 1.5D);
             this.labelWelcome = new System.Windows.Forms.Label();
@@ -339,23 +339,23 @@ namespace Client
             // 
             // chart1
             // 
-            chartArea2.AxisX.LabelStyle.Enabled = false;
-            chartArea2.AxisX.Minimum = 0D;
-            chartArea2.Name = "ChartArea1";
+            this.chartArea2.AxisX.LabelStyle.Enabled = false;
+            this.chartArea2.AxisX.Minimum = 0D;
+            this.chartArea2.Name = "ChartArea1";
             this.chart1.ChartAreas.Add(chartArea2);
-            legend2.LegendStyle = System.Windows.Forms.DataVisualization.Charting.LegendStyle.Column;
-            legend2.Name = "Legend1";
+            this.legend2.LegendStyle = System.Windows.Forms.DataVisualization.Charting.LegendStyle.Column;
+            this.legend2.Name = "Legend1";
             this.chart1.Legends.Add(legend2);
             this.chart1.Location = new System.Drawing.Point(346, 173);
             this.chart1.Name = "chart1";
-            series2.ChartArea = "ChartArea1";
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series2.Color = System.Drawing.Color.Red;
-            series2.IsVisibleInLegend = false;
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            series2.Points.Add(dataPoint3);
-            series2.Points.Add(dataPoint4);
+            this.series2.ChartArea = "ChartArea1";
+            this.series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            this.series2.Color = System.Drawing.Color.Red;
+            this.series2.IsVisibleInLegend = false;
+            this.series2.Legend = "Legend1";
+            this.series2.Name = "Series1";
+            this.series2.Points.Add(dataPoint3);
+            this.series2.Points.Add(dataPoint4);
             this.chart1.Series.Add(series2);
             this.chart1.Size = new System.Drawing.Size(239, 141);
             this.chart1.TabIndex = 19;
@@ -399,7 +399,7 @@ namespace Client
 
         private System.Windows.Forms.Label labelWelcome;
         private System.Windows.Forms.Button button1;
-        public System.Windows.Forms.Label labelSharePrice;
+        private System.Windows.Forms.Label labelSharePrice;
         private System.Windows.Forms.NumericUpDown numericUpDown1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button button2;
@@ -416,9 +416,9 @@ namespace Client
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
-        public System.Windows.Forms.Label labelNumberDiginotes;
+        private System.Windows.Forms.Label labelNumberDiginotes;
         private System.Windows.Forms.Label label8;
-        public System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label labelCountDown;
         private System.Windows.Forms.Label labelLocked;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
@@ -428,5 +428,8 @@ namespace Client
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.NumericUpDown numericUpDown2;
         private System.Windows.Forms.Label label1;
+        private Legend legend2;
+        private ChartArea chartArea2;
+        private Series series2;
     }
 }

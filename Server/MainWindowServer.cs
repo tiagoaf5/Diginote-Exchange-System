@@ -15,12 +15,12 @@ namespace Server
         {
             _market = market;
             _market.AddWindow(this);
-            _market.UpdateLockingEvent += new UpdateLockingTimeDelegate(UpdateTimer);
+            _market.UpdateLockingEvent += UpdateTimer;
             InitializeComponent();
         }
 
 
-        public void AddUser(User x, bool online)
+        public void AddUser(IUser x, bool online)
         {
             if (InvokeRequired) // I'm not in UI thread
                 BeginInvoke((MethodInvoker) delegate { AddUser(x, online); }); // Invoke using an anonymous delegate
@@ -51,6 +51,7 @@ namespace Server
             }
         }
 
+        //Loads what needs to be shown on the window - gets data from _market
         private void InitialSetup(object sender, EventArgs e)
         {
             _market.LoadUsers();
