@@ -33,14 +33,18 @@ namespace Client
         private void InitialSetup(object sender, EventArgs e)
         {
             labelWelcome.Text = "Welcome" + (_user == null ? "" : " " + _user.Name) + "!";
-            labelSharePrice.Text = _market.SharePrice.ToString(CultureInfo.InvariantCulture);
+            numericUpDown1.DecimalPlaces = 0;
+            numericUpDown1.Minimum = 0;
+            
+            UpdateView();
+        }
 
+        private void UpdateView()
+        {
+            labelSharePrice.Text = _market.SharePrice.ToString(CultureInfo.InvariantCulture);
             int nDiginotes = _market.GetUserDiginotes(_user).Count;
             labelNumberDiginotes.Text = nDiginotes.ToString();
-            numericUpDown1.DecimalPlaces = 0;
             numericUpDown1.Maximum = nDiginotes;
-            numericUpDown1.Minimum = 0;
-
             UpdateChart();
         }
 
@@ -55,7 +59,7 @@ namespace Client
 
                 LockButtons(true);
                 //TODO: checkPendingOrders();
-                UpdateChart();
+                UpdateView();
             }
 
         }
