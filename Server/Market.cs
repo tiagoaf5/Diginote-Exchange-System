@@ -18,17 +18,16 @@ namespace Server
         private const string DatabaseName = "database.db";
         private const int NumberOfDiginotes = 100;
         private const string DatePatt = @"yyyy-MM-dd HH:mm:ss";
-        private const int TimerSeconds = 10;
 
         private SQLiteConnection _mDbConnection;
         private MainWindowServer _myWindow;
 
         public event ChangeDelegate ChangeEvent;
-        public event UpdateLockingTimeDelegate UpdateLockingEvent;
+        public event UpdateTimerLockingDelegate UpdateLockingEvent;
 
         public float SharePrice { get; private set; }
 
-        private int _countDown; // Seconds
+        public int CountDown { get; private set; } // Seconds
         private Timer _timer;
 
         private readonly Hashtable _table = new Hashtable();
@@ -216,7 +215,7 @@ namespace Server
 
             string sql = "SELECT idUser, name FROM USER WHERE nickname = '" + nickname + "'";
             SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
-             SQLiteDataReader reader = command.ExecuteReader();
+            SQLiteDataReader reader = command.ExecuteReader();
 
             if (!reader.Read())
                 return null;
@@ -224,7 +223,7 @@ namespace Server
             var u = new User(Convert.ToInt32(reader["idUser"]), Convert.ToString(reader["name"]), nickname);
 
 
-            return  GetUserDiginotes(u);
+            return GetUserDiginotes(u);
         }
 
         public IUser RegisterUser(string nickname, string password, string name, string address)
@@ -618,12 +617,7 @@ namespace Server
         private void SetTimer()
         {
             Debug.WriteLine("setting Timer");
-            _countDown = TimerSeconds;
-            _timer = new Timer(timer1_Tick, null, 0, 1000);
-        }
 
-        private void timer1_Tick(object sender)
-        {
             if (UpdateLockingEvent != null)
             {
                 Delegate[] invkList = UpdateLockingEvent.GetInvocationList();
@@ -631,13 +625,13 @@ namespace Server
                 //foreach (ChangeDelegate handler in invkList)
                 foreach (var @delegate in invkList)
                 {
-                    var handler = (UpdateLockingTimeDelegate)@delegate;
+                    var handler = (UpdateTimerLockingDelegate)@delegate;
                     var handler1 = handler;
                     new Thread(() =>
                     {
                         try
                         {
-                            handler1(_countDown);
+                            handler1(true);
                             Debug.WriteLine("Invoking event handler");
                         }
                         catch (Exception)
@@ -649,10 +643,43 @@ namespace Server
                 }
             }
 
-            _countDown--;
+            CountDown = Constants.TimerSeconds + 2;
+            _timer = new Timer(timer1_Tick, null, 0, 1000);
 
-            if (_countDown == 0)
+        }
+
+        private void timer1_Tick(object sender)
+        {
+            CountDown--;
+
+            if (CountDown == 0)
+            {
+                if (UpdateLockingEvent != null)
+                {
+                    Delegate[] invkList = UpdateLockingEvent.GetInvocationList();
+
+                    //foreach (ChangeDelegate handler in invkList)
+                    foreach (var @delegate in invkList)
+                    {
+                        var handler = (UpdateTimerLockingDelegate)@delegate;
+                        var handler1 = handler;
+                        new Thread(() =>
+                        {
+                            try
+                            {
+                                handler1(false);
+                                Debug.WriteLine("Invoking event handler");
+                            }
+                            catch (Exception)
+                            {
+                                UpdateLockingEvent -= handler1;
+                                Debug.WriteLine("Exception: Removed an event handler");
+                            }
+                        }).Start();
+                    }
+                }
                 _timer.Dispose();
+            }
 
         }
 
@@ -664,6 +691,45 @@ namespace Server
                 return (IClientNotify)RemotingServices.Connect(typeof(IClientNotify), addr); // Obtain a reference to the client remote object
 
             return null;
+        }
+
+        public int GetNumberOfDemmandingDiginotes()
+        {
+            return 5; //TODO
+        }
+
+        public int GetNumberOfAvailableDiginotes()
+        {
+            return 8;//TODO
+        }
+
+        private void UpdateClients() //TODO: NOT USED YET 
+        {
+            if (ChangeEvent != null)
+            {
+                Delegate[] invkList = ChangeEvent.GetInvocationList();
+
+                //foreach (ChangeDelegate handler in invkList)
+                foreach (var @delegate in invkList)
+                {
+                    var handler = (ChangeDelegate)@delegate;
+                    var handler1 = handler;
+                    new Thread(() =>
+                    {
+                        try
+                        {
+                            handler1(ChangeOperation.UpdateInterface);
+                            Debug.WriteLine("Invoking event handler");
+                        }
+                        catch (Exception)
+                        {
+                            ChangeEvent -= handler1;
+                            Debug.WriteLine("Exception: Removed an event handler");
+                        }
+                    }).Start();
+                }
+            }
+
         }
 
 

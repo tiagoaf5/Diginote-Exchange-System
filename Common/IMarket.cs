@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Common
 {
 
-    public delegate void UpdateLockingTimeDelegate(int seconds);
+    public delegate void UpdateTimerLockingDelegate(bool start);
 
     public interface IMarket
     {
@@ -12,10 +12,12 @@ namespace Common
 
         //Market
         float SharePrice { get; }
+        int CountDown { get; }
+
         //general event used to let clients know prices drop
-        event ChangeDelegate ChangeEvent; 
+        event ChangeDelegate ChangeEvent;
         //general event that lets clients know that market locked time
-        event UpdateLockingTimeDelegate UpdateLockingEvent;
+        event UpdateTimerLockingDelegate UpdateLockingEvent;
         int BuyDiginotes(int quantity, IUser user);
         int SellDiginotes(int quantity, IUser user);
 
@@ -30,5 +32,9 @@ namespace Common
         ArrayList GetSharePricesList();
         void Logout(IUser user);
         List<IDiginote> GetUserDiginotes(IUser user);
+
+        int GetNumberOfDemmandingDiginotes();
+
+        int GetNumberOfAvailableDiginotes();
     }
 }

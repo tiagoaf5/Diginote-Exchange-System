@@ -34,8 +34,8 @@ namespace Client
             chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint1 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 1D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint2 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(1D, 1.5D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint3 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 1D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint4 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(1D, 1.5D);
             this.labelWelcome = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.labelSharePrice = new System.Windows.Forms.Label();
@@ -68,7 +68,7 @@ namespace Client
             this.label7 = new System.Windows.Forms.Label();
             this.labelNumberDiginotes = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
-            this.labelSupply = new System.Windows.Forms.Label();
+            this.labelAvailable = new System.Windows.Forms.Label();
             this.labelCountDown = new System.Windows.Forms.Label();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.label10 = new System.Windows.Forms.Label();
@@ -375,22 +375,22 @@ namespace Client
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(447, 43);
+            this.label8.Location = new System.Drawing.Point(429, 43);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(56, 16);
+            this.label8.Size = new System.Drawing.Size(74, 16);
             this.label8.TabIndex = 16;
-            this.label8.Text = "Supply";
+            this.label8.Text = "Available";
             // 
-            // labelSupply
+            // labelAvailable
             // 
-            this.labelSupply.AutoSize = true;
-            this.labelSupply.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelSupply.Location = new System.Drawing.Point(534, 43);
-            this.labelSupply.Name = "labelSupply";
-            this.labelSupply.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.labelSupply.Size = new System.Drawing.Size(15, 16);
-            this.labelSupply.TabIndex = 17;
-            this.labelSupply.Text = "0";
+            this.labelAvailable.AutoSize = true;
+            this.labelAvailable.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelAvailable.Location = new System.Drawing.Point(534, 43);
+            this.labelAvailable.Name = "labelAvailable";
+            this.labelAvailable.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.labelAvailable.Size = new System.Drawing.Size(15, 16);
+            this.labelAvailable.TabIndex = 17;
+            this.labelAvailable.Text = "0";
             // 
             // labelCountDown
             // 
@@ -421,8 +421,8 @@ namespace Client
             series1.IsVisibleInLegend = false;
             series1.Legend = "Legend1";
             series1.Name = "Series1";
-            series1.Points.Add(dataPoint1);
-            series1.Points.Add(dataPoint2);
+            series1.Points.Add(dataPoint3);
+            series1.Points.Add(dataPoint4);
             this.chart1.Series.Add(series1);
             this.chart1.Size = new System.Drawing.Size(239, 141);
             this.chart1.TabIndex = 19;
@@ -458,7 +458,7 @@ namespace Client
             this.Controls.Add(this.label10);
             this.Controls.Add(this.chart1);
             this.Controls.Add(this.labelCountDown);
-            this.Controls.Add(this.labelSupply);
+            this.Controls.Add(this.labelAvailable);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.labelNumberDiginotes);
             this.Controls.Add(this.label7);
@@ -507,7 +507,7 @@ namespace Client
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label labelNumberDiginotes;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label labelSupply;
+        private System.Windows.Forms.Label labelAvailable;
         private System.Windows.Forms.Label labelCountDown;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
         private System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1;

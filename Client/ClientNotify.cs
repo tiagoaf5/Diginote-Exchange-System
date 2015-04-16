@@ -21,5 +21,10 @@ namespace Client
         {
             _win.AddMessage(message);
         }
+
+        public void UpdateClientView()
+        {
+            _win.UpdateView();
+        }
     }
 }

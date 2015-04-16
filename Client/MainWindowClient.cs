@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Net.Sockets;
 using System.Windows.Forms;
 using Common;
+using Timer = System.Threading.Timer;
 
 namespace Client
 {
@@ -14,6 +15,8 @@ namespace Client
     {
         private readonly IUser _user;
         private readonly IMarket _market;
+        private int _countDown;
+        private Timer _timer;
 
         public MainWindowClient(IUser user, IMarket market)
         {
@@ -25,9 +28,9 @@ namespace Client
                 //_market = (IMarket)RemoteNew.New(typeof(IMarket));
                 EventsRepeater repeater = new EventsRepeater();
                 repeater.ChangeEvent += ChangeOperation;
-                repeater.UpdateLockingEvent += new UpdateLockingTimeDelegate(UpdateTimer);
+                repeater.UpdateLockingEvent += new UpdateTimerLockingDelegate(TimerLock);
                 _market.ChangeEvent += new ChangeDelegate(repeater.ChangeRepeater);
-                _market.UpdateLockingEvent += new UpdateLockingTimeDelegate(repeater.LockingRepeater);
+                _market.UpdateLockingEvent += new UpdateTimerLockingDelegate(repeater.LockingRepeater);
 
                 this.Closing += Form1_FormClosing;
                 InitializeComponent();
@@ -49,7 +52,7 @@ namespace Client
             UpdateView();
         }
 
-        private void UpdateView()
+        public void UpdateView()
         {
             try
             {
@@ -72,6 +75,9 @@ namespace Client
                     else listView_buy.Items.Add(new ListViewItem(info));
 
                 }
+
+                labelAvailable.Text = _market.GetNumberOfAvailableDiginotes().ToString();
+                labelDemand.Text = _market.GetNumberOfDemmandingDiginotes().ToString();
             }
             catch (SocketException exception)
             {
@@ -130,28 +136,45 @@ namespace Client
             }
         }
 
-        public void UpdateTimer(int seconds)
+
+        public void TimerLock(bool start)
         {
-            if (InvokeRequired) // I'm not in UI thread
-                BeginInvoke((MethodInvoker)delegate { UpdateTimer(seconds); }); // Invoke using an anonymous delegate
+            if (start)
+            {
+                Debug.WriteLine("setting Timer");
+                _countDown = Constants.TimerSeconds;
+                _timer = new Timer(timer1_Tick, null, 0, 1000);
+            }
             else
             {
+                LockButtons(false);
+                _timer.Dispose();
+                //labelCountDown.Visible = false;
+            }
+        }
+
+        private void timer1_Tick(object sender)
+        {
+            if (InvokeRequired) // I'm not in UI thread
+                BeginInvoke((MethodInvoker)delegate { timer1_Tick(_countDown); }); // Invoke using an anonymous delegate
+            else
+            {
+
+
                 if (!labelCountDown.Visible)
                 {
                     labelCountDown.Visible = true;
                 }
 
-                labelCountDown.Text = seconds.ToString();
+                labelCountDown.Text = _countDown.ToString();
+                _countDown--;
 
-                if (seconds == 0)
-                {
-                    labelCountDown.Visible = false;
-                    LockButtons(false);
-                }
+                if (_countDown != 0) return;
+
+                labelCountDown.Visible = false;
+                LockButtons(false);
+                _timer.Dispose();
             }
-
-
-
         }
 
         private void LockButtons(bool locked)
@@ -295,7 +318,7 @@ namespace Client
             }
             catch (SocketException exception)
             {
-                this.Close();
+
             }
         }
 

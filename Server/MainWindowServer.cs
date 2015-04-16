@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using Common;
@@ -10,12 +11,14 @@ namespace Server
     {
 
         private readonly Market _market;
+        private int _countDown;
+        private System.Threading.Timer _timer;
 
         public MainWindowServer(Market market)
         {
             _market = market;
             _market.AddWindow(this);
-            _market.UpdateLockingEvent += UpdateTimer;
+            _market.UpdateLockingEvent += TimerLock;
             InitializeComponent();
         }
 
@@ -41,16 +44,33 @@ namespace Server
         }
 
 
-        public void UpdateTimer(int seconds)
+        public void TimerLock(bool start)
         {
-            if (InvokeRequired) // I'm not in UI thread
-                BeginInvoke((MethodInvoker)delegate { UpdateTimer(seconds); }); // Invoke using an anonymous delegate
+            if (start)
+            {
+                Debug.WriteLine("setting Timer");
+                _countDown = Constants.TimerSeconds;
+                _timer = new System.Threading.Timer(timer1_Tick, null, 0, 1000);
+            }
             else
             {
-                labelCountDown.Text = seconds.ToString();
+                _timer.Dispose();
             }
         }
 
+        private void timer1_Tick(object sender)
+        {
+            if (InvokeRequired) // I'm not in UI thread
+                BeginInvoke((MethodInvoker)delegate { timer1_Tick(_countDown); }); // Invoke using an anonymous delegate
+            else
+            {
+                labelCountDown.Text = _countDown.ToString();
+                _countDown--;
+
+                if (_countDown == 0)
+                    _timer.Dispose();
+            }
+        }
 
         //Loads what needs to be shown on the window - gets data from _market
         private void InitialSetup(object sender, EventArgs e)

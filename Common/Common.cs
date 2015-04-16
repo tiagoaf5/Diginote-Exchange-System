@@ -33,7 +33,7 @@ namespace Common
     public class EventsRepeater : MarshalByRefObject
     {
         public event ChangeDelegate ChangeEvent;
-        public event UpdateLockingTimeDelegate UpdateLockingEvent;
+        public event UpdateTimerLockingDelegate UpdateLockingEvent;
 
         public override object InitializeLifetimeService()
         {
@@ -46,10 +46,15 @@ namespace Common
                 ChangeEvent(change);
         }
 
-        public void LockingRepeater(int seconds)
+        public void LockingRepeater(bool start)
         {
             if (UpdateLockingEvent != null)
-                UpdateLockingEvent(seconds);
+                UpdateLockingEvent(start);
         }
+    }
+
+    public static class Constants
+    {
+        public static int TimerSeconds = 10;
     }
 }
