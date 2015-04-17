@@ -88,6 +88,25 @@ namespace Client
 
                     labelAvailable.Text = _market.GetNumberOfAvailableDiginotes().ToString();
                     labelDemand.Text = _market.GetNumberOfDemmandingDiginotes().ToString();
+
+                    List<IOrder> orders = _market.GetOrdersHistoy(_user);
+
+                    foreach (var o in orders)
+                    {
+                        ListViewItem listViewItem1 = new ListViewItem(new[]
+                    {
+                        o.Date,
+                        o.OrderType == OrderOptionEnum.Sell ? "sell" : "buy",
+                        o.Wanted.ToString(),
+                        o.Satisfied.ToString(),
+                        o.SharePrice.ToString(CultureInfo.InvariantCulture),
+                        o.Closed ? "closed" : "open"
+                    }, -1);
+                        listView1.Items.Add(listViewItem1);
+                    }
+
+                    listView1.Items[listView1.Items.Count - 1].EnsureVisible();
+
                 }
                 catch (SocketException exception)
                 {
@@ -100,7 +119,7 @@ namespace Client
         public void ChangeOperation(ChangeOperation change, int value)
         {
             if (InvokeRequired) // I'm not in UI thread
-                BeginInvoke((MethodInvoker)delegate { ChangeOperation(change,value); }); // Invoke using an anonymous delegate
+                BeginInvoke((MethodInvoker)delegate { ChangeOperation(change, value); }); // Invoke using an anonymous delegate
             else
             {
                 switch (change)
@@ -262,7 +281,7 @@ namespace Client
                     using (NewPrice np = new NewPrice((int)numericUpDown1.Value, (int)numericUpDown1.Value - result, (decimal)_market.SharePrice, true))
                     {
                         np.ShowDialog();
-                        if(np.newValue > 0)
+                        if (np.newValue > 0)
                             _market.SuggestNewSharePrice((float)np.newValue, _user, true, (int)numericUpDown1.Value - result);
                     }
 

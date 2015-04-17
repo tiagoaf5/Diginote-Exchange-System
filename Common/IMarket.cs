@@ -23,7 +23,7 @@ namespace Common
 
         IOrder GetUserPendingOrder(IUser user);
 
-        void SuggestNewSharePrice(float newPrice, IUser user, bool Sell, int quantity);
+        void SuggestNewSharePrice(float newPrice, IUser user, bool sell, int quantity);
         void SuggestNewSharePrice(float newPrice, IUser user, IOrder order);
 
         //USER
@@ -42,5 +42,6 @@ namespace Common
 
         void RevokeOrder(IOrder order);
 
+        List<IOrder> GetOrdersHistoy(IUser user);
     }
 }
