@@ -445,6 +445,8 @@ namespace Server
                     c.UpdateClientView();
             }
 
+            _myWindow.UpdateView();
+
             return quantity - howManyLeftToBuy;
         }
 
@@ -513,6 +515,8 @@ namespace Server
                 if (c != null)
                     c.UpdateClientView();
             }
+
+            _myWindow.UpdateView();
 
             return quantity - howManyLeft;
         }
@@ -615,7 +619,7 @@ namespace Server
             }
 
             SetTimer();
-            _myWindow.UpdateChart();
+            _myWindow.UpdateView();
         }
 
         private void UpdateShare(float newPrice, IUser user)
@@ -656,6 +660,7 @@ namespace Server
                 Debug.WriteLine("exception in " + exception.Source + ": '" + exception.Message + "'");
 
             }
+            _myWindow.UpdateView();
         }
 
 
@@ -677,6 +682,7 @@ namespace Server
                 Debug.WriteLine("exception in " + exception.Source + ": '" + exception.Message + "'");
 
             }
+            _myWindow.UpdateView();
         }
 
         private void SetTimer()

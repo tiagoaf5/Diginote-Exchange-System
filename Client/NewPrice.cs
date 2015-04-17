@@ -20,8 +20,16 @@ namespace Client
             InitializeComponent();
             valueUpDown.DecimalPlaces = 2;
             valueUpDown.Increment = 0.01M;
-            valueUpDown.Minimum = 0.01M;
-            valueUpDown.Maximum = current_value;
+            if (sell)
+            {
+                valueUpDown.Minimum = 0.01M;
+                valueUpDown.Maximum = current_value;
+            }
+            else
+            {
+                valueUpDown.Minimum = current_value;
+            }
+
             valueUpDown.Value = current_value;
 
             newValue = -1;
@@ -34,14 +42,23 @@ namespace Client
             label.Text = "We were able to " + sell_buy + (total-remaining) + " diginotes.\n Suggest a new price for the remaining " + remaining + " diginotes.";
         }
 
-        public NewPrice(int number, decimal current_value)
+        public NewPrice(int number, decimal current_value, bool sell)
         {
             InitializeComponent();
             valueUpDown.DecimalPlaces = 2;
             valueUpDown.Increment = 0.01M;
-            valueUpDown.Minimum = 0.01M;
-            valueUpDown.Maximum = current_value-0.01M;
-            valueUpDown.Value = current_value-0.01M;
+            if (sell)
+            {
+                valueUpDown.Minimum = 0.01M;
+                valueUpDown.Maximum = current_value-0.01M;
+                valueUpDown.Value = current_value - 0.01M;
+            }
+            else
+            {
+                valueUpDown.Minimum = current_value + 0.01M ;
+                valueUpDown.Value = current_value + 0.01M;
+            }
+
 
             newValue = -1;
 
