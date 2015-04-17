@@ -91,6 +91,8 @@ namespace Client
 
                     List<IOrder> orders = _market.GetOrdersHistoy(_user);
 
+                    listView1.Items.Clear();
+
                     foreach (var o in orders)
                     {
                         ListViewItem listViewItem1 = new ListViewItem(new[]
@@ -144,7 +146,6 @@ namespace Client
 
         private void CheckPendingOrders(int idUser)
         {
-            //TODO CHECK if I have pendent buyOrders and sell orders
 
             if (idUser == _user.IdUser)
                 return;
@@ -228,6 +229,8 @@ namespace Client
                     }
                 }
             }
+
+            UpdateView();
 
         }
 
@@ -314,7 +317,7 @@ namespace Client
                     {
                         np.ShowDialog();
                         if (np.newValue > 0)
-                        _market.SuggestNewSharePrice((float)np.newValue, _user, false, (int)numericUpDown2.Value - result);
+                            _market.SuggestNewSharePrice((float)np.newValue, _user, false, (int)numericUpDown2.Value - result);
                     }
 
                 }
@@ -371,7 +374,7 @@ namespace Client
         private void button6_Click(object sender, EventArgs e)
         {
             IOrder o = _market.GetUserPendingOrder(_user);
-            if (o == null)
+            if (o == null || o.OrderType != OrderOptionEnum.Sell)
                 return;
 
             _market.RevokeOrder(o);
@@ -382,7 +385,7 @@ namespace Client
         {
             IOrder o = _market.GetUserPendingOrder(_user);
 
-            if (o == null)
+            if (o == null || o.OrderType != OrderOptionEnum.Sell)
                 return;
 
                 using (NewPrice np = new NewPrice(o.Wanted-o.Satisfied,(decimal)_market.SharePrice))
@@ -398,12 +401,34 @@ namespace Client
 
         private void button7_Click(object sender, EventArgs e)
         {
-            button6_Click(sender, e);
+            IOrder o = _market.GetUserPendingOrder(_user);
+            if (o == null || o.OrderType != OrderOptionEnum.Buy)
+                return;
+
+            _market.RevokeOrder(o);
+            UpdateView();
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
-            button3_Click(sender, e);
+            IOrder o = _market.GetUserPendingOrder(_user);
+
+            if (o == null || o.OrderType != OrderOptionEnum.Buy)
+                return;
+
+            using (NewPrice np = new NewPrice(o.Wanted - o.Satisfied, (decimal)_market.SharePrice))
+            {
+                np.ShowDialog();
+                if (np.newValue > 0)
+                    _market.SuggestNewSharePrice((float)np.newValue, _user, o);
+            }
+
+            UpdateView();
+        }
+
+        private void listView1_SelectedIndexChanged_1(object sender, EventArgs e)
+        {
+
         }
     }
 
