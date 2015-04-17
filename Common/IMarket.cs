@@ -36,5 +36,9 @@ namespace Common
         int GetNumberOfDemmandingDiginotes();
 
         int GetNumberOfAvailableDiginotes();
+
+        void KeepOrderOn(IOrder order);
+
+        void RevokeOrder(IOrder order);
     }
 }

@@ -40,10 +40,10 @@ namespace Common
             return null;
         }
 
-        public void ChangeRepeater(ChangeOperation change)
+        public void ChangeRepeater(ChangeOperation change,int value)
         {
             if (ChangeEvent != null)
-                ChangeEvent(change);
+                ChangeEvent(change,value);
         }
 
         public void LockingRepeater(bool start)

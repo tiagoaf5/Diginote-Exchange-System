@@ -54,50 +54,61 @@ namespace Client
 
         public void UpdateView()
         {
-            try
+            if (InvokeRequired) // I'm not in UI thread
+                BeginInvoke((MethodInvoker)delegate { UpdateView(); }); // Invoke using an anonymous delegate
+            else
             {
-                labelSharePrice.Text = _market.SharePrice.ToString(CultureInfo.InvariantCulture);
-                int nDiginotes = _market.GetUserDiginotes(_user).Count;
-                labelNumberDiginotes.Text = nDiginotes.ToString();
-                numericUpDown1.Value = 0;
-                numericUpDown1.Maximum = nDiginotes;
-                UpdateChart();
-
-                listView_sell.Items.Clear();
-                IOrder order = _market.GetUserPendingOrder(_user);
-                if (order != null)
+                try
                 {
-                    button2.Enabled = false;
-                    button4.Enabled = false;
-                    string[] info = { Convert.ToString(order.Wanted), Convert.ToString(order.Satisfied), Convert.ToString(order.Wanted - order.Satisfied) };
-                    if (order.OrderType == OrderOptionEnum.Sell)
-                        listView_sell.Items.Add(new ListViewItem(info));
-                    else listView_buy.Items.Add(new ListViewItem(info));
+                    labelSharePrice.Text = _market.SharePrice.ToString(CultureInfo.InvariantCulture);
+                    int nDiginotes = _market.GetUserDiginotes(_user).Count;
+                    labelNumberDiginotes.Text = nDiginotes.ToString();
+                    numericUpDown1.Value = 0;
+                    numericUpDown1.Maximum = nDiginotes;
+                    UpdateChart();
 
+                    listView_sell.Items.Clear();
+                    listView_buy.Items.Clear();
+                    IOrder order = _market.GetUserPendingOrder(_user);
+                    if (order != null)
+                    {
+                        button2.Enabled = false;
+                        button4.Enabled = false;
+                        string[] info = { Convert.ToString(order.Wanted), Convert.ToString(order.Satisfied), Convert.ToString(order.Wanted - order.Satisfied) };
+                        if (order.OrderType == OrderOptionEnum.Sell)
+                            listView_sell.Items.Add(new ListViewItem(info));
+                        else listView_buy.Items.Add(new ListViewItem(info));
+
+                    }
+                    else
+                    {
+                        button2.Enabled = true;
+                        button4.Enabled = true;
+                    }
+
+                    labelAvailable.Text = _market.GetNumberOfAvailableDiginotes().ToString();
+                    labelDemand.Text = _market.GetNumberOfDemmandingDiginotes().ToString();
                 }
-
-                labelAvailable.Text = _market.GetNumberOfAvailableDiginotes().ToString();
-                labelDemand.Text = _market.GetNumberOfDemmandingDiginotes().ToString();
-            }
-            catch (SocketException exception)
-            {
-                ServerDown(exception);
+                catch (SocketException exception)
+                {
+                    ServerDown(exception);
+                }
             }
 
         }
 
-        public void ChangeOperation(ChangeOperation change)
+        public void ChangeOperation(ChangeOperation change, int value)
         {
             if (InvokeRequired) // I'm not in UI thread
-                BeginInvoke((MethodInvoker)delegate { ChangeOperation(change); }); // Invoke using an anonymous delegate
+                BeginInvoke((MethodInvoker)delegate { ChangeOperation(change,value); }); // Invoke using an anonymous delegate
             else
             {
-                UpdateView();
                 switch (change)
                 {
                     case Common.ChangeOperation.ShareChange:
                         {
-                            CheckPendingOrders();
+                            UpdateView();
+                            CheckPendingOrders(value);
                             break;
                         }
                     case Common.ChangeOperation.UpdateInterface:
@@ -112,9 +123,12 @@ namespace Client
 
         }
 
-        private void CheckPendingOrders()
+        private void CheckPendingOrders(int idUser)
         {
             //TODO CHECK if I have pendent buyOrders and sell orders
+
+            if (idUser == _user.IdUser)
+                return;
 
             IOrder order = _market.GetUserPendingOrder(_user);
             if (order == null)
@@ -122,16 +136,16 @@ namespace Client
 
 
             String text = String.Format("Do you want to {0} the remaining diginotes ({1}) at the new share price ({2}€)?",
-                order.OrderType == OrderOptionEnum.Sell ? "sell" : "buy", order.Wanted - order.Satisfied, labelSharePrice.Text);
+                order.OrderType == OrderOptionEnum.Sell ? "sell" : "buy", order.Wanted - order.Satisfied, _market.SharePrice);
             DialogResult result1 = MessageBox.Show(text, "Share price changed!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (result1 == DialogResult.Yes)
             {
-                Debug.WriteLine("->YES");
+                _market.KeepOrderOn(order);
             }
             else
             {
-                Debug.WriteLine("->NO");
+                _market.RevokeOrder(order);
                 UpdateView();
             }
         }
@@ -224,12 +238,6 @@ namespace Client
                     GetAllControl(control, list);
             }
         }
-        private void button1_Click(object sender, EventArgs e)
-        {
-            //_market.SuggestNewSharePrice((float)(Math.Floor((new Random()).NextDouble() * 100) / 100.0), _user);
-            //series1.Points.Add(new DataPoint(12, 3));
-            CheckPendingOrders();
-        }
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
@@ -253,8 +261,9 @@ namespace Client
                 {
                     using (NewPrice np = new NewPrice((int)numericUpDown1.Value, (int)numericUpDown1.Value - result, (decimal)_market.SharePrice, true))
                     {
-                        var r1 = np.ShowDialog();
-                        _market.SuggestNewSharePrice((float)np.newValue, _user, true, (int)numericUpDown1.Value - result);
+                        np.ShowDialog();
+                        if(np.newValue > 0)
+                            _market.SuggestNewSharePrice((float)np.newValue, _user, true, (int)numericUpDown1.Value - result);
                     }
 
                 }
@@ -263,6 +272,7 @@ namespace Client
                     MessageBox.Show("Your diginotes have been sold!", "Success", MessageBoxButtons.OK,
                     MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
                 }
+                UpdateView();
             }
             catch (SocketException exception)
             {
@@ -275,6 +285,9 @@ namespace Client
         {
             try
             {
+                if (numericUpDown2.Value <= 0)
+                    return;
+
                 int result = _market.BuyDiginotes((int)numericUpDown2.Value, _user);
                 if (result < numericUpDown2.Value)
                 {
@@ -289,9 +302,9 @@ namespace Client
                 {
                     MessageBox.Show("Your have new diginotes!", "Success", MessageBoxButtons.OK,
                     MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+
                 }
-                numericUpDown1.Value = 0;
-                numericUpDown1.Maximum = _market.GetUserDiginotes(_user).Count;
+                UpdateView();
             }
             catch (SocketException exception)
             {

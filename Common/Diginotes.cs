@@ -12,7 +12,7 @@ namespace Common
 
     public enum ChangeOperation { ShareChange, UpdateInterface};
 
-    public delegate void ChangeDelegate(ChangeOperation change);
+    public delegate void ChangeDelegate(ChangeOperation change,int value);
 
     
 }

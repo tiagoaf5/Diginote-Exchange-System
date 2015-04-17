@@ -108,14 +108,14 @@ namespace Client
         {
             this.Hide();
 
-            MainWindowClient myWindow = new MainWindowClient(_user, _market)
+            _mainWindow = new MainWindowClient(_user, _market)
             {
                 FormBorderStyle = FormBorderStyle.FixedSingle
             };
 
             ClientNotify r = (ClientNotify)RemotingServices.Connect(typeof(ClientNotify), "tcp://localhost:" + _port.ToString() + "/ClientNotify");    // connect to the registered my remote object here
-            r.PutMyForm(myWindow);
-            myWindow.ShowDialog();
+            r.PutMyForm(_mainWindow);
+            _mainWindow.ShowDialog();
             this.Close();
         }
     }
