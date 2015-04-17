@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DiginotesWindow));
             this.listView1 = new System.Windows.Forms.ListView();
             this.columnSerialNumber = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.label1 = new System.Windows.Forms.Label();
@@ -69,6 +70,7 @@
             this.ClientSize = new System.Drawing.Size(354, 261);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.listView1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "DiginotesWindow";
             this.Text = "DiginotesWindow";
             this.Shown += new System.EventHandler(this.InitialSetup);
