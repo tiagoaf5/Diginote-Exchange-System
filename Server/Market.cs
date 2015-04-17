@@ -693,14 +693,34 @@ namespace Server
             return null;
         }
 
-        public int GetNumberOfDemmandingDiginotes()
-        {
-            return 5; //TODO
-        }
-
         public int GetNumberOfAvailableDiginotes()
         {
-            return 8;//TODO
+            int available = 0;
+            string sql = String.Format("SELECT * FROM SELLORDER WHERE NOT closed");
+            SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
+            SQLiteDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                available += (Convert.ToInt32(reader["wanted"]) - Convert.ToInt32(reader["satisfied"]));
+            }
+
+            return available;
+        }
+
+        public int  GetNumberOfDemmandingDiginotes()
+        {
+            int demand = 0;
+            string sql = String.Format("SELECT * FROM BUYORDER WHERE NOT closed");
+            SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
+            SQLiteDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                demand += (Convert.ToInt32(reader["wanted"]) - Convert.ToInt32(reader["satisfied"]));
+            }
+
+            return demand;
         }
 
         private void UpdateClients() //TODO: NOT USED YET 
