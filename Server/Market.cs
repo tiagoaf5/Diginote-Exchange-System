@@ -437,9 +437,6 @@ namespace Server
             }
 
             t.Commit();
-<<<<<<< HEAD
-            _myWindow.UpdateView();
-=======
 
             foreach (IOrder o in orders)
             {
@@ -448,7 +445,6 @@ namespace Server
                     c.UpdateClientView();
             }
 
->>>>>>> 182ee5f19af0d396152d611141d15c5690be9ca4
             return quantity - howManyLeftToBuy;
         }
 
@@ -510,9 +506,6 @@ namespace Server
             }
 
             t.Commit();
-<<<<<<< HEAD
-            _myWindow.UpdateView();
-=======
 
             foreach (IOrder o in orders)
             {
@@ -521,7 +514,6 @@ namespace Server
                     c.UpdateClientView();
             }
 
->>>>>>> 182ee5f19af0d396152d611141d15c5690be9ca4
             return quantity - howManyLeft;
         }
 
