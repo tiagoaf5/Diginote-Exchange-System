@@ -38,26 +38,19 @@ namespace Server
             series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint1 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 1D);
             System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint2 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(1D, 1.5D);
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
-            "22:03:2000 12:00",
-            "tiagoaf",
-            "buy",
-            "100",
-            "20",
-            "80",
-            "open"}, -1);
             this.listView1 = new System.Windows.Forms.ListView();
             this.columnNickname = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.labelCountDown = new System.Windows.Forms.Label();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.listView2 = new System.Windows.Forms.ListView();
-            this.columnDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnUser = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnTotal = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnSatisfied = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnRemaining = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
@@ -113,59 +106,63 @@ namespace Server
             series1.Points.Add(dataPoint1);
             series1.Points.Add(dataPoint2);
             this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(544, 141);
+            this.chart1.Size = new System.Drawing.Size(566, 141);
             this.chart1.TabIndex = 20;
             this.chart1.Text = "Share Price";
             // 
             // listView2
             // 
             this.listView2.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnDate,
-            this.columnUser,
-            this.columnType,
-            this.columnTotal,
-            this.columnSatisfied,
-            this.columnRemaining,
-            this.columnStatus});
-            this.listView2.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1});
+            this.columnHeader1,
+            this.columnHeader2,
+            this.columnHeader3,
+            this.columnHeader4,
+            this.columnHeader5,
+            this.columnHeader6,
+            this.columnHeader7,
+            this.columnHeader8});
             this.listView2.Location = new System.Drawing.Point(135, 186);
             this.listView2.Name = "listView2";
-            this.listView2.Size = new System.Drawing.Size(544, 167);
+            this.listView2.Size = new System.Drawing.Size(566, 167);
             this.listView2.TabIndex = 21;
             this.listView2.UseCompatibleStateImageBehavior = false;
             this.listView2.View = System.Windows.Forms.View.Details;
             // 
-            // columnDate
+            // columnHeader1
             // 
-            this.columnDate.Text = "Date";
-            this.columnDate.Width = 95;
+            this.columnHeader1.Text = "Date";
+            this.columnHeader1.Width = 110;
             // 
-            // columnUser
+            // columnHeader2
             // 
-            this.columnUser.Text = "User";
-            this.columnUser.Width = 82;
+            this.columnHeader2.Text = "User";
             // 
-            // columnType
+            // columnHeader3
             // 
-            this.columnType.Text = "Type";
+            this.columnHeader3.Text = "Type";
+            this.columnHeader3.Width = 57;
             // 
-            // columnTotal
+            // columnHeader4
             // 
-            this.columnTotal.Text = "Total";
+            this.columnHeader4.Text = "Total";
             // 
-            // columnSatisfied
+            // columnHeader5
             // 
-            this.columnSatisfied.Text = "Satisfied";
+            this.columnHeader5.Text = "Satisfied";
             // 
-            // columnRemaining
+            // columnHeader6
             // 
-            this.columnRemaining.Text = "Remaining";
-            this.columnRemaining.Width = 63;
+            this.columnHeader6.Text = "Remaining";
+            this.columnHeader6.Width = 63;
             // 
-            // columnStatus
+            // columnHeader7
             // 
-            this.columnStatus.Text = "Status";
+            this.columnHeader7.Text = "Share price";
+            this.columnHeader7.Width = 68;
+            // 
+            // columnHeader8
+            // 
+            this.columnHeader8.Text = "Status";
             // 
             // button1
             // 
@@ -181,7 +178,7 @@ namespace Server
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(691, 365);
+            this.ClientSize = new System.Drawing.Size(713, 365);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.listView2);
             this.Controls.Add(this.chart1);
@@ -205,16 +202,17 @@ namespace Server
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
         private Series series1;
         private ListView listView2;
-        private ColumnHeader columnDate;
-        private ColumnHeader columnUser;
-        private ColumnHeader columnType;
-        private ColumnHeader columnTotal;
-        private ColumnHeader columnSatisfied;
-        private ColumnHeader columnRemaining;
-        private ColumnHeader columnStatus;
         private Legend legend1;
         private ChartArea chartArea1;
         private Button button1;
+        private ColumnHeader columnHeader1;
+        private ColumnHeader columnHeader2;
+        private ColumnHeader columnHeader3;
+        private ColumnHeader columnHeader4;
+        private ColumnHeader columnHeader5;
+        private ColumnHeader columnHeader6;
+        private ColumnHeader columnHeader7;
+        private ColumnHeader columnHeader8;
     }
 }
 

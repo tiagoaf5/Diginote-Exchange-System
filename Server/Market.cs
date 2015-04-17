@@ -393,7 +393,9 @@ namespace Server
 
             while (reader.Read())
             {
-                Order o1 = new Order(OrderOptionEnum.Sell, Convert.ToInt32(reader["idSellOrder"]), Convert.ToInt32(reader["user"]), Convert.ToInt32(reader["wanted"]), Convert.ToInt32(reader["satisfied"]));
+                Order o1 = new Order(OrderOptionEnum.Sell, Convert.ToInt32(reader["idSellOrder"]),
+                    Convert.ToInt32(reader["user"]), Convert.ToInt32(reader["wanted"]), Convert.ToInt32(reader["satisfied"]),
+                    Convert.ToString(reader["date"]));
 
                 int howManyToSell = o1.Wanted - o1.Satisfied;
                 if (howManyLeftToBuy > howManyToSell)
@@ -435,7 +437,7 @@ namespace Server
             }
 
             t.Commit();
-
+            _myWindow.UpdateView();
             return quantity - howManyLeftToBuy;
         }
 
@@ -453,7 +455,7 @@ namespace Server
 
             while (reader.Read())
             {
-                Order o1 = new Order(OrderOptionEnum.Sell, Convert.ToInt32(reader["idBuyOrder"]), Convert.ToInt32(reader["user"]), Convert.ToInt32(reader["wanted"]), Convert.ToInt32(reader["satisfied"]));
+                Order o1 = new Order(OrderOptionEnum.Sell, Convert.ToInt32(reader["idBuyOrder"]), Convert.ToInt32(reader["user"]), Convert.ToInt32(reader["wanted"]), Convert.ToInt32(reader["satisfied"]), Convert.ToString(reader["date"]));
 
                 int howManyToOffer = o1.Wanted - o1.Satisfied;
                 if (howManyLeft > howManyToOffer)
@@ -508,7 +510,7 @@ namespace Server
             }
 
             t.Commit();
-
+            _myWindow.UpdateView();
             return quantity - howManyLeft;
         }
 
@@ -519,14 +521,14 @@ namespace Server
             SQLiteDataReader reader = command.ExecuteReader();
 
             if (reader.Read())
-                return new Order(OrderOptionEnum.Buy, Convert.ToInt32(reader["idBuyOrder"]), user.IdUser, Convert.ToInt32(reader["wanted"]), Convert.ToInt32(reader["satisfied"]), Convert.ToBoolean(reader["closed"]));
+                return new Order(OrderOptionEnum.Buy, Convert.ToInt32(reader["idBuyOrder"]), user.IdUser, Convert.ToInt32(reader["wanted"]), Convert.ToInt32(reader["satisfied"]), Convert.ToString(reader["date"]), Convert.ToBoolean(reader["closed"]));
 
             sql = String.Format("SELECT * FROM SELLORDER WHERE not closed and user = {0} LIMIT 1", user.IdUser);
             command = new SQLiteCommand(sql, _mDbConnection);
             reader = command.ExecuteReader();
 
             if (reader.Read())
-                return new Order(OrderOptionEnum.Sell, Convert.ToInt32(reader["idSellOrder"]), user.IdUser, Convert.ToInt32(reader["wanted"]), Convert.ToInt32(reader["satisfied"]), Convert.ToBoolean(reader["closed"]));
+                return new Order(OrderOptionEnum.Sell, Convert.ToInt32(reader["idSellOrder"]), user.IdUser, Convert.ToInt32(reader["wanted"]), Convert.ToInt32(reader["satisfied"]), Convert.ToString(reader["date"]), Convert.ToBoolean(reader["closed"]));
 
             return null;
         }
@@ -708,7 +710,7 @@ namespace Server
             return available;
         }
 
-        public int  GetNumberOfDemmandingDiginotes()
+        public int GetNumberOfDemmandingDiginotes()
         {
             int demand = 0;
             string sql = String.Format("SELECT * FROM BUYORDER WHERE NOT closed");
@@ -752,6 +754,34 @@ namespace Server
 
         }
 
+        public List<IOrder> GetOrdersHistoy(IUser user)
+        {
+            List<IOrder> orders = new List<IOrder>();
+            string sql = user != null ? String.Format("SELECT * FROM BUYORDER WHERE user = {0}", user.IdUser) :
+                String.Format("SELECT * FROM BUYORDER");
 
+            SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
+            SQLiteDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+                orders.Add(new Order(OrderOptionEnum.Buy, Convert.ToInt32(reader["idBuyOrder"]), Convert.ToInt32(reader["user"]),
+                    Convert.ToInt32(reader["wanted"]), Convert.ToInt32(reader["satisfied"]), Convert.ToString(reader["date"]),
+                    Convert.ToBoolean(reader["closed"])) { SharePrice = (float)Convert.ToDouble(reader["sharePrice"]) });
+
+
+            sql = user != null ? String.Format("SELECT * FROM SELLORDER WHERE user = {0}", user.IdUser) :
+                String.Format("SELECT * FROM SELLORDER");
+
+            command = new SQLiteCommand(sql, _mDbConnection);
+            reader = command.ExecuteReader();
+
+            while (reader.Read())
+                orders.Add(new Order(OrderOptionEnum.Sell, Convert.ToInt32(reader["idSellOrder"]), Convert.ToInt32(reader["user"]),
+                    Convert.ToInt32(reader["wanted"]), Convert.ToInt32(reader["satisfied"]), Convert.ToString(reader["date"]),
+                    Convert.ToBoolean(reader["closed"])) { SharePrice = (float)Convert.ToDouble(reader["sharePrice"]) });
+
+            orders.Sort();
+            return orders;
+        }
     }
 }

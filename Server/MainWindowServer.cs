@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.Windows.Forms;
 using Common;
 
@@ -76,23 +78,46 @@ namespace Server
         private void InitialSetup(object sender, EventArgs e)
         {
             _market.LoadUsers();
-            UpdateChart();
+            UpdateView();
         }
 
-        public void UpdateChart()
+        public void UpdateView()
         {
             if (InvokeRequired) // I'm not in UI thread
-                BeginInvoke((MethodInvoker)delegate { UpdateChart(); }); // Invoke using an anonymous delegate
+                BeginInvoke((MethodInvoker)delegate { UpdateView(); }); // Invoke using an anonymous delegate
             else
             {
-                series1.Points.Clear();
-                ArrayList history = _market.GetSharePricesList();
+                List<IOrder> orders = _market.GetOrdersHistoy(null);
 
-                int size = history.Count;
-                for (int i = 0; i < size; i++)
-                    series1.Points.AddXY(i, history[i]);
+                foreach (var order in orders)
+                {
+                    ListViewItem listViewItem1 = new ListViewItem(new string[]
+                    {
+                        order.Date,
+                        order.IdUser.ToString(),
+                        order.OrderType == OrderOptionEnum.Sell ? "sell" : "buy",
+                        order.Wanted.ToString(),
+                        order.Satisfied.ToString(),
+                        (order.Wanted - order.Satisfied).ToString(),
+                        order.SharePrice.ToString(CultureInfo.InvariantCulture),
+                        order.Closed ? "closed" : "open"
+                    }, -1);
+                    listView2.Items.Add(listViewItem1);
+                }
+
+                listView2.Items[listView2.Items.Count - 1].EnsureVisible();
+
+                UpdateChart();
             }
+        }
+        public void UpdateChart()
+        {
+            series1.Points.Clear();
+            ArrayList history = _market.GetSharePricesList();
 
+            int size = history.Count;
+            for (int i = 0; i < size; i++)
+                series1.Points.AddXY(i, history[i]);
         }
 
         private void ListView1_ItemActivate(Object sender, EventArgs e)
