@@ -388,7 +388,7 @@ namespace Client
             if (o == null || o.OrderType != OrderOptionEnum.Sell)
                 return;
 
-                using (NewPrice np = new NewPrice(o.Wanted-o.Satisfied,(decimal)_market.SharePrice))
+                using (NewPrice np = new NewPrice(o.Wanted-o.Satisfied,(decimal)_market.SharePrice,true))
                 {
                     np.ShowDialog();
                     if (np.newValue > 0)
@@ -416,7 +416,7 @@ namespace Client
             if (o == null || o.OrderType != OrderOptionEnum.Buy)
                 return;
 
-            using (NewPrice np = new NewPrice(o.Wanted - o.Satisfied, (decimal)_market.SharePrice))
+            using (NewPrice np = new NewPrice(o.Wanted - o.Satisfied, (decimal)_market.SharePrice,false))
             {
                 np.ShowDialog();
                 if (np.newValue > 0)
