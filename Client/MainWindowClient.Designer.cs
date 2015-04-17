@@ -34,8 +34,8 @@ namespace Client
             chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint3 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 1D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint4 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(1D, 1.5D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint1 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 1D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint2 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(1D, 1.5D);
             this.labelWelcome = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.labelSharePrice = new System.Windows.Forms.Label();
@@ -185,6 +185,7 @@ namespace Client
             this.button6.TabIndex = 16;
             this.button6.Text = "Close";
             this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
             // button3
             // 
@@ -194,6 +195,7 @@ namespace Client
             this.button3.TabIndex = 15;
             this.button3.Text = "Change";
             this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // label6
             // 
@@ -256,6 +258,7 @@ namespace Client
             this.button7.TabIndex = 18;
             this.button7.Text = "Close";
             this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
             // button5
             // 
@@ -265,6 +268,7 @@ namespace Client
             this.button5.TabIndex = 17;
             this.button5.Text = "Change";
             this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // label5
             // 
@@ -420,8 +424,8 @@ namespace Client
             series1.IsVisibleInLegend = false;
             series1.Legend = "Legend1";
             series1.Name = "Series1";
-            series1.Points.Add(dataPoint3);
-            series1.Points.Add(dataPoint4);
+            series1.Points.Add(dataPoint1);
+            series1.Points.Add(dataPoint2);
             this.chart1.Series.Add(series1);
             this.chart1.Size = new System.Drawing.Size(239, 141);
             this.chart1.TabIndex = 19;

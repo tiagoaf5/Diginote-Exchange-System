@@ -34,6 +34,21 @@ namespace Client
             label.Text = "We were able to " + sell_buy + (total-remaining) + " diginotes.\n Suggest a new price for the remaining " + remaining + " diginotes.";
         }
 
+        public NewPrice(int number, decimal current_value)
+        {
+            InitializeComponent();
+            valueUpDown.DecimalPlaces = 2;
+            valueUpDown.Increment = 0.01M;
+            valueUpDown.Minimum = 0.01M;
+            valueUpDown.Maximum = current_value-0.01M;
+            valueUpDown.Value = current_value-0.01M;
+
+            newValue = -1;
+
+            label.Text = "You are currently selling at "+ current_value +"€.\n Suggest a new price for  the " + number + " diginotes.";
+
+        }
+
         private void valueUpDown_ValueChanged(object sender, EventArgs e)
         {
            

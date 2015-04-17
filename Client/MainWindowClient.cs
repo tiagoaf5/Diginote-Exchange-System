@@ -293,7 +293,8 @@ namespace Client
                 {
                     using (NewPrice np = new NewPrice((int)numericUpDown2.Value, (int)numericUpDown2.Value - result, (decimal)_market.SharePrice, false))
                     {
-                        var r1 = np.ShowDialog();
+                        np.ShowDialog();
+                        if (np.newValue > 0)
                         _market.SuggestNewSharePrice((float)np.newValue, _user, false, (int)numericUpDown2.Value - result);
                     }
 
@@ -346,6 +347,44 @@ namespace Client
         private void labelNumberDiginotes_Click(object sender, EventArgs e)
         {
             new DiginotesWindow(_market.GetUserDiginotes(_user)).ShowDialog();
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            IOrder o = _market.GetUserPendingOrder(_user);
+            if (o == null)
+                return;
+
+            _market.RevokeOrder(o);
+            UpdateView();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            IOrder o = _market.GetUserPendingOrder(_user);
+
+            if (o == null)
+                return;
+
+                using (NewPrice np = new NewPrice(o.Wanted-o.Satisfied,(decimal)_market.SharePrice))
+                {
+                    np.ShowDialog();
+                    if (np.newValue > 0)
+                        _market.SuggestNewSharePrice((float)np.newValue, _user, o);
+                }
+       
+            UpdateView();
+ 
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            button6_Click(sender, e);
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            button3_Click(sender, e);
         }
     }
 

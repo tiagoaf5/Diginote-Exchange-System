@@ -563,7 +563,60 @@ namespace Server
             }
         }
 
+        public void SuggestNewSharePrice(float newPrice, IUser user, IOrder order)
+        {
+            //alterar cotacao
+            UpdateShare(newPrice, user);
+            KeepOrderOn(order);
+            NotifySharePriceChange(user);
+
+        }
+
         public void SuggestNewSharePrice(float newPrice, IUser user, bool sell, int quantity)
+        {
+            UpdateShare(newPrice, user);
+
+            if (sell)
+                InsertSellOrder(quantity, user);
+            else
+                InsertBuyOrder(quantity, user);
+
+            NotifySharePriceChange(user);
+
+        }
+
+        private void NotifySharePriceChange(IUser user)
+        {
+            if (ChangeEvent != null)
+            {
+                Delegate[] invkList = ChangeEvent.GetInvocationList();
+
+                //foreach (ChangeDelegate handler in invkList)
+                foreach (var @delegate in invkList)
+                {
+                    var handler = (ChangeDelegate)@delegate;
+                    var handler1 = handler;
+                    new Thread(() =>
+                    {
+                        try
+                        {
+                            handler1(ChangeOperation.ShareChange, user.IdUser);
+                            Debug.WriteLine("Invoking event handler");
+                        }
+                        catch (Exception)
+                        {
+                            ChangeEvent -= handler1;
+                            Debug.WriteLine("Exception: Removed an event handler");
+                        }
+                    }).Start();
+                }
+            }
+
+            SetTimer();
+            _myWindow.UpdateChart();
+        }
+
+        private void UpdateShare(float newPrice, IUser user)
         {
             SharePrice = newPrice;
 
@@ -581,40 +634,6 @@ namespace Server
                 Debug.WriteLine("exception in " + exception.Source + ": '" + exception.Message + "'");
 
             }
-
-            if (sell)
-                InsertSellOrder(quantity, user);
-            else
-                InsertBuyOrder(quantity, user);
-
-            if (ChangeEvent != null)
-            {
-                Delegate[] invkList = ChangeEvent.GetInvocationList();
-
-                //foreach (ChangeDelegate handler in invkList)
-                foreach (var @delegate in invkList)
-                {
-                    var handler = (ChangeDelegate)@delegate;
-                    var handler1 = handler;
-                    new Thread(() =>
-                    {
-                        try
-                        {
-                            handler1(ChangeOperation.ShareChange,user.IdUser);
-                            Debug.WriteLine("Invoking event handler");
-                        }
-                        catch (Exception)
-                        {
-                            ChangeEvent -= handler1;
-                            Debug.WriteLine("Exception: Removed an event handler");
-                        }
-                    }).Start();
-                }
-            }
-
-            SetTimer();
-            _myWindow.UpdateChart();
-
         }
 
         public void KeepOrderOn(IOrder order)
