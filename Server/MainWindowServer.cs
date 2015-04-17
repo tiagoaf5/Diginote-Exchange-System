@@ -89,6 +89,8 @@ namespace Server
             {
                 List<IOrder> orders = _market.GetOrdersHistoy(null);
 
+                listView1.Items.Clear();
+
                 foreach (var order in orders)
                 {
                     ListViewItem listViewItem1 = new ListViewItem(new[]
@@ -135,6 +137,11 @@ namespace Server
         private void button1_Click(object sender, EventArgs e)
         {
             _market.GetUserChannel(1).SomeMessage("oi gatinho");
+        }
+
+        private void listView2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
 
     }
