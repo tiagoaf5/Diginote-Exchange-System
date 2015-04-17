@@ -112,12 +112,17 @@ namespace Server
         }
         public void UpdateChart()
         {
-            series1.Points.Clear();
-            ArrayList history = _market.GetSharePricesList();
+            if (InvokeRequired) // I'm not in UI thread
+                BeginInvoke((MethodInvoker)delegate { UpdateChart(); }); // Invoke using an anonymous delegate
+            else
+            {
+                series1.Points.Clear();
+                ArrayList history = _market.GetSharePricesList();
 
-            int size = history.Count;
-            for (int i = 0; i < size; i++)
-                series1.Points.AddXY(i, history[i]);
+                int size = history.Count;
+                for (int i = 0; i < size; i++)
+                    series1.Points.AddXY(i, history[i]);
+            }
         }
 
         private void ListView1_ItemActivate(Object sender, EventArgs e)
