@@ -91,7 +91,7 @@ namespace Server
 
                 foreach (var order in orders)
                 {
-                    ListViewItem listViewItem1 = new ListViewItem(new string[]
+                    ListViewItem listViewItem1 = new ListViewItem(new[]
                     {
                         order.Date,
                         order.IdUser.ToString(),
