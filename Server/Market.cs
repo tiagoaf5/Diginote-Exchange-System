@@ -437,7 +437,18 @@ namespace Server
             }
 
             t.Commit();
+<<<<<<< HEAD
             _myWindow.UpdateView();
+=======
+
+            foreach (IOrder o in orders)
+            {
+                IClientNotify c = GetUserChannel(o.IdUser);
+                if(c!=null)
+                    c.UpdateClientView();
+            }
+
+>>>>>>> 182ee5f19af0d396152d611141d15c5690be9ca4
             return quantity - howManyLeftToBuy;
         }
 
@@ -463,24 +474,12 @@ namespace Server
                     o1.Satisfied = o1.Wanted;
                     orders.Add(o1);
                     howManyLeft -= howManyToOffer;
-                    for (int i = 0; i < howManyToOffer; i++)
-                    {
-                        //TODO
-                        /*IDiginote d = user.Diginotes[0];
-                        user.Diginotes.RemoveAt(0);*/
-                    }
                     TransferDiginotes(user.IdUser, o1.IdUser, howManyToOffer);
                 }
                 else
                 {
                     o1.Satisfied += howManyLeft;
                     orders.Add(o1);
-                    for (int i = 0; i < howManyLeft; i++)
-                    {
-                        //TODO
-                        /*IDiginote d = user.Diginotes[0];
-                        user.Diginotes.RemoveAt(0);*/
-                    }
                     TransferDiginotes(user.IdUser, o1.IdUser, howManyLeft);
                     howManyLeft = 0;
                     break;
@@ -507,23 +506,35 @@ namespace Server
                     //TODO fazer try catch global para rollback
                 }
 
+
             }
 
             t.Commit();
+<<<<<<< HEAD
             _myWindow.UpdateView();
+=======
+
+            foreach (IOrder o in orders)
+            {
+                IClientNotify c = GetUserChannel(o.IdUser);
+                if (c != null)
+                    c.UpdateClientView();
+            }
+
+>>>>>>> 182ee5f19af0d396152d611141d15c5690be9ca4
             return quantity - howManyLeft;
         }
 
         public IOrder GetUserPendingOrder(IUser user)
         {
-            string sql = String.Format("SELECT * FROM BUYORDER WHERE not closed and user = {0} LIMIT 1", user.IdUser);
+            string sql = String.Format("SELECT * FROM BUYORDER WHERE closed = 0 and user = {0} LIMIT 1", user.IdUser);
             SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
             SQLiteDataReader reader = command.ExecuteReader();
 
             if (reader.Read())
                 return new Order(OrderOptionEnum.Buy, Convert.ToInt32(reader["idBuyOrder"]), user.IdUser, Convert.ToInt32(reader["wanted"]), Convert.ToInt32(reader["satisfied"]), Convert.ToString(reader["date"]), Convert.ToBoolean(reader["closed"]));
 
-            sql = String.Format("SELECT * FROM SELLORDER WHERE not closed and user = {0} LIMIT 1", user.IdUser);
+            sql = String.Format("SELECT * FROM SELLORDER WHERE closed = 0 and user = {0} LIMIT 1", user.IdUser);
             command = new SQLiteCommand(sql, _mDbConnection);
             reader = command.ExecuteReader();
 
@@ -599,7 +610,7 @@ namespace Server
                     {
                         try
                         {
-                            handler1(ChangeOperation.ShareChange);
+                            handler1(ChangeOperation.ShareChange,user.IdUser);
                             Debug.WriteLine("Invoking event handler");
                         }
                         catch (Exception)
@@ -614,6 +625,47 @@ namespace Server
             SetTimer();
             _myWindow.UpdateChart();
 
+        }
+
+        public void KeepOrderOn(IOrder order)
+        {
+            string sql;
+            if (order.OrderType == OrderOptionEnum.Buy)
+                 sql = String.Format("UPDATE BUYORDER SET shareprice = {0} where idBuyOrder = {1}", SharePrice, order.IdOrder);
+            else sql = String.Format("UPDATE SELLORDER SET shareprice = {0} where idSellOrder = {1}", SharePrice, order.IdOrder);
+
+            SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
+
+            try
+            {
+                command.ExecuteNonQuery();
+            }
+            catch (SQLiteException exception)
+            {
+                Debug.WriteLine("exception in " + exception.Source + ": '" + exception.Message + "'");
+
+            }
+        }
+
+
+        public void RevokeOrder(IOrder order)
+        {
+            string sql;
+            if (order.OrderType == OrderOptionEnum.Buy)
+                sql = String.Format("UPDATE BUYORDER SET closed = 1 where idBuyOrder = {0}", order.IdOrder);
+            else sql = String.Format("UPDATE SELLORDER SET closed = 1 where idSellOrder = {0}", order.IdOrder);
+
+            SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
+
+            try
+            {
+                command.ExecuteNonQuery();
+            }
+            catch (SQLiteException exception)
+            {
+                Debug.WriteLine("exception in " + exception.Source + ": '" + exception.Message + "'");
+
+            }
         }
 
         private void SetTimer()
@@ -740,7 +792,7 @@ namespace Server
                     {
                         try
                         {
-                            handler1(ChangeOperation.UpdateInterface);
+                            handler1(ChangeOperation.UpdateInterface,0);
                             Debug.WriteLine("Invoking event handler");
                         }
                         catch (Exception)

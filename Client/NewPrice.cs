@@ -24,6 +24,8 @@ namespace Client
             valueUpDown.Maximum = current_value;
             valueUpDown.Value = current_value;
 
+            newValue = -1;
+
             string sell_buy;
             if (sell)
                 sell_buy = "sell ";

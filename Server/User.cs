@@ -33,7 +33,5 @@ namespace Server
 
         public int IdUser { get; internal set; }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
     }
 }
