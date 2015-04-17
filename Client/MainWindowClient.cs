@@ -181,8 +181,11 @@ namespace Client
             }
             else
             {
-                LockButtons(false);
-                _timer.Dispose();
+                if (_timer == null)
+                {
+                    LockButtons(false);
+                }
+                //_timer.Dispose();
                 //labelCountDown.Visible = false;
             }
         }
@@ -201,13 +204,17 @@ namespace Client
                 }
 
                 labelCountDown.Text = _countDown.ToString();
+
+                if (_countDown == 0)
+                {
+
+                    labelCountDown.Visible = false;
+                    LockButtons(false);
+                    _timer.Dispose();
+                }
                 _countDown--;
 
-                if (_countDown != 0) return;
-
-                labelCountDown.Visible = false;
-                LockButtons(false);
-                _timer.Dispose();
+                
             }
         }
 
@@ -388,15 +395,15 @@ namespace Client
             if (o == null || o.OrderType != OrderOptionEnum.Sell)
                 return;
 
-                using (NewPrice np = new NewPrice(o.Wanted-o.Satisfied,(decimal)_market.SharePrice,true))
-                {
-                    np.ShowDialog();
-                    if (np.newValue > 0)
-                        _market.SuggestNewSharePrice((float)np.newValue, _user, o);
-                }
-       
+            using (NewPrice np = new NewPrice(o.Wanted - o.Satisfied, (decimal)_market.SharePrice, true))
+            {
+                np.ShowDialog();
+                if (np.newValue > 0)
+                    _market.SuggestNewSharePrice((float)np.newValue, _user, o);
+            }
+
             UpdateView();
- 
+
         }
 
         private void button7_Click(object sender, EventArgs e)
@@ -416,7 +423,7 @@ namespace Client
             if (o == null || o.OrderType != OrderOptionEnum.Buy)
                 return;
 
-            using (NewPrice np = new NewPrice(o.Wanted - o.Satisfied, (decimal)_market.SharePrice,false))
+            using (NewPrice np = new NewPrice(o.Wanted - o.Satisfied, (decimal)_market.SharePrice, false))
             {
                 np.ShowDialog();
                 if (np.newValue > 0)

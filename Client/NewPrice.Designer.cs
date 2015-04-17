@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NewPrice));
             this.label = new System.Windows.Forms.Label();
             this.valueUpDown = new System.Windows.Forms.NumericUpDown();
             this.submit = new System.Windows.Forms.Button();
@@ -66,10 +67,11 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 262);
+            this.ClientSize = new System.Drawing.Size(284, 156);
             this.Controls.Add(this.submit);
             this.Controls.Add(this.valueUpDown);
             this.Controls.Add(this.label);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "NewPrice";
             this.Text = "New Value";
             ((System.ComponentModel.ISupportInitialize)(this.valueUpDown)).EndInit();

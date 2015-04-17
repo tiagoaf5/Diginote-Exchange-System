@@ -32,7 +32,7 @@ namespace Server
             else
             {
                 var color = online ? Color.Green : Color.Maroon;
-                ListViewItem item = listView1.FindItemWithText(x.Nickname);
+                ListViewItem item = listViewUsers.FindItemWithText(x.Nickname);
 
                 if (item != null)
                 {
@@ -41,7 +41,7 @@ namespace Server
                 }
 
                 var listViewItem1 = new ListViewItem(new[] { x.Nickname }, -1, color, Color.Empty, null);
-                listView1.Items.Add(listViewItem1);
+                listViewUsers.Items.Add(listViewItem1);
             }
         }
 
@@ -56,7 +56,7 @@ namespace Server
             }
             else
             {
-                _timer.Dispose();
+                //_timer.Dispose();
             }
         }
 
@@ -66,11 +66,17 @@ namespace Server
                 BeginInvoke((MethodInvoker)delegate { timer1_Tick(_countDown); }); // Invoke using an anonymous delegate
             else
             {
+                if (!labelCountDown.Visible) 
+                    labelCountDown.Visible = true;
+
                 labelCountDown.Text = _countDown.ToString();
-                _countDown--;
 
                 if (_countDown == 0)
+                {
+                    labelCountDown.Visible = false;
                     _timer.Dispose();
+                }
+                _countDown--;
             }
         }
 
@@ -89,7 +95,7 @@ namespace Server
             {
                 List<IOrder> orders = _market.GetOrdersHistoy(null);
 
-                listView1.Items.Clear();
+                listViewLog.Items.Clear();
 
                 foreach (var order in orders)
                 {
@@ -104,10 +110,14 @@ namespace Server
                         order.SharePrice.ToString(CultureInfo.InvariantCulture),
                         order.Closed ? "closed" : "open"
                     }, -1);
-                    listView2.Items.Add(listViewItem1);
+                    listViewLog.Items.Add(listViewItem1);
                 }
 
-                listView2.Items[listView2.Items.Count - 1].EnsureVisible();
+                listViewLog.Items[listViewLog.Items.Count - 1].EnsureVisible();
+
+                labelAvailable.Text = _market.GetNumberOfAvailableDiginotes().ToString();
+                labelDemand.Text = _market.GetNumberOfDemmandingDiginotes().ToString();
+                labelSharePrice.Text = _market.SharePrice.ToString(CultureInfo.InvariantCulture);
 
                 UpdateChart();
             }
@@ -129,8 +139,8 @@ namespace Server
 
         private void ListView1_ItemActivate(Object sender, EventArgs e)
         {
-            if (listView1.SelectedItems.Count > 0)
-                new DiginotesWindow(_market.GetUserDiginotes(listView1.SelectedItems[0].Text)).ShowDialog();
+            if (listViewUsers.SelectedItems.Count > 0)
+                new DiginotesWindow(_market.GetUserDiginotes(listViewUsers.SelectedItems[0].Text)).ShowDialog();
 
         }
 

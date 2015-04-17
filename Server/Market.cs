@@ -714,7 +714,7 @@ namespace Server
                 }
             }
 
-            CountDown = Constants.TimerSeconds + 2;
+            CountDown = Constants.TimerSeconds;
             _timer = new Timer(timer1_Tick, null, 0, 1000);
 
         }
