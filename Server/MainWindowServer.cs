@@ -113,7 +113,8 @@ namespace Server
                     listViewLog.Items.Add(listViewItem1);
                 }
 
-                listViewLog.Items[listViewLog.Items.Count - 1].EnsureVisible();
+                if(listViewLog.Items.Count > 0)
+                     listViewLog.Items[listViewLog.Items.Count - 1].EnsureVisible();
 
                 labelAvailable.Text = _market.GetNumberOfAvailableDiginotes().ToString();
                 labelDemand.Text = _market.GetNumberOfDemmandingDiginotes().ToString();
