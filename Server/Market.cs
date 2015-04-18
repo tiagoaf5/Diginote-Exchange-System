@@ -415,7 +415,8 @@ namespace Server
                 }
             }
 
-            InsertBuyOrder(quantity, user, quantity - howManyLeftToBuy, true);
+            if(orders.Count > 0)
+                InsertBuyOrder(quantity, user, quantity - howManyLeftToBuy, true);
 
             foreach (IOrder o in orders)
             {
@@ -484,8 +485,8 @@ namespace Server
                 }
             }
 
-
-            InsertSellOrder(quantity, user, quantity - howManyLeft, true);
+            if (orders.Count > 0)
+                InsertSellOrder(quantity, user, quantity - howManyLeft, true);
 
             foreach (IOrder o in orders)
             {
@@ -663,6 +664,39 @@ namespace Server
             _myWindow.UpdateView();
         }
 
+        private void KeepAllOrdersOn()
+        {
+            string sql = String.Format("UPDATE BUYORDER SET shareprice = {0} where closed = 0", SharePrice);
+
+            SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
+
+            try
+            {
+                command.ExecuteNonQuery();
+            }
+            catch (SQLiteException exception)
+            {
+                Debug.WriteLine("exception in " + exception.Source + ": '" + exception.Message + "'");
+
+            }
+
+            sql = String.Format("UPDATE SELLORDER SET shareprice = {0} where closed = 0", SharePrice);
+
+            command = new SQLiteCommand(sql, _mDbConnection);
+
+            try
+            {
+                command.ExecuteNonQuery();
+            }
+            catch (SQLiteException exception)
+            {
+                Debug.WriteLine("exception in " + exception.Source + ": '" + exception.Message + "'");
+
+            }
+
+            _myWindow.UpdateView();
+        }
+
 
         public void RevokeOrder(IOrder order)
         {
@@ -725,6 +759,7 @@ namespace Server
 
             if (CountDown == 0)
             {
+                KeepAllOrdersOn();
                 if (UpdateLockingEvent != null)
                 {
                     Delegate[] invkList = UpdateLockingEvent.GetInvocationList();
