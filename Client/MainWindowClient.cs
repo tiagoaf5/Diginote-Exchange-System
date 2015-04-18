@@ -160,15 +160,20 @@ namespace Client
                 order.OrderType == OrderOptionEnum.Sell ? "sell" : "buy", order.Wanted - order.Satisfied, _market.SharePrice);
             DialogResult result1 = MessageBox.Show(text, "Share price changed!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
-            if (result1 == DialogResult.Yes)
+            if (_countDown > 0)
             {
-                _market.KeepOrderOn(order);
-            }
-            else
-            {
-                _market.RevokeOrder(order);
+                if (result1 == DialogResult.No)
+                {
+                    _market.RevokeOrder(order);
+                }
+                else
+                {
+                    _market.KeepOrderOn(order);
+                }
                 UpdateView();
             }
+
+
         }
 
 
@@ -369,9 +374,8 @@ namespace Client
 
         public void AddMessage(string message)
         {
-            /* MessageBox.Show(message, "Message from server", MessageBoxButtons.OK,
-                  MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);*/
-            button1.BackColor = Color.Red;
+            MessageBox.Show(message, "Message from server", MessageBoxButtons.OK,
+                  MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
         }
 
         private void labelNumberDiginotes_Click(object sender, EventArgs e)

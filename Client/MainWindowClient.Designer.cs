@@ -38,7 +38,6 @@ namespace Client
             System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint2 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(1D, 1.5D);
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindowClient));
             this.labelWelcome = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
             this.labelSharePrice = new System.Windows.Forms.Label();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
@@ -99,15 +98,6 @@ namespace Client
             this.labelWelcome.Size = new System.Drawing.Size(69, 16);
             this.labelWelcome.TabIndex = 0;
             this.labelWelcome.Text = "Welcome!";
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(395, 124);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
             // 
             // labelSharePrice
             // 
@@ -520,7 +510,6 @@ namespace Client
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.labelSharePrice);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.labelWelcome);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainWindowClient";
@@ -543,7 +532,6 @@ namespace Client
         #endregion
 
         private System.Windows.Forms.Label labelWelcome;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label labelSharePrice;
         private System.Windows.Forms.NumericUpDown numericUpDown1;
         private System.Windows.Forms.Label label3;

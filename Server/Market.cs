@@ -32,6 +32,8 @@ namespace Server
 
         private readonly Hashtable _table = new Hashtable();
 
+        private StreamWriter _log;
+
         public Market()
         {
             OpenDatabase();
@@ -54,6 +56,15 @@ namespace Server
                 ConnectToDatabase();
             }
 
+        }
+
+        private void Log(String message)
+        {
+            if (_log == null)
+                _log = new StreamWriter("log.txt",true);
+            
+            _log.WriteLine(DateTime.Now.ToString(DatePatt) + ": " + message);
+            _log.Flush();
         }
 
         private void LoadSharePrice()
@@ -188,7 +199,7 @@ namespace Server
             if (address != null)
                 _table.Add(u.IdUser, address);
 
-
+            Log("User id:" + u.IdUser + " nickname: " + nickname + " signed in.");
 
             return u;
         }
@@ -247,6 +258,8 @@ namespace Server
 
             User u = new User(id, name, nickname);
 
+            Log("User id:" + u.IdUser + " nickname: " + nickname + " registered and signed in.");
+
             if (_myWindow != null)
                 _myWindow.AddUser(u, true);
 
@@ -291,10 +304,12 @@ namespace Server
             try
             {
                 command.ExecuteNonQuery();
+                Log(sql);
             }
             catch (SQLiteException exception)
             {
                 Debug.WriteLine("exception in " + exception.Source + ": '" + exception.Message + "'");
+                Log("ERROR " + sql);
             }
 
         }
@@ -314,9 +329,11 @@ namespace Server
             try
             {
                 command.ExecuteNonQuery();
+                Log(sql);
             }
             catch (SQLiteException exception)
             {
+                Log("ERROR " + sql);
                 Debug.WriteLine("exception in " + exception.Source + ": '" + exception.Message + "'");
 
             }
@@ -331,10 +348,12 @@ namespace Server
 
             try
             {
+                Log(sql);
                 command.ExecuteNonQuery();
             }
             catch (SQLiteException exception)
             {
+                Log("ERROR " + sql);
                 Debug.WriteLine("exception in " + exception.Source + ": '" + exception.Message + "'");
 
             }
@@ -382,6 +401,8 @@ namespace Server
         public int BuyDiginotes(int quantity, IUser user)
         {
 
+            Log("----- User " + user.IdUser + " wants to buy " + quantity + " diginotes. -----");
+
             SQLiteTransaction t = _mDbConnection.BeginTransaction();
             string sql = "SELECT * FROM SELLORDER WHERE not closed ORDER BY date asc";
             SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
@@ -396,6 +417,8 @@ namespace Server
                 Order o1 = new Order(OrderOptionEnum.Sell, Convert.ToInt32(reader["idSellOrder"]),
                     Convert.ToInt32(reader["user"]), Convert.ToInt32(reader["wanted"]), Convert.ToInt32(reader["satisfied"]),
                     Convert.ToString(reader["date"]));
+
+                Log("Considering sell order: "+ o1.IdOrder + " Timestamp: " + o1.Date);
 
                 int howManyToSell = o1.Wanted - o1.Satisfied;
                 if (howManyLeftToBuy > howManyToSell)
@@ -426,11 +449,13 @@ namespace Server
 
                 try
                 {
+                    Log(sql);
                     command = new SQLiteCommand(sql, _mDbConnection);
                     command.ExecuteNonQuery();
                 }
                 catch (SQLiteException exception)
                 {
+                    Log("ERROR " + sql);
                     Debug.WriteLine("exception in " + exception.Source + ": '" + exception.Message + "'");
                     //TODO fazer try catch global para rollback
                 }
@@ -448,11 +473,14 @@ namespace Server
 
             _myWindow.UpdateView();
 
+            Log("User " + user.IdUser + " bought " + (quantity - howManyLeftToBuy) + " diginotes. -----");
+
             return quantity - howManyLeftToBuy;
         }
 
         public int SellDiginotes(int quantity, IUser user) // apenas para as que estao disponiveis
         {
+            Log("----- User " + user.IdUser + " wants to sell " + quantity + " diginotes. -----");
 
             SQLiteTransaction t = _mDbConnection.BeginTransaction();
             string sql = "SELECT * FROM BUYORDER WHERE not closed ORDER BY date asc";
@@ -466,6 +494,8 @@ namespace Server
             while (reader.Read())
             {
                 Order o1 = new Order(OrderOptionEnum.Sell, Convert.ToInt32(reader["idBuyOrder"]), Convert.ToInt32(reader["user"]), Convert.ToInt32(reader["wanted"]), Convert.ToInt32(reader["satisfied"]), Convert.ToString(reader["date"]));
+
+                Log("Considering buy order: " + o1.IdOrder + " Timestamp: " + o1.Date);
 
                 int howManyToOffer = o1.Wanted - o1.Satisfied;
                 if (howManyLeft > howManyToOffer)
@@ -496,11 +526,13 @@ namespace Server
 
                 try
                 {
+                    Log(sql);
                     command = new SQLiteCommand(sql, _mDbConnection);
                     command.ExecuteNonQuery();
                 }
                 catch (SQLiteException exception)
                 {
+                    Log("ERROR: " + sql);
                     Debug.WriteLine("exception in " + exception.Source + ": '" + exception.Message + "'");
                     //TODO fazer try catch global para rollback
                 }
@@ -518,6 +550,9 @@ namespace Server
             }
 
             _myWindow.UpdateView();
+
+            Log("User " + user.IdUser + " sold " + (quantity - howManyLeft) + " diginotes. -----");
+
 
             return quantity - howManyLeft;
         }
@@ -561,18 +596,20 @@ namespace Server
             String sql = String.Format("UPDATE DIGINOTE SET user = {0} WHERE idDiginote in (SELECT idDiginote FROM Diginote where user = {1} LIMIT {2})", destination, origin, quantity);
             try
             {
+                Log(sql);
                 SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
                 command.ExecuteNonQuery();
             }
             catch (SQLiteException exception)
             {
+                Log("ERROR: " + sql);
                 Debug.WriteLine("exception in " + exception.Source + ": '" + exception.Message + "'");
             }
         }
 
         public void SuggestNewSharePrice(float newPrice, IUser user, IOrder order)
         {
-            //alterar cotacao
+            Log("----- User " + user.IdUser + " wants to change price to " + newPrice + " -----");
             UpdateShare(newPrice, user);
             KeepOrderOn(order);
             NotifySharePriceChange(user);
@@ -581,6 +618,7 @@ namespace Server
 
         public void SuggestNewSharePrice(float newPrice, IUser user, bool sell, int quantity)
         {
+            Log("----- User " + user.IdUser + " wants to " + (sell ? "sell" : "buy") + " remaining " + quantity + " diginotes with price " + newPrice + " -----");
             UpdateShare(newPrice, user);
 
             if (sell)
@@ -634,10 +672,12 @@ namespace Server
 
             try
             {
+                Log(sql);
                 command.ExecuteNonQuery();
             }
             catch (SQLiteException exception)
             {
+                Log("ERROR " + sql);
                 Debug.WriteLine("exception in " + exception.Source + ": '" + exception.Message + "'");
 
             }
@@ -647,17 +687,19 @@ namespace Server
         {
             string sql;
             if (order.OrderType == OrderOptionEnum.Buy)
-                 sql = String.Format("UPDATE BUYORDER SET shareprice = {0} where idBuyOrder = {1}", SharePrice, order.IdOrder);
-            else sql = String.Format("UPDATE SELLORDER SET shareprice = {0} where idSellOrder = {1}", SharePrice, order.IdOrder);
+                 sql = String.Format("UPDATE BUYORDER SET shareprice = {0} where idBuyOrder = {1}", RealToString(SharePrice), order.IdOrder);
+            else sql = String.Format("UPDATE SELLORDER SET shareprice = {0} where idSellOrder = {1}", RealToString(SharePrice), order.IdOrder);
 
             SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
 
             try
             {
+                Log(sql);
                 command.ExecuteNonQuery();
             }
             catch (SQLiteException exception)
             {
+                Log("ERROR " + sql);
                 Debug.WriteLine("exception in " + exception.Source + ": '" + exception.Message + "'");
 
             }
@@ -666,30 +708,34 @@ namespace Server
 
         private void KeepAllOrdersOn()
         {
-            string sql = String.Format("UPDATE BUYORDER SET shareprice = {0} where closed = 0", SharePrice);
+            string sql = String.Format("UPDATE BUYORDER SET shareprice = {0} where closed = 0", RealToString(SharePrice));
 
             SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
 
             try
             {
+                Log("Update all orders: " + sql);
                 command.ExecuteNonQuery();
             }
             catch (SQLiteException exception)
             {
+                Log("ERROR " + sql);
                 Debug.WriteLine("exception in " + exception.Source + ": '" + exception.Message + "'");
 
             }
 
-            sql = String.Format("UPDATE SELLORDER SET shareprice = {0} where closed = 0", SharePrice);
+            sql = String.Format("UPDATE SELLORDER SET shareprice = {0} where closed = 0", RealToString(SharePrice));
 
             command = new SQLiteCommand(sql, _mDbConnection);
 
             try
             {
+                Log("Update all orders: " + sql);
                 command.ExecuteNonQuery();
             }
             catch (SQLiteException exception)
             {
+                Log("ERROR " + sql);
                 Debug.WriteLine("exception in " + exception.Source + ": '" + exception.Message + "'");
 
             }
@@ -709,10 +755,12 @@ namespace Server
 
             try
             {
+                Log("Remove order: " + sql);
                 command.ExecuteNonQuery();
             }
             catch (SQLiteException exception)
             {
+                Log("ERROR Remove order: " + sql);
                 Debug.WriteLine("exception in " + exception.Source + ": '" + exception.Message + "'");
 
             }
