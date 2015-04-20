@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.Remoting;
 using System.Windows.Forms;
 using Common;
@@ -118,5 +119,11 @@ namespace Client
             _mainWindow.ShowDialog();
             this.Close();
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            new ConfirmChangeWindow(null,null,null,"","", "nabo").Show();
+        }
+
     }
 }

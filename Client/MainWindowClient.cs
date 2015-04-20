@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.Globalization;
 using System.Net.Sockets;
 using System.Windows.Forms;
@@ -155,10 +154,15 @@ namespace Client
             if (order == null)
                 return;
 
+            String msg1 = String.Format("Do you want to {0} the remaining diginotes ({1})",order.OrderType == OrderOptionEnum.Sell ? "sell" : "buy", order.Wanted - order.Satisfied);
+            String msg2 = String.Format("at the new share price ({0}€)?", _market.SharePrice);
+            new ConfirmChangeWindow(_market, order, this, msg1, msg2, "Share price changed!") {
+                FormBorderStyle = FormBorderStyle.FixedSingle
+            }.ShowDialog();
 
-            String text = String.Format("Do you want to {0} the remaining diginotes ({1}) at the new share price ({2}€)?",
+            /*  ",
                 order.OrderType == OrderOptionEnum.Sell ? "sell" : "buy", order.Wanted - order.Satisfied, _market.SharePrice);
-            DialogResult result1 = MessageBox.Show(text, "Share price changed!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult result1 = MessageBox.Show(text, , MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (_countDown > 0)
             {
@@ -173,7 +177,7 @@ namespace Client
                 UpdateView();
             }
 
-
+            */
         }
 
 
@@ -355,9 +359,6 @@ namespace Client
             this.Close();
         }
 
-        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-        }
 
         private void Form1_FormClosing(object sender, EventArgs e)
         {
@@ -367,7 +368,7 @@ namespace Client
             }
             catch (SocketException exception)
             {
-
+                Debug.WriteLine(exception.Message);
             }
         }
 

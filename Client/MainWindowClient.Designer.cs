@@ -217,7 +217,6 @@ namespace Client
             this.listView_sell.TabIndex = 13;
             this.listView_sell.UseCompatibleStateImageBehavior = false;
             this.listView_sell.View = System.Windows.Forms.View.Details;
-            this.listView_sell.SelectedIndexChanged += new System.EventHandler(this.listView1_SelectedIndexChanged);
             // 
             // Total
             // 
