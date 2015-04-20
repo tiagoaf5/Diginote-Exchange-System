@@ -619,14 +619,15 @@ namespace Server
         public void SuggestNewSharePrice(float newPrice, IUser user, bool sell, int quantity)
         {
             Log("----- User " + user.IdUser + " wants to " + (sell ? "sell" : "buy") + " remaining " + quantity + " diginotes with price " + newPrice + " -----");
-            UpdateShare(newPrice, user);
+            bool result = UpdateShare(newPrice, user);
 
             if (sell)
                 InsertSellOrder(quantity, user);
             else
                 InsertBuyOrder(quantity, user);
 
-            NotifySharePriceChange(user);
+            if(result)
+                NotifySharePriceChange(user);
 
         }
 
@@ -661,8 +662,12 @@ namespace Server
             _myWindow.UpdateView();
         }
 
-        private void UpdateShare(float newPrice, IUser user)
+        private bool UpdateShare(float newPrice, IUser user)
         {
+
+            if (newPrice == SharePrice)
+                return false;
+            
             SharePrice = newPrice;
 
             string sql = String.Format("INSERT INTO SHAREHISTORY (date, user, newSharePrice) SELECT '{0}', idUser, '{1}' FROM USER WHERE nickname = '{2}'",
@@ -681,6 +686,7 @@ namespace Server
                 Debug.WriteLine("exception in " + exception.Source + ": '" + exception.Message + "'");
 
             }
+            return true;
         }
 
         public void KeepOrderOn(IOrder order)
