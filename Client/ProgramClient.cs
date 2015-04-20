@@ -3,8 +3,8 @@ using System.Collections;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
+using System.Runtime.Serialization.Formatters;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 
 namespace Client
 {
@@ -19,7 +19,7 @@ namespace Client
             IDictionary props = new Hashtable();
             props["port"] = 0;  // let the system choose a free port
             BinaryServerFormatterSinkProvider serverProvider = new BinaryServerFormatterSinkProvider();
-            serverProvider.TypeFilterLevel = System.Runtime.Serialization.Formatters.TypeFilterLevel.Full;
+            serverProvider.TypeFilterLevel = TypeFilterLevel.Full;
             BinaryClientFormatterSinkProvider clientProvider = new BinaryClientFormatterSinkProvider();
             TcpChannel chan = new TcpChannel(props, clientProvider, serverProvider);  // instantiate the channel
             ChannelServices.RegisterChannel(chan, false);                             // register the channel
@@ -30,19 +30,6 @@ namespace Client
             RemotingConfiguration.Configure("Client.exe.config", false);             // register the server objects
             RemotingConfiguration.RegisterWellKnownServiceType(typeof(ClientNotify), "ClientNotify", WellKnownObjectMode.Singleton);  // register my remote object for service
 
-           // VisualStyleElement.Window myWindow = new VisualStyleElement.Window(port);
-
-            //MainWindowClient mainWindowClient = new MainWindowClient();
-
-                         // communicate the window reference
-
-           /* Application.EnableVisualStyles();
-            Application.Run(myWindow);*/
-
-            /***
-             * 
-             * 
-             */
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new FormLogin(port) {FormBorderStyle = FormBorderStyle.FixedSingle});

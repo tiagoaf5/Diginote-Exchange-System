@@ -94,7 +94,7 @@
             this.Name = "ConfirmChangeWindow";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "frmMessageBoxWithCheckBox";
+            this.Text = "ChangeWindow";
             this.Load += new System.EventHandler(this.InitialSetup);
             this.ResumeLayout(false);
             this.PerformLayout();

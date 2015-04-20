@@ -66,7 +66,7 @@ namespace Server
                 BeginInvoke((MethodInvoker)delegate { timer1_Tick(_countDown); }); // Invoke using an anonymous delegate
             else
             {
-                if (!labelCountDown.Visible) 
+                if (!labelCountDown.Visible)
                     labelCountDown.Visible = true;
 
                 labelCountDown.Text = _countDown.ToString();
@@ -113,8 +113,8 @@ namespace Server
                     listViewLog.Items.Add(listViewItem1);
                 }
 
-                if(listViewLog.Items.Count > 0)
-                     listViewLog.Items[listViewLog.Items.Count - 1].EnsureVisible();
+                if (listViewLog.Items.Count > 0)
+                    listViewLog.Items[listViewLog.Items.Count - 1].EnsureVisible();
 
                 labelAvailable.Text = _market.GetNumberOfAvailableDiginotes().ToString();
                 labelDemand.Text = _market.GetNumberOfDemmandingDiginotes().ToString();
@@ -142,16 +142,6 @@ namespace Server
         {
             if (listViewUsers.SelectedItems.Count > 0)
                 new DiginotesWindow(_market.GetUserDiginotes(listViewUsers.SelectedItems[0].Text)).ShowDialog();
-
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            _market.GetUserChannel(1).SomeMessage("oi gatinho");
-        }
-
-        private void listView2_SelectedIndexChanged(object sender, EventArgs e)
-        {
 
         }
 

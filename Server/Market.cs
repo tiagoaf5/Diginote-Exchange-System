@@ -61,8 +61,8 @@ namespace Server
         private void Log(String message)
         {
             if (_log == null)
-                _log = new StreamWriter("log.txt",true);
-            
+                _log = new StreamWriter("log.txt", true);
+
             _log.WriteLine(DateTime.Now.ToString(DatePatt) + ": " + message);
             _log.Flush();
         }
@@ -158,7 +158,7 @@ namespace Server
         // Testing purpose
         void FillTable()
         {
-            RegisterUser("ze", "nabo", "jose", null);
+            RegisterUser("ze", "manuel", "Jose Manuel", null);
             for (int i = 0; i < NumberOfDiginotes; i++)
                 RegisterDiginotes(GetHashSha1(i + "diginote"));
 
@@ -187,7 +187,7 @@ namespace Server
             SQLiteDataReader reader = command.ExecuteReader();
 
             if (reader.Read())
-                Debug.WriteLine("Name: " + reader["name"] + "    nickname: " + reader["nickname"] + "    password: " + reader["password"]);
+                Debug.WriteLine("welcome " + reader["name"]);
             else
                 return null;
 
@@ -418,7 +418,7 @@ namespace Server
                     Convert.ToInt32(reader["user"]), Convert.ToInt32(reader["wanted"]), Convert.ToInt32(reader["satisfied"]),
                     Convert.ToString(reader["date"]));
 
-                Log("Considering sell order: "+ o1.IdOrder + " Timestamp: " + o1.Date);
+                Log("Considering sell order: " + o1.IdOrder + " Timestamp: " + o1.Date);
 
                 int howManyToSell = o1.Wanted - o1.Satisfied;
                 if (howManyLeftToBuy > howManyToSell)
@@ -438,7 +438,7 @@ namespace Server
                 }
             }
 
-            if(orders.Count > 0)
+            if (orders.Count > 0)
                 InsertBuyOrder(quantity, user, quantity - howManyLeftToBuy, true);
 
             foreach (IOrder o in orders)
@@ -467,7 +467,7 @@ namespace Server
             foreach (IOrder o in orders)
             {
                 IClientNotify c = GetUserChannel(o.IdUser);
-                if(c!=null)
+                if (c != null)
                     c.UpdateClientView();
             }
 
@@ -626,7 +626,7 @@ namespace Server
             else
                 InsertBuyOrder(quantity, user);
 
-            if(result)
+            if (result)
                 NotifySharePriceChange(user);
 
         }
@@ -667,7 +667,7 @@ namespace Server
 
             if (newPrice == SharePrice)
                 return false;
-            
+
             SharePrice = newPrice;
 
             string sql = String.Format("INSERT INTO SHAREHISTORY (date, user, newSharePrice) SELECT '{0}', idUser, '{1}' FROM USER WHERE nickname = '{2}'",
@@ -693,7 +693,7 @@ namespace Server
         {
             string sql;
             if (order.OrderType == OrderOptionEnum.Buy)
-                 sql = String.Format("UPDATE BUYORDER SET shareprice = {0} where idBuyOrder = {1}", RealToString(SharePrice), order.IdOrder);
+                sql = String.Format("UPDATE BUYORDER SET shareprice = {0} where idBuyOrder = {1}", RealToString(SharePrice), order.IdOrder);
             else sql = String.Format("UPDATE SELLORDER SET shareprice = {0} where idSellOrder = {1}", RealToString(SharePrice), order.IdOrder);
 
             SQLiteCommand command = new SQLiteCommand(sql, _mDbConnection);
@@ -883,7 +883,7 @@ namespace Server
             return demand;
         }
 
-        private void UpdateClients() //TODO: NOT USED YET 
+        private void UpdateClients() 
         {
             if (ChangeEvent != null)
             {
@@ -898,7 +898,7 @@ namespace Server
                     {
                         try
                         {
-                            handler1(ChangeOperation.UpdateInterface,0);
+                            handler1(ChangeOperation.UpdateInterface, 0);
                             Debug.WriteLine("Invoking event handler");
                         }
                         catch (Exception)

@@ -27,11 +27,11 @@ namespace Client
                 //_market = (IMarket)RemoteNew.New(typeof(IMarket));
                 EventsRepeater repeater = new EventsRepeater();
                 repeater.ChangeEvent += ChangeOperation;
-                repeater.UpdateLockingEvent += new UpdateTimerLockingDelegate(TimerLock);
-                _market.ChangeEvent += new ChangeDelegate(repeater.ChangeRepeater);
-                _market.UpdateLockingEvent += new UpdateTimerLockingDelegate(repeater.LockingRepeater);
+                repeater.UpdateLockingEvent += TimerLock;
+                _market.ChangeEvent += repeater.ChangeRepeater;
+                _market.UpdateLockingEvent += repeater.LockingRepeater;
 
-                this.Closing += Form1_FormClosing;
+                Closing += Form1_FormClosing;
                 InitializeComponent();
             }
             catch (SocketException exception)
@@ -44,7 +44,7 @@ namespace Client
         //Loads what needs to be shown on the window - gets data from _market and _user
         private void InitialSetup(object sender, EventArgs e)
         {
-            labelWelcome.Text = "Welcome" + (_user == null ? "" : " " + _user.Name) + "!";
+            labelWelcome.Text = @"Welcome" + (_user == null ? "" : " " + _user.Name) + @"!";
             numericUpDown1.DecimalPlaces = 0;
             numericUpDown1.Minimum = 0;
 
@@ -154,9 +154,10 @@ namespace Client
             if (order == null)
                 return;
 
-            String msg1 = String.Format("Do you want to {0} the remaining diginotes ({1})",order.OrderType == OrderOptionEnum.Sell ? "sell" : "buy", order.Wanted - order.Satisfied);
+            String msg1 = String.Format("Do you want to {0} the remaining diginotes ({1})", order.OrderType == OrderOptionEnum.Sell ? "sell" : "buy", order.Wanted - order.Satisfied);
             String msg2 = String.Format("at the new share price ({0}€)?", _market.SharePrice);
-            new ConfirmChangeWindow(_market, order, this, msg1, msg2, "Share price changed!") {
+            new ConfirmChangeWindow(_market, order, this, msg1, msg2, "Share price changed!")
+            {
                 FormBorderStyle = FormBorderStyle.FixedSingle
             }.ShowDialog();
 
@@ -224,7 +225,7 @@ namespace Client
                 }
                 _countDown--;
 
-                
+
             }
         }
 
@@ -278,16 +279,6 @@ namespace Client
             }
         }
 
-        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void numericUpDown2_ValueChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void button2_Click(object sender, EventArgs e)
         {
             try
@@ -308,7 +299,7 @@ namespace Client
                 }
                 else
                 {
-                    MessageBox.Show("Your diginotes have been sold!", "Success", MessageBoxButtons.OK,
+                    MessageBox.Show(@"Your diginotes have been sold!", @"Success", MessageBoxButtons.OK,
                     MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
                 }
                 UpdateView();
@@ -340,7 +331,7 @@ namespace Client
                 }
                 else
                 {
-                    MessageBox.Show("Your have new diginotes!", "Success", MessageBoxButtons.OK,
+                    MessageBox.Show(@"Your have new diginotes!", @"Success", MessageBoxButtons.OK,
                     MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
 
                 }
@@ -354,9 +345,9 @@ namespace Client
 
         private void ServerDown(SocketException exception)
         {
-            MessageBox.Show(exception.Message, "Server is not online!", MessageBoxButtons.OK,
+            MessageBox.Show(exception.Message, @"Server is not online!", MessageBoxButtons.OK,
                 MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-            this.Close();
+            Close();
         }
 
 
@@ -375,37 +366,57 @@ namespace Client
 
         public void AddMessage(string message)
         {
-            MessageBox.Show(message, "Message from server", MessageBoxButtons.OK,
+            MessageBox.Show(message, @"Message from server", MessageBoxButtons.OK,
                   MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
         }
 
         private void labelNumberDiginotes_Click(object sender, EventArgs e)
         {
-            new DiginotesWindow(_market.GetUserDiginotes(_user)).ShowDialog();
+            try
+            {
+                new DiginotesWindow(_market.GetUserDiginotes(_user)).ShowDialog();
+            }
+            catch (SocketException exception)
+            {
+                Debug.WriteLine(exception.Message);
+            }
         }
 
         private void button6_Click(object sender, EventArgs e)
         {
-            IOrder o = _market.GetUserPendingOrder(_user);
-            if (o == null || o.OrderType != OrderOptionEnum.Sell)
-                return;
-
-            _market.RevokeOrder(o);
+            try
+            {
+                IOrder o = _market.GetUserPendingOrder(_user);
+                if (o == null || o.OrderType != OrderOptionEnum.Sell)
+                    return;
+                _market.RevokeOrder(o);
+            }
+            catch (SocketException exception)
+            {
+                Debug.WriteLine(exception.Message);
+            }
             UpdateView();
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            IOrder o = _market.GetUserPendingOrder(_user);
-
-            if (o == null || o.OrderType != OrderOptionEnum.Sell)
-                return;
-
-            using (NewPrice np = new NewPrice(o.Wanted - o.Satisfied, (decimal)_market.SharePrice, true))
+            try
             {
-                np.ShowDialog();
-                if (np.newValue > 0)
-                    _market.SuggestNewSharePrice((float)np.newValue, _user, o);
+                IOrder o = _market.GetUserPendingOrder(_user);
+
+                if (o == null || o.OrderType != OrderOptionEnum.Sell)
+                    return;
+
+                using (NewPrice np = new NewPrice(o.Wanted - o.Satisfied, (decimal)_market.SharePrice, true))
+                {
+                    np.ShowDialog();
+                    if (np.newValue > 0)
+                        _market.SuggestNewSharePrice((float)np.newValue, _user, o);
+                }
+            }
+            catch (SocketException exception)
+            {
+                Debug.WriteLine(exception.Message);
             }
 
             UpdateView();
@@ -414,35 +425,47 @@ namespace Client
 
         private void button7_Click(object sender, EventArgs e)
         {
-            IOrder o = _market.GetUserPendingOrder(_user);
-            if (o == null || o.OrderType != OrderOptionEnum.Buy)
-                return;
+            try
+            {
+                IOrder o = _market.GetUserPendingOrder(_user);
+                if (o == null || o.OrderType != OrderOptionEnum.Buy)
+                    return;
 
-            _market.RevokeOrder(o);
+                _market.RevokeOrder(o);
+
+            }
+            catch (SocketException exception)
+            {
+                Debug.WriteLine(exception.Message);
+            }
             UpdateView();
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
-            IOrder o = _market.GetUserPendingOrder(_user);
-
-            if (o == null || o.OrderType != OrderOptionEnum.Buy)
-                return;
-
-            using (NewPrice np = new NewPrice(o.Wanted - o.Satisfied, (decimal)_market.SharePrice, false))
+            try
             {
-                np.ShowDialog();
-                if (np.newValue > 0)
-                    _market.SuggestNewSharePrice((float)np.newValue, _user, o);
+
+                IOrder o = _market.GetUserPendingOrder(_user);
+
+                if (o == null || o.OrderType != OrderOptionEnum.Buy)
+                    return;
+
+                using (NewPrice np = new NewPrice(o.Wanted - o.Satisfied, (decimal)_market.SharePrice, false))
+                {
+                    np.ShowDialog();
+                    if (np.newValue > 0)
+                        _market.SuggestNewSharePrice((float)np.newValue, _user, o);
+                }
+            }
+            catch (SocketException exception)
+            {
+                Debug.WriteLine(exception.Message);
             }
 
             UpdateView();
         }
 
-        private void listView1_SelectedIndexChanged_1(object sender, EventArgs e)
-        {
-
-        }
     }
 
 }

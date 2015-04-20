@@ -55,6 +55,6 @@ namespace Common
 
     public static class Constants
     {
-        public static int TimerSeconds = 10;
+        public static int TimerSeconds = 60;
     }
 }

@@ -134,7 +134,6 @@ namespace Server
             this.listViewLog.TabIndex = 21;
             this.listViewLog.UseCompatibleStateImageBehavior = false;
             this.listViewLog.View = System.Windows.Forms.View.Details;
-            this.listViewLog.SelectedIndexChanged += new System.EventHandler(this.listView2_SelectedIndexChanged);
             // 
             // columnHeader1
             // 

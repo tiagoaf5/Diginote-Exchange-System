@@ -36,7 +36,7 @@ namespace Client
             lblMessage.Text = _message1;
             lblMessage2.Text = _message2;
 
-            _countDown = Constants.TimerSeconds;
+            _countDown = Constants.TimerSeconds - 1;
             _timer = new System.Threading.Timer(timer1_Tick, null, 0, 1000);
         }
 
@@ -45,27 +45,27 @@ namespace Client
         {
             _market.KeepOrderOn(_order);
             _windowClient.UpdateView();
-            this.Close();
+            Close();
         }
 
         private void btnNo_Click(object sender, EventArgs e)
         {
             _market.RevokeOrder(_order);
             _windowClient.UpdateView();
-            this.Close();
+            Close();
         }
 
         private void timer1_Tick(object sender)
         {
             if (InvokeRequired) // I'm not in UI thread
-                BeginInvoke((MethodInvoker) delegate { timer1_Tick(sender); }); // Invoke using an anonymous delegate
+                BeginInvoke((MethodInvoker)delegate { timer1_Tick(sender); }); // Invoke using an anonymous delegate
             else
             {
-                btnNo.Text = "&No" + " (" + _countDown + ")";
+                btnNo.Text = @"&No (" + _countDown + @")";
                 if (_countDown == 0)
                 {
                     _timer.Dispose();
-                    this.Close();
+                    Close();
                 }
 
                 _countDown--;

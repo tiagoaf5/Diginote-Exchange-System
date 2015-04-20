@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Net.Sockets;
 using System.Runtime.Remoting;
 using System.Windows.Forms;
 using Common;
@@ -15,7 +15,7 @@ namespace Client
 
         public FormLogin(int port)
         {
-            this._port = port;
+            _port = port;
             //RemotingConfiguration.Configure("Client.exe.config", false);
             _market = (IMarket)RemoteNew.New(typeof(IMarket));
             InitializeComponent();
@@ -29,16 +29,16 @@ namespace Client
                 {
                     _user = _market.LogUser(textUsername.Text, textPassword.Text, "tcp://localhost:" + _port.ToString() + "/ClientNotify");
                 }
-                catch (System.Net.Sockets.SocketException exception)
+                catch (SocketException exception)
                 {
-                    MessageBox.Show(exception.Message, "Server is not online!", MessageBoxButtons.OK,
+                    MessageBox.Show(exception.Message, @"Server is not online!", MessageBoxButtons.OK,
                       MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    this.Close();
+                    Close();
                 }
 
                 if (_user != null) //success
                 {
-                    MessageBox.Show("Login successful!", "Welcome", MessageBoxButtons.OK,
+                    MessageBox.Show(@"Login successful!", @"Welcome", MessageBoxButtons.OK,
                     MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
                     
                     OpenMainWindow();
@@ -46,13 +46,13 @@ namespace Client
                 }
                 else //wrong credentials
                 {
-                    MessageBox.Show("Wrong credentials!", "Error", MessageBoxButtons.OK,
+                    MessageBox.Show(@"Wrong credentials!", @"Error", MessageBoxButtons.OK,
                   MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 }
             }
             else //not all fields filled in
             {
-                MessageBox.Show("Please insert username and password!", "Warning", MessageBoxButtons.OK,
+                MessageBox.Show(@"Please insert username and password!", @"Warning", MessageBoxButtons.OK,
                    MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
             }
         }
@@ -66,12 +66,12 @@ namespace Client
 
             if (name == "" || nickname == "" || password == "" || password1 == "") //not everything fillen in
             {
-                MessageBox.Show("You must fill in all fields!", "Warning", MessageBoxButtons.OK,
+                MessageBox.Show(@"You must fill in all fields!", @"Warning", MessageBoxButtons.OK,
                     MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
             }
             else if (password != password1) //passwords don't match
             {
-                MessageBox.Show("Passwords don't match!", "Warning", MessageBoxButtons.OK,
+                MessageBox.Show(@"Passwords don't match!", @"Warning", MessageBoxButtons.OK,
                     MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                 textRpassword.Text = "";
                 textRpassword1.Text = "";
@@ -82,22 +82,22 @@ namespace Client
                 {
                     _user = _market.RegisterUser(nickname, password, name, "tcp://localhost:" + _port.ToString() + "/ClientNotify");
                 }
-                catch (System.Net.Sockets.SocketException exception)
+                catch (SocketException exception)
                 {
-                    MessageBox.Show(exception.Message, "Server is not online!", MessageBoxButtons.OK,
+                    MessageBox.Show(exception.Message, @"Server is not online!", MessageBoxButtons.OK,
                       MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    this.Close();
+                    Close();
                 }
 
                 if (_user == null)
                 {
-                    MessageBox.Show("Username already taken! Choose another one!", "Warning", MessageBoxButtons.OK,
+                    MessageBox.Show(@"Username already taken! Choose another one!", @"Warning", MessageBoxButtons.OK,
                         MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                     textRNickname.Text = "";
                 }
                 else //register successful
                 {
-                    MessageBox.Show("You've registered with success!", "Welcome", MessageBoxButtons.OK,
+                    MessageBox.Show(@"You've registered with success!", @"Welcome", MessageBoxButtons.OK,
                      MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
 
                     OpenMainWindow();
@@ -107,7 +107,7 @@ namespace Client
 
         private void OpenMainWindow()
         {
-            this.Hide();
+            Hide();
 
             _mainWindow = new MainWindowClient(_user, _market)
             {
@@ -117,12 +117,7 @@ namespace Client
             ClientNotify r = (ClientNotify)RemotingServices.Connect(typeof(ClientNotify), "tcp://localhost:" + _port.ToString() + "/ClientNotify");    // connect to the registered my remote object here
             r.PutMyForm(_mainWindow);
             _mainWindow.ShowDialog();
-            this.Close();
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            new ConfirmChangeWindow(null,null,null,"","", "nabo").Show();
+            Close();
         }
 
     }
