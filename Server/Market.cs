@@ -472,6 +472,7 @@ namespace Server
             }
 
             _myWindow.UpdateView();
+            UpdateClients();
 
             Log("User " + user.IdUser + " bought " + (quantity - howManyLeftToBuy) + " diginotes. -----");
 
@@ -550,6 +551,7 @@ namespace Server
             }
 
             _myWindow.UpdateView();
+            UpdateClients();
 
             Log("User " + user.IdUser + " sold " + (quantity - howManyLeft) + " diginotes. -----");
 
@@ -630,6 +632,7 @@ namespace Server
                 NotifySharePriceChange(user);
 
             _myWindow.UpdateView();
+            UpdateClients();
         }
 
         private void NotifySharePriceChange(IUser user)
@@ -772,6 +775,7 @@ namespace Server
 
             }
             _myWindow.UpdateView();
+            UpdateClients();
         }
 
         private void SetTimer()
@@ -941,6 +945,11 @@ namespace Server
 
             orders.Sort();
             return orders;
+        }
+
+        private void UpdateClientsOneByOne()
+        {
+            
         }
     }
 }

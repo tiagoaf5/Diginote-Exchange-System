@@ -130,15 +130,16 @@ namespace Client
                         {
                             UpdateView();
                             CheckPendingOrders(value);
+                            LockButtons(true);
                             break;
                         }
                     case Common.ChangeOperation.UpdateInterface:
                         {
-
+                            labelAvailable.Text = _market.GetNumberOfAvailableDiginotes().ToString();
+                            labelDemand.Text = _market.GetNumberOfDemmandingDiginotes().ToString();
                             break;
                         }
                 }
-                LockButtons(true);
 
             }
 
@@ -286,14 +287,16 @@ namespace Client
                 if (numericUpDown1.Value <= 0)
                     return;
 
-                int result = _market.SellDiginotes((int)numericUpDown1.Value, _user);
+                int howmany = (int)numericUpDown1.Value;
+
+                int result = _market.SellDiginotes(howmany, _user);
                 if (result < numericUpDown1.Value)
                 {
-                    using (NewPrice np = new NewPrice((int)numericUpDown1.Value, (int)numericUpDown1.Value - result, (decimal)_market.SharePrice, true))
+                    using (NewPrice np = new NewPrice(howmany, howmany - result, (decimal)_market.SharePrice, true))
                     {
                         np.ShowDialog();
                         if (np.newValue > 0)
-                            _market.SuggestNewSharePrice((float)np.newValue, _user, true, (int)numericUpDown1.Value - result);
+                            _market.SuggestNewSharePrice((float)np.newValue, _user, true, howmany - result);
                     }
 
                 }
@@ -318,14 +321,16 @@ namespace Client
                 if (numericUpDown2.Value <= 0)
                     return;
 
-                int result = _market.BuyDiginotes((int)numericUpDown2.Value, _user);
+                int howmany = (int)numericUpDown2.Value;
+
+                int result = _market.BuyDiginotes(howmany, _user);
                 if (result < numericUpDown2.Value)
                 {
-                    using (NewPrice np = new NewPrice((int)numericUpDown2.Value, (int)numericUpDown2.Value - result, (decimal)_market.SharePrice, false))
+                    using (NewPrice np = new NewPrice(howmany, howmany - result, (decimal)_market.SharePrice, false))
                     {
                         np.ShowDialog();
                         if (np.newValue > 0)
-                            _market.SuggestNewSharePrice((float)np.newValue, _user, false, (int)numericUpDown2.Value - result);
+                            _market.SuggestNewSharePrice((float)np.newValue, _user, false, howmany - result);
                     }
 
                 }
