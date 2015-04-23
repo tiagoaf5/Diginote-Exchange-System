@@ -248,8 +248,8 @@ namespace Client
                     }
                 }
             }
-
-            UpdateView();
+            if(!locked)
+                UpdateView();
 
         }
 

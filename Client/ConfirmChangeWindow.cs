@@ -61,7 +61,7 @@ namespace Client
                 BeginInvoke((MethodInvoker)delegate { timer1_Tick(sender); }); // Invoke using an anonymous delegate
             else
             {
-                btnNo.Text = @"&No (" + _countDown + @")";
+                btnYes.Text = @"&Yes (" + _countDown + @")";
                 if (_countDown == 0)
                 {
                     _timer.Dispose();
