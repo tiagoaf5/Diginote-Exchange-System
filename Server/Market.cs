@@ -613,7 +613,7 @@ namespace Server
             UpdateShare(newPrice, user);
             KeepOrderOn(order);
             NotifySharePriceChange(user);
-
+            _myWindow.UpdateView();
         }
 
         public void SuggestNewSharePrice(float newPrice, IUser user, bool sell, int quantity)
@@ -629,6 +629,7 @@ namespace Server
             if (result)
                 NotifySharePriceChange(user);
 
+            _myWindow.UpdateView();
         }
 
         private void NotifySharePriceChange(IUser user)
@@ -659,7 +660,7 @@ namespace Server
             }
 
             SetTimer();
-            _myWindow.UpdateView();
+           // _myWindow.UpdateView();
         }
 
         private bool UpdateShare(float newPrice, IUser user)
